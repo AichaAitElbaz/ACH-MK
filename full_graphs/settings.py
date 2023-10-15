@@ -57,7 +57,7 @@ ROOT_URLCONF = 'full_graphs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+            'DIRS': ['C:/Users/pc/Desktop/S3/Devops/ACH-MK/accounts/templates'],  # Assurez-vous que le chemin est correct
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

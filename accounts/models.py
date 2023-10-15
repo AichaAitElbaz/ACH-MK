@@ -47,3 +47,13 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
+
+
+  
+
+class Guest(models.Model):
+    ip_address = models.CharField(max_length=15)  # Utilisez CharField pour stocker des adresses IP
+    visit_counter = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.ip_address
