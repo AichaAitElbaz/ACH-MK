@@ -57,7 +57,7 @@ ROOT_URLCONF = 'full_graphs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+            'DIRS': ['C:/Users/pc/Desktop/S3/Devops/ACH-MK/accounts/templates'],  # Assurez-vous que le chemin est correct
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -87,8 +87,8 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'graphsapp2023@gmail.com'
-EMAIL_HOST_PASSWORD = 'nkhhfzbgjxoddllr'
+EMAIL_HOST_USER = 'mina.idahmed@gmail.com'
+EMAIL_HOST_PASSWORD = 'mbuzxyuidcfnpumk'
 EMAIL_USE_TLS = True
 
 REST_FRAMEWORK = {
