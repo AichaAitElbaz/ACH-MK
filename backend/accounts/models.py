@@ -46,7 +46,16 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class Graph(models.Model):
+    source_file = models.FileField()
+    graph = models.FileField()
+    interpretation = models.FileField()
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    date_uploaded = models.DateTimeField(default=timezone.now)
     
+    def __str__(self):
+        return f'Graph for {self.user.email}'
 
 
   
