@@ -255,15 +255,14 @@ const GenerateForm = () => {
                     <div class="inline-block relative w-56 mx-2 my-6">
                         <label className={`${styles.label}`}>BG Color</label>
                         <select className={`${styles.select}`} value={color} onChange={handleColorChange}>
-                            <option value={'#70c58f'}>vert</option>
-                            <option >orange</option>
-                            <option >bleu</option>
+                            <option value={'#70c58f'}>green</option>
+                            <option value={'#E7870B'}>orange</option>
+                            <option value={'#0F43C8'}>bleu</option>
                             <option value={'#d8102c'}>red</option>
-                            <option >white</option>
-                            <option >black</option>
-                            <option >purple</option>
-                            <option >gris</option>
-                            <option >yellow</option>
+                            <option value={'#010A0E'}>black</option>
+                            <option value={'#720FAC'}>purple</option>
+                            <option value={'#57525A'}>gris</option>
+                            <option value={'#DFE810'}>yellow</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-gris ">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -404,15 +403,14 @@ const GenerateForm = () => {
                 <div class="inline-block relative w-56 mx-2 my-6">
                         <label className={`${styles.label}`}>Color</label>
                         <select className={`${styles.select}`} value={textColor} onChange={handleTextColorChange}>
-                            <option value={'#70c58f'}>vert</option>
-                            <option >orange</option>
-                            <option >bleu</option>
+                          <option value={'#70c58f'}>green</option>
+                            <option value={'#E7870B'}>orange</option>
+                            <option value={'#0F43C8'}>bleu</option>
                             <option value={'#d8102c'}>red</option>
-                            <option >white</option>
-                            <option >black</option>
-                            <option >purple</option>
-                            <option >gris</option>
-                            <option >yellow</option>
+                            <option value={'#010A0E'}>black</option>
+                            <option value={'#720FAC'}>purple</option>
+                            <option value={'#57525A'}>gris</option>
+                            <option value={'#DFE810'}>yellow</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-gris ">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -434,10 +432,10 @@ const GenerateForm = () => {
                     <div class="inline-block relative w-56 mx-2 my-6">
                         <label className={`${styles.label}`}>Police</label>
                         <select className={`${styles.select}`} value={fontFamily} onChange={handleFontFamilyChange}>
-                            <option value={'Goudy Bookletter 1911,sans-erif'} >Norml</option>
-                            <option value={'Georgia, serif'}>Gras</option>
-                            <option value={'cursive'} >Normal Italic</option>
-                            <option value={'Gill Sans, sans-serif'} >Gras Italic</option>
+                            <option value={'Goudy Bookletter 1911,sans-erif'} >Goudy Bookletter 1911</option>
+                            <option value={'Georgia, serif'}>Georgia</option>
+                            <option value={'cursive'} >cursive</option>
+                            <option value={'Gill Sans, sans-serif'} >Gill Sans</option>
 
                         </select>   
                     
