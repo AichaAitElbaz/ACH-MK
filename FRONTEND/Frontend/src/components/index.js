@@ -6,6 +6,7 @@ import GenerateForm from "./GenerateForm";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import AboutUs from "./AboutUs";
+import ContactUs from "./ContactUs";
 
 export {
   Navbar,
@@ -15,5 +16,6 @@ export {
   GenerateForm,
   SignIn,
   SignUp,
-  AboutUs
+  AboutUs,
+  ContactUs
 };

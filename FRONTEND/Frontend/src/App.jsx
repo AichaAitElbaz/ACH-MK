@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from "./style";
 
-import { GenerateForm, Footer, Navbar, Hero, SignIn, AboutUs } from "./components";
+import { GenerateForm, Footer, Navbar, Hero, SignIn, AboutUs, ContactUs } from "./components";
 
 
 const App
@@ -21,8 +21,7 @@ const App
     
     <div className={`  ${styles.flexCenter}`}>
       <div className={`${styles.boxWidth} `}>
-        {/* <GenerateForm/> */}
-        <AboutUs/>
+        <ContactUs/>
         <Footer/>
       </div>
     </div>
