@@ -10,6 +10,7 @@ import linkedin from "./linkedin.png";
 import twitter from "./twitter.png";
 import updown from "./up-down-Arrow.svg";
 import down from "./down-Arrow.svg";
+import login from "./login.jpg";
 
 export {
     logo,
@@ -23,5 +24,6 @@ export {
     twitter,
     linkedin,
     updown,
-    down
+    down,
+    login
 };
