@@ -11,8 +11,6 @@ import twitter from "./twitter.png";
 import updown from "./up-down-Arrow.svg";
 import down from "./down-Arrow.svg";
 import login from "./login.jpg";
-import chart from "./chart.jpg";
-import chart2 from "./chart2.jpg"
 
 export {
     logo,
@@ -27,7 +25,5 @@ export {
     linkedin,
     updown,
     down,
-    login,
-    chart,
-    chart2
+    login
 };
