@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphes de l'Utilisateur</title>
+</head>
+<body>
+    <h1>Graphes de l'Utilisateur</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Source File</th>
+                <th>Graph File</th>
+                <th>Interpretation File</th>
+                <th>Date Uploaded</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for graph in user_graphs %}
+                <tr>
+                    <td>{{ graph.id }}</td>
+                    <td>{{ graph.source_file }}</td>
+                    <td>{{ graph.graph }}</td>
+                    <td>{{ graph.interpretation }}</td>
+                    <td>{{ graph.date_uploaded }}</td>
+                    <td>
+                        <form method="post" action="{% url 'delete_graph' graph.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
