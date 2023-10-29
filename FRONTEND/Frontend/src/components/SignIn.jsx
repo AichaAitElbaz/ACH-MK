@@ -37,7 +37,7 @@ const onSubmit = e => {
 
 const continueWithGoogle = async () => {
     try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=${process.env.REACT_APP_API_URL}/google`)
+        const res = await axios.get(`http://localhost:8000/auth/o/google-oauth2/?redirect_uri=${process.env.REACT_APP_API_URL}/google`)
 
         window.location.replace(res.data.authorization_url);
     } catch (err) {
@@ -47,7 +47,7 @@ const continueWithGoogle = async () => {
 
 const continueWithFacebook = async () => {
     try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/o/facebook/?redirect_uri=${process.env.REACT_APP_API_URL}/facebook`)
+        const res = await axios.get(`http://localhost:8000/auth/o/facebook/?redirect_uri=${process.env.REACT_APP_API_URL}/facebook`)
 
         window.location.replace(res.data.authorization_url);
     } catch (err) {
