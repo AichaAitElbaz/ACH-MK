@@ -1,32 +1,23 @@
 import React from 'react';
 import styles from "./style";
+import {BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
-import { GenerateForm, Footer, Navbar, Hero, SignIn, AboutUs } from "./components";
-
-
+import { GenerateForm, Footer, Navbar, Hero, SignIn,SignUp, AboutUs } from "./components";
+import { Provider } from 'react-redux';
+import store from './store';
 const App
   = () => (
-    <div className=" w-full overflow-hidden">
-    <div className={`${styles.paddingX} ${styles.flexCenter} `}>
-      <div className={`${styles.boxWidth} `}> 
-        <Navbar/>
-      </div>
-    </div>
-
-    {/* <div className={` ${styles.flexStart}`}>
-      <div className={`${styles.boxWidth}`}>
-        <Hero />
-      </div>
-    </div> */}
-    
-    <div className={`  ${styles.flexCenter}`}>
-      <div className={`${styles.boxWidth} `}>
-        {/* <GenerateForm/> */}
-        <AboutUs/>
-        <Footer/>
-      </div>
-    </div>
-  </div>
+<Provider store={store}>
+  <Router>
+    <Navbar />
+    <Routes>
+      <Route path="/" element={<GenerateForm/>}/>
+      <Route path='/login' element={<SignIn/>}/>
+      <Route path='/signup' element={<SignUp/>}/>
+    </Routes>
+    <Footer /> 
+  </Router>
+</Provider>
     );
   
 
