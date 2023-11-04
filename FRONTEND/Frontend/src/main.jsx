@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import App from './App.jsx'
 import './index.css'
-import AppAdmin from './components/DashboardAdmin/AppAdmin.jsx'
+import AppAdmin from './components/DashboardAdmin/layouts/admin/index.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path='/' element={<React.StrictMode>
         <App />
       </React.StrictMode>}></Route>
-      <Route path='/admin' element={<React.StrictMode>
+      <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
       </React.StrictMode>}></Route>
     </Routes>
