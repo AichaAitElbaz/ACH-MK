@@ -81,7 +81,7 @@ export default function Admin(props) {
               <Routes>
                 {getRoutes(routes)}
 
-                <Route path="/" element={<Navigate to="/default" replace />} />
+                <Route path="/" element={<Navigate to="/admin/default" replace />} />
 
               </Routes>
             </div>
