@@ -18,5 +18,4 @@ export {
   SignUp,
   Activate,
   AboutUs,
-  
 };

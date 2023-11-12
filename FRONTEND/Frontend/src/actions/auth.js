@@ -212,6 +212,7 @@ export const verify = (uid, token) => async dispatch => {
     };
 
     const body = JSON.stringify({ uid, token });
+  
 
     try {
         await axios.post(`http://localhost:8000/auth/users/activation/`, body, config);
