@@ -5,10 +5,12 @@ import styles, { layout } from "../style";
 import { Select, initTE } from "tw-elements";
 import * as XLSX from 'xlsx';
 import { updown, down, logo ,close} from '../assets';
-initTE({ Select });
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 const GenerateForm = () => {
+
     const [selectedFile, setSelectedFile] = useState(null);
+    
     const [graphiqueType, setGraphiqueType] = useState('Barre');
     const [width, setWidth] = useState('400');
     const [height, setHeight] = useState('400');
@@ -30,8 +32,12 @@ const GenerateForm = () => {
     const[yMax,setYMax]= useState('yMax');
 
     const [chartData, setChartData] = useState({ labels: [], series: [] });
+    const [pieChartData, setPieChartData] = useState({ labels: [], series: [] });
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const chartRef = useRef(null);
+    const chartRef1 = useRef(null);
+
     useEffect(() => {
 
       if (chartRef.current && isModalOpen) {
@@ -43,6 +49,29 @@ const GenerateForm = () => {
           link.click();
         });
       }
+        // Analyse le texte pour extraire les données (c'est un exemple simple).
+    // const data = textData.match(/\d+/g).map(Number); // Extrait les nombres du texte.
+
+    // Crée un tableau d'objets pour ApexCharts.
+    // const chartData = {
+    //   series: [
+    //     {
+    //       name: 'Données',
+    //       data: data,
+    //     },
+    //   ],
+    //   options: {
+    //     chart: {
+    //       type: 'bar',
+    //     },
+    //     xaxis: {
+    //       categories: ['Catégorie 1', 'Catégorie 2', 'Catégorie 3', 'Catégorie 4'],
+    //     },
+    //   },
+    // };
+
+    // Met à jour le graphique avec les données.
+    // chartRef.current.updateSeries(chartData.series);
     }, [isModalOpen]);
 
     const handleFileChange = (e) => {
@@ -122,13 +151,41 @@ const GenerateForm = () => {
             const yData = sheetData.map((row) => row[y]);
             const yMin = Math.min(...yData);
             const yMax = Math.max(...yData);
+            let series = [];
+            if (graphiqueType === 'line' || graphiqueType === 'bar'|| graphiqueType==='area' 
+            || graphiqueType==='radar'||graphiqueType==='scatter' || graphiqueType==='heatmap') {
+                series = [{ name: y, data: yData }];
+              } else if (graphiqueType === 'donut' || graphiqueType === 'pie') {
+                series = yData;
+              } else if (graphiqueType === 'boxplot') {
+                // Utilisez les données de xData comme labels des boîtes
+                const labels = xData;
+                
+                // Utilisez les données de yData pour créer les séries de boîtes
+                series = yData.map((data, index) => {
+                  return {
+                    name: labels[index],  // Nommez chaque boîte avec l'étiquette correspondante
+                    data: data,  // Données pour chaque boîte (quartiles Q1, médiane, Q3, min, max)
+                  };
+                });
+            }else if (graphiqueType === 'bubble') {
+                // Utilisez les données de xData, yData et sizeData pour créer les séries de données
+                series = xData.map((x, index) => {
+                  return {
+                    x: x,           // Valeur x
+                    y: yData[index], // Valeur y
+                    z: sizeData[index], // Taille de la bulle
+                  };
+                });
+              };
             const chartData = {
               labels: xData,
-              series: [{ name: y, data: yData ,min: yMin,
-                    max: yMax,}],
+              series: series,
             };
-
+      
+              
             setChartData(chartData);
+            setPieChartData(pieChartData);
             openModal();
           } catch (error) {
             console.error('Error reading file or creating chart:', error);
@@ -148,12 +205,14 @@ const GenerateForm = () => {
         //     max: yMax,
         // },
         colors: [color], 
+
         plotOptions: {
             bar: {
                 horizontal: chartLayout === 'horizontal',
               },
               
           },
+       
        
         };
 
@@ -178,6 +237,32 @@ const GenerateForm = () => {
           </option>
         );
       }
+    // const puppeteer = require('puppeteer');
+
+    const generatePDF = () => {
+        const doc = new jsPDF();
+      
+        // Capture le composant React en tant qu'image avec html2canvas.
+        const chart = document.getElementById('chart');
+        const text = document.getElementById('text');
+      
+        html2canvas(chart).then((canvas) => {
+          const chartImage = canvas.toDataURL('image/png');
+
+
+        doc.addImage(chartImage, 'JPEG', 20, 20, 90, 70);
+
+        doc.text(10, 120, text.textContent);
+
+        doc.save('ACH_MK.pdf');
+        });
+      };
+      
+
+
+      
+      
+      
     return (
         <section id="generate" className='bg-discount-gradient px-16 py-6' >
             <div className="flex flex-row justify-between items-center w-full">
@@ -193,6 +278,7 @@ const GenerateForm = () => {
           type="file"
           accept=".xlsx, .xls"
           onChange={handleFileChange}
+         
         />
       </div>
                 <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1 ">
@@ -202,17 +288,28 @@ const GenerateForm = () => {
       
                         <label className={`${styles.label}`}>Graphique Type</label>
                         <select className={`${styles.select}`} value={graphiqueType} onChange={handleGraphiqueTypeChange}>
-                            <option style={{ display: 'flex', alignItems: 'center' }}> Bar</option>
-                            <option >line</option>
+                            <option style={{ display: 'flex', alignItems: 'center' }}> line</option>
+                            {/* <option >line</option> */}
                             <option >bar</option>
-                            <option >Pie</option>
+                            <option >pie</option>
+                            <option >area</option>
+                            <option >donut</option>
+                            <option >radar</option>
+                            <option >scatter</option>
+                            <option >heatmap</option>
+                            <option >boxplot</option>
+                            <option >bubble</option>
+
+
+
+
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-gris ">
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                         </div>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div class="inline-block relative w-56 mx-2 my-6" id='test'>
                         <label className={`${styles.label}`}>Width</label>
                         <select className={`${styles.select}`} value={width} onChange={handleWidthChange}>
                             <option >400</option>
@@ -492,7 +589,7 @@ const GenerateForm = () => {
                     <button type="button" onClick={generateChart} className={` w-56 py-3 px-6 m-3 font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px] outline-none ${styles}`}>
                         Generate
                     </button>
-                    <Modal
+                    <Modal id='modal'
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Chart Modal"
@@ -524,15 +621,21 @@ const GenerateForm = () => {
       >
         <h2 style={textStyle}>{title}</h2>
         <h4 >{subTitle}</h4>
-        <ReactApexChart ref={chartRef} type={graphiqueType}  width={width} height={height} series={chartData.series} options={options} />
+        <ReactApexChart id='chart' ref={chartRef} type={graphiqueType}  width={width} height={height}         series={chartData.series}
+ options={options} />
         <div id='modalbtns'>
           <button className="modalbtns">Save</button>
-          <button className="modalbtns" >Download</button>
+          <button className="modalbtns" onClick={generatePDF}>Download</button>
           <button className="modalbtns">Interpret</button>
           <button className="modalbtns" onClick={closeModal}>Close</button>
 
         </div>
+        <p id='text'>Donec tincidunt tempor metus. Aenean egestas cursus nulla. Fusce ac metus at enim viverra lacinia. Vestibulum in magna non eros varius suscipit. Nullam cursus nibh. Mauris neque. In nunc quam, convallis vitae, posuere in, consequat sed, wisi. Phasellus bibendum consectetuer massa. Curabitur quis urna. Pellentesque a justo.</p>
       </Modal>
+      <div>
+
+      {/* <ApexCharts ref={chartRef1} options={chartData.options} series={chartData.series} type={chartData.options.chart.type} width="500" /> */}
+    </div>
                 </div>
         </section>
       
