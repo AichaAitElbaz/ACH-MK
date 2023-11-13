@@ -13,15 +13,15 @@ const App
       </div>
     </div>
 
-    {/* <div className={` ${styles.flexStart}`}>
+    <div className={` ${styles.flexStart}`}>
       <div className={`${styles.boxWidth}`}>
         <Hero />
       </div>
-    </div> */}
+    </div>
     
     <div className={`  ${styles.flexCenter}`}>
       <div className={`${styles.boxWidth} `}>
-        <ContactUs/>
+        <GenerateForm/>
         <Footer/>
       </div>
     </div>

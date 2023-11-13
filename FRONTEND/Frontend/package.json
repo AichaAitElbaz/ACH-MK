@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.2",
+    "@fontsource/roboto": "^5.0.8",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-brands-svg-icons": "^6.4.2",
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
@@ -17,7 +20,9 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
     "react-dom": "^18.2.0",
+    "react-github-btn": "^1.4.0",
     "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
