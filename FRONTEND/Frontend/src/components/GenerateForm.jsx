@@ -6,7 +6,7 @@ initTE({ Select });
 
 const GenerateForm = () => {
     return (
-        <section id="generate" className='bg-discount-gradient px-16 py-6' >
+        <section id="generate" className=' px-16 py-6' >
             <div className="flex flex-row justify-between items-center w-full">
                 <h1 className="flex-1 font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris ss:leading-[95px] leading-[45px]">
                     Chart Settings
