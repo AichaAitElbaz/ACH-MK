@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const SignIn = ({ login, isAuthenticated }) => {
   const navigate = useNavigate();
 
@@ -15,24 +17,27 @@ const { email, password } = formData;
 
 const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-const onSubmit = e => {
-
+const onSubmit = async (e) => {
   e.preventDefault();
-  console.log('Submit button clicked');
-  // login(email, password);
+
   try {
-    login(email, password);
-    console.log('success');
-    navigate('/')
-
-  
+    await login(email, password);
+    if (isAuthenticated) {
+      toast.success("Good !", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else {
+      console.log('Login failed');
+      // Display error toast
+      toast.error("Email or password incorrect!", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
   } catch (error) {
-
     console.error('Login error:', error);
-
+    // Display error toast
+    toast.error('An error occurred during login');
   }
-
-
 };
 
 const continueWithGoogle = async () => {
@@ -54,9 +59,7 @@ const continueWithFacebook = async () => {
 
     }
 };
-if (isAuthenticated) {
-  console.log('successful');
-};
+
     return(
 
 
@@ -89,6 +92,7 @@ if (isAuthenticated) {
         <button className="w-full my-5 py-2 bg-[#466474] shadow-lg hover:shadow-[#72898D] text-white" type='submit'>Sign In</button>
         <p className="text-[#BD9333] text-center text-sm">Don't Have an Account? Sign Up</p>
       </form>
+      <ToastContainer />
     </div>
     
     

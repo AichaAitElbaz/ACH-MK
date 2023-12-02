@@ -205,27 +205,40 @@ export const signup = (firstname, lastname, email, password, re_password) => asy
 };
 
 export const verify = (uid, token) => async dispatch => {
+    // Extract CSRF token from cookies
+    const csrfTokenMatch = document.cookie.match(/csrftoken=([^;]+)/);
+    if (!csrfTokenMatch) {
+      console.error('CSRF token not found.');
+      dispatch({
+        type: ACTIVATION_FAIL
+      });
+      return;
+    }
+  
+    const csrfToken = csrfTokenMatch[1];
+  
     const config = {
-        headers: {
-            'Content-Type': 'application/json'
-        }
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken,
+      },
     };
-
+  
     const body = JSON.stringify({ uid, token });
   
-
     try {
-        await axios.post(`http://localhost:8000/auth/users/activation/`, body, config);
-
-        dispatch({
-            type: ACTIVATION_SUCCESS,
-        });
+      await axios.post(`http://localhost:8000/auth/users/activation`, body, config);
+  
+      dispatch({
+        type: ACTIVATION_SUCCESS,
+      });
     } catch (err) {
-        dispatch({
-            type: ACTIVATION_FAIL
-        })
+      dispatch({
+        type: ACTIVATION_FAIL
+      });
     }
-};
+  };
+  
 
 export const reset_password = (email) => async dispatch => {
     const config = {

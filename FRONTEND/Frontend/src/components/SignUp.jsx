@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signup } from '../actions/auth';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = ({ signup, isAuthenticated }) => {
   const navigate = useNavigate();
@@ -25,6 +27,11 @@ const SignUp = ({ signup, isAuthenticated }) => {
           signup(firstname, lastname, email, password, re_password);
           setAccountCreated(true);
       }
+      if (password !== re_password) {
+        toast.error("Passwords Do Not Match !", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+    }
   };
 
   const continueWithGoogle = async () => {
@@ -129,7 +136,9 @@ const SignUp = ({ signup, isAuthenticated }) => {
           Already have an account? <a href="#">Sign In</a>
         </p>
       </form>
+      <ToastContainer />
     </div>
+    
   );
 };
 const mapStateToProps = state => ({

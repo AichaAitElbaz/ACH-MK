@@ -14,6 +14,7 @@ const App
       <Route path="/" element={<GenerateForm/>}/>
       <Route path='/login' element={<SignIn/>}/>
       <Route path='/signup' element={<SignUp/>}/>
+      <Route path='/aboutus' element={<AboutUs/>}/>
       <Route path='/activate/:uid/:token' element={<Activate/>} />
     </Routes>
     <Footer /> 
