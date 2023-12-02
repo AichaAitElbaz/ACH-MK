@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import my_view
+from . import views
 
 urlpatterns = [
-    path('', my_view),
+    path('generate-interpretation/', views.generate_graph_interpretation, name='generate_interpretation'),
+    # Other URL patterns...
 ]
