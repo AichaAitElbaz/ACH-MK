@@ -1,8 +1,11 @@
+
 import React, { useState } from 'react';
+import styles, { layout } from "../style";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -19,7 +22,8 @@ const SignUp = () => {
     e.preventDefault();
     
     if (
-      formData.username === '' ||
+      formData.firstName === '' ||
+      formData.lastName === '' ||
       formData.email === '' ||
       formData.password === '' ||
       formData.confirmPassword === ''
@@ -33,57 +37,78 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-[#72898D]">
-      <form className="max-w-[400px] w-full bg-[#E8E8E8] p-8 rounded-lg">
-        <h2 className="text-4xl text-[#466474] font-bold text-center">SIGN UP</h2>
+    <div className="flex justify-center items-center h-screen bg-discount-gradient">
+      <form className=" max-w-[400px]   bg-white border-2  border-schemes rounded-[10px] py-[20px] px-4 shadow-md">
+        <h2 className="font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris">SIGN UP</h2>
         {error && <p className="text-red-500">{error}</p>}
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Username</label>
+        
+        <div className="flex flex-col  py-2">
+  <div className="flex">
+    <div className=" flex-col mr-2">
+      <label className={`${styles.labelCheck}`}>First Name</label>
+      <input
+        className={`${styles.input}`}
+        type="text"
+        name="firstName"
+        value={formData.firstName}
+        onChange={handleInputChange}
+      />
+    </div>
+    <div className="flex flex-col">
+      <label className={`${styles.labelCheck}`}>Last Name</label>
+      <input
+        className={`${styles.input}`}
+        type="text"
+        name="lastName"
+        value={formData.lastName}
+        onChange={handleInputChange}
+      />
+    </div>
+  </div>
+</div>
+
+
+        <div className="flex flex-col  py-2">
+          <label className={`${styles.labelCheck}`}>Email</label>
           <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Email</label>
-          <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
+            className={`${styles.input}`}
             type="email"
             name="email"
             value={formData.email}
             onChange={handleInputChange}
           />
         </div>
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Password</label>
+        <div className="flex flex-col  py-2">
+          <label className={`${styles.labelCheck}`}>Password</label>
           <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
+            className={`${styles.input}`}
             type="password"
             name="password"
             value={formData.password}
             onChange={handleInputChange}
           />
         </div>
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Confirm Password</label>
+        <div className="flex flex-col  py-2">
+          <label className={`${styles.labelCheck}`}>Confirm Password</label>
           <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
+            className={`${styles.input}`}
             type="password"
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleInputChange}
           />
         </div>
-        <button
-          className="w-full my-5 py-2 bg-[#466474] shadow-lg hover:shadow-[#72898D] text-white"
-          onClick={handleSubmit}
-        >
-          Sign Up
-        </button>
-        <p className="text-[#BD9333] text-center text-sm">
+        
+        <div className="flex items-center justify-center">
+          <button
+            className="w-56 py-3 px-8 m-7  font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px]"
+            onClick={handleSubmit}
+          >
+            Sign Up
+          </button>
+        </div>
+        
+        <p className="font-semibold text-gradient-label dark:text-white text-center text-sm">
           Already have an account? <a href="#">Sign In</a>
         </p>
       </form>

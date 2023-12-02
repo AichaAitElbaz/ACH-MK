@@ -4,6 +4,9 @@ module.exports = {
   mode: "jit",
   theme: {
     extend: {
+      backgroundColor: {
+        'custom-color': '#dff3f0',
+      },
       colors: {
         primary: "#00040f",
         darkBlue: "#31356E",
