@@ -1,5 +1,7 @@
 import React, { useState, useRef,useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
+import Chart from 'react-apexcharts';
+
 import Modal from 'react-modal';
 import styles, { layout } from "../style";
 import { Select, initTE } from "tw-elements";
@@ -197,6 +199,7 @@ const GenerateForm = () => {
    
 
       const options = {
+      
         xaxis: {
           categories: chartData.labels,
         },
@@ -204,18 +207,31 @@ const GenerateForm = () => {
         //     min: yMin,
         //     max: yMax,
         // },
+        theme: {
+            palette: 'palette2'
+          },
         colors: [color], 
-
+        chart: {
+            type: graphiqueType,
+            options3d: {
+              enabled: true,
+              alpha: 15,
+              beta: 15,
+              depth: 50,
+              viewDistance: 25,
+            },
+          },
         plotOptions: {
             bar: {
                 horizontal: chartLayout === 'horizontal',
               },
+             
               
           },
        
        
         };
-
+   
       const openModal = () => {
         setIsModalOpen(true);
       };
@@ -244,7 +260,7 @@ const GenerateForm = () => {
       
         // Capture le composant React en tant qu'image avec html2canvas.
         const chart = document.getElementById('chart');
-        const text = document.getElementById('text');
+        // const text = document.getElementById('text');
       
         html2canvas(chart).then((canvas) => {
           const chartImage = canvas.toDataURL('image/png');
@@ -252,7 +268,7 @@ const GenerateForm = () => {
 
         doc.addImage(chartImage, 'JPEG', 20, 20, 90, 70);
 
-        doc.text(10, 120, text.textContent);
+        // doc.text(10, 120, text.textContent);
 
         doc.save('ACH_MK.pdf');
         });
@@ -264,7 +280,7 @@ const GenerateForm = () => {
       
       
     return (
-        <section id="generate" className='bg-discount-gradient px-16 py-6' >
+        <section id="generate" className=' px-16 py-6' >
             <div className="flex flex-row justify-between items-center w-full">
                 <h1 className="flex-1 font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris ss:leading-[95px] leading-[45px]">
                     Chart Settings
@@ -297,7 +313,7 @@ const GenerateForm = () => {
                             <option >radar</option>
                             <option >scatter</option>
                             <option >heatmap</option>
-                            <option >boxplot</option>
+                            {/* <option >boxplot</option> */}
                             <option >bubble</option>
 
 
@@ -621,7 +637,7 @@ const GenerateForm = () => {
       >
         <h2 style={textStyle}>{title}</h2>
         <h4 >{subTitle}</h4>
-        <ReactApexChart id='chart' ref={chartRef} type={graphiqueType}  width={width} height={height}         series={chartData.series}
+        <Chart id='chart' ref={chartRef} type={graphiqueType}   width={width} height={height}         series={chartData.series}
  options={options} />
         <div id='modalbtns'>
           <button className="modalbtns">Save</button>
@@ -630,11 +646,9 @@ const GenerateForm = () => {
           <button className="modalbtns" onClick={closeModal}>Close</button>
 
         </div>
-        <p id='text'>Donec tincidunt tempor metus. Aenean egestas cursus nulla. Fusce ac metus at enim viverra lacinia. Vestibulum in magna non eros varius suscipit. Nullam cursus nibh. Mauris neque. In nunc quam, convallis vitae, posuere in, consequat sed, wisi. Phasellus bibendum consectetuer massa. Curabitur quis urna. Pellentesque a justo.</p>
       </Modal>
       <div>
 
-      {/* <ApexCharts ref={chartRef1} options={chartData.options} series={chartData.series} type={chartData.options.chart.type} width="500" /> */}
     </div>
                 </div>
         </section>
