@@ -199,10 +199,12 @@ export const signup = (firstname, lastname, email, password, re_password) => asy
         });
     } catch (err) {
         dispatch({
-            type: SIGNUP_FAIL
-        })
+            type: SIGNUP_FAIL,
+            payload: err.response.data  // Include the error response data in the payload
+        });
     }
 };
+
 
 export const verify = (uid, token) => async dispatch => {
     // Extract CSRF token from cookies
