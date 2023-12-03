@@ -20,7 +20,7 @@ const App
     
     <div className={`  ${styles.flexCenter}`}>
       <div className={`${styles.boxWidth} `}>
-        <GenerateForm/>
+        {/* <GenerateForm/> */}
         <Footer/>
       </div>
     </div>
