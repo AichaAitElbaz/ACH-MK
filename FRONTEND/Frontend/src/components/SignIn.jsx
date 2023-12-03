@@ -85,17 +85,16 @@ const continueWithFacebook = async () => {
            minLength='6'
            required />
         </div>
-        <div className="flex justify-between text-[#BD9333] py-2">
-          <p className="flex items-center text-sm"><input className="mr-2" type="checkbox" /> Remember Me</p>
-          <p className="text-sm">Forgot Password?</p>
+        <div className="flex  items-center justify-center ">
+        <button className="w-56 py-3 px-8 m-7  font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px]">Sign In</button>
         </div>
         <button className="w-full my-5 py-2 bg-[#466474] shadow-lg hover:shadow-[#72898D] text-white" type='submit'>Sign In</button>
         <p className="text-[#BD9333] text-center text-sm">Don't Have an Account? Sign Up</p>
       </form>
       <ToastContainer />
     </div>
-    
-    
+     
+      
   );
     };
   

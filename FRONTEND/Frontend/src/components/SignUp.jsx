@@ -1,17 +1,13 @@
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { signup } from '../actions/auth';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import styles, { layout } from "../style";
 
 const SignUp = ({ signup, isAuthenticated }) => {
   const navigate = useNavigate();
   const [accountCreated, setAccountCreated] = useState(false);
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     re_password: ''
@@ -20,81 +16,60 @@ const SignUp = ({ signup, isAuthenticated }) => {
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = e => {
-      e.preventDefault();
-
-      if (password === re_password) {
-          signup(firstname, lastname, email, password, re_password);
-          setAccountCreated(true);
-      }
-      if (password !== re_password) {
-        toast.error("Passwords Do Not Match !", {
-          position: toast.POSITION.TOP_CENTER,
-        });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (
+      formData.firstName === '' ||
+      formData.lastName === '' ||
+      formData.email === '' ||
+      formData.password === '' ||
+      formData.confirmPassword === ''
+    ) {
+      setError('Please fill out all fields.');
+    } else if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match.');
+    } else {
+      setError('');
     }
   };
 
-  const continueWithGoogle = async () => {
-      try {
-          const res = await axios.get(`http://localhost:8000/auth/o/google-oauth2/?redirect_uri=http://localhost:8000/google`)
-
-          window.location.replace(res.data.authorization_url);
-      } catch (err) {
-
-      }
-  };
-
-  const continueWithFacebook = async () => {
-      try {
-          const res = await axios.get(`http://localhost:8000/auth/o/facebook/?redirect_uri=http://localhost:8000/facebook`)
-
-          window.location.replace(res.data.authorization_url);
-      } catch (err) {
-
-      }
-  };
-
-  if (isAuthenticated) {
-      navigate('/')
-  }
-  if (accountCreated) {
-      navigate('/login')
-  }
-
-
-
   return (
-    <div className="flex justify-center items-center h-screen bg-[#72898D]">
-      <form className="max-w-[400px] w-full bg-[#E8E8E8] p-8 rounded-lg"
-      onSubmit={e => onSubmit(e)}>
-        <h2 className="text-4xl text-[#466474] font-bold text-center">SIGN UP</h2>
-       <p className="text-red-500"></p>
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Firstname</label>
+    <div className="flex justify-center items-center h-screen bg-discount-gradient">
+      <form className=" max-w-[400px]   bg-white border-2  border-schemes rounded-[10px] py-[20px] px-4 shadow-md">
+        <h2 className="font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris">SIGN UP</h2>
+        {error && <p className="text-red-500">{error}</p>}
+        
+        <div className="flex flex-col  py-2">
+  <div className="flex">
+    <div className=" flex-col mr-2">
+      <label className={`${styles.labelCheck}`}>First Name</label>
+      <input
+        className={`${styles.input}`}
+        type="text"
+        name="firstName"
+        value={formData.firstName}
+        onChange={handleInputChange}
+      />
+    </div>
+    <div className="flex flex-col">
+      <label className={`${styles.labelCheck}`}>Last Name</label>
+      <input
+        className={`${styles.input}`}
+        type="text"
+        name="lastName"
+        value={formData.lastName}
+        onChange={handleInputChange}
+      />
+    </div>
+  </div>
+</div>
+
+
+        <div className="flex flex-col  py-2">
+          <label className={`${styles.labelCheck}`}>Email</label>
           <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
-            type="text"
-            name="firstname"
-            value={firstname}
-            onChange={e => onChange(e)}
-            required
-          />
-        </div>
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Lastname</label>
-          <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
-            type="text"
-            name="lastname"
-            value={lastname}
-            onChange={e => onChange(e)}
-            required
-          />
-        </div>
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Email</label>
-          <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
+            className={`${styles.input}`}
             type="email"
             name="email"
             value={email}
@@ -102,10 +77,10 @@ const SignUp = ({ signup, isAuthenticated }) => {
             required
           />
         </div>
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Password</label>
+        <div className="flex flex-col  py-2">
+          <label className={`${styles.labelCheck}`}>Password</label>
           <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
+            className={`${styles.input}`}
             type="password"
             name="password"
             value={password}
@@ -114,10 +89,10 @@ const SignUp = ({ signup, isAuthenticated }) => {
             required
           />
         </div>
-        <div className="flex flex-col text-[#2A3240] py-2">
-          <label>Confirm Password</label>
+        <div className="flex flex-col  py-2">
+          <label className={`${styles.labelCheck}`}>Confirm Password</label>
           <input
-            className="rounded-lg bg-[#F6F6F6] mt-2 p-2 focus:outline-none"
+            className={`${styles.input}`}
             type="password"
             name="re_password"
             value={re_password}
@@ -126,14 +101,18 @@ const SignUp = ({ signup, isAuthenticated }) => {
             required
           />
         </div>
-        <button
-          className="w-full my-5 py-2 bg-[#466474] shadow-lg hover:shadow-[#72898D] text-white"
-          type='submit'
-        >
-          Sign Up
-        </button>
-        <p className="text-[#BD9333] text-center text-sm">
-          Already have an account? <a href="#">Sign In</a>
+        
+        <div className="flex items-center justify-center">
+          <button
+            className="w-56 py-3 px-8 m-7  font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px]"
+            onClick={handleSubmit}
+          >
+            Sign Up
+          </button>
+        </div>
+        
+        <p className="font-semibold text-gradient-label dark:text-white text-center text-sm">
+          Already have an account? <a href="/login">Sign In</a>
         </p>
       </form>
       <ToastContainer />
