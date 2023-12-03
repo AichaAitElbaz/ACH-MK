@@ -1,3 +1,6 @@
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {
     LOGIN_SUCCESS,
     LOGIN_FAIL,
@@ -37,6 +40,7 @@ export default function(state = initialState, action) {
                 isAuthenticated: true
             }
         case LOGIN_SUCCESS:
+            toast.success("Authentication successful");
         case GOOGLE_AUTH_SUCCESS:
         case FACEBOOK_AUTH_SUCCESS:
             localStorage.setItem('access', payload.access);
@@ -48,6 +52,7 @@ export default function(state = initialState, action) {
                 refresh: payload.refresh
             }
         case SIGNUP_SUCCESS:
+            toast.success("Sign up Success");
             return {
                 ...state,
                 isAuthenticated: false
@@ -70,7 +75,10 @@ export default function(state = initialState, action) {
         case GOOGLE_AUTH_FAIL:
         case FACEBOOK_AUTH_FAIL:
         case LOGIN_FAIL:
+            toast.error('Incorrect Credentials');
         case SIGNUP_FAIL:
+            toast.error('Error');
+
         case LOGOUT:
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
