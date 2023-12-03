@@ -109,7 +109,7 @@ const SignUp = () => {
         </div>
         
         <p className="font-semibold text-gradient-label dark:text-white text-center text-sm">
-          Already have an account? <a href="#">Sign In</a>
+          Already have an account? <a href="/login">Sign In</a>
         </p>
       </form>
     </div>

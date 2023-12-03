@@ -26,7 +26,7 @@ const SignIn = () => {
         <div className="flex  items-center justify-center ">
         <button className="w-56 py-3 px-8 m-7  font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px]">Sign In</button>
         </div>
-        <p className="font-semibold text-gradient-label dark:text-white text-center text-sm"><a href="#">Don't Have an Account? Sign Up</a></p>
+        <p className="font-semibold text-gradient-label dark:text-white text-center text-sm"><a href="/register">Don't Have an Account? Sign Up</a></p>
       </form>
     </div>
      

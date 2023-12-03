@@ -280,14 +280,14 @@ const GenerateForm = () => {
       
       
     return (
-        <section id="generate" className=' px-16 py-6' >
+        <section id="generate" className=' px-16 py-6 ' >
             <div className="flex flex-row justify-between items-center w-full">
                 <h1 className="flex-1 font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris ss:leading-[95px] leading-[45px]">
                     Chart Settings
                 </h1>
 
             </div>
-            <div className='bg-white border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md '>
+            <div className=' border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md bg-white'>
 
             <div className="text-center" style={{ paddingTop: "20px" }}>
         <input
@@ -297,9 +297,9 @@ const GenerateForm = () => {
          
         />
       </div>
-                <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1 ">
+                <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1  ">
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div class="inline-block relative w-56 mx-2 my-6 bg-[] ">
       
       
                         <label className={`${styles.label}`}>Graphique Type</label>

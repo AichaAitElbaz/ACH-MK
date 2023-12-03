@@ -10,6 +10,7 @@ const customStyles = {
   content: {
     top: '50%',
     left: '50%',
+    backgroundColor:'#FCFEFE',
     transform: 'translate(-50%, -50%)',
     width: '100%', // Largeur du modal
     height: '100%', // Hauteur maximale du modal
@@ -54,9 +55,10 @@ const GetStarted = () => {
         onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Generate Form Modal"
+        
       >
         <GenerateForm />
-        <div className='flex justify-center'>
+        <div className='flex justify-center '>
         <button onClick={closeModal} className={` w-56 py-3 px-6 m-3 font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px] outline-none ${styles}`}>Close Modal</button>
         </div>
       </Modal>

@@ -1,15 +1,15 @@
 import { useState } from "react";
 import styles from "../style";
-
+import { Link } from "react-router-dom";
 import { close, logo, menu } from "../assets";
 import { navLinks } from "../constants";
 
 const Navbar = () => {
   const [active, setActive] = useState("Home");
   const [toggle, setToggle] = useState(false);
-
+ 
   return (
-    <nav className="w-full flex py-4 justify-between items-center navbar border-b-2 ">
+    <nav className=" flex py-4 justify-between items-center navbar border-b-2 ">
       <img src={logo} alt="hoobank" className="w-[124px] h-[48px]" />
 
       <ul className="list-none sm:flex hidden justify-end items-center flex-1">
@@ -20,13 +20,17 @@ const Navbar = () => {
               } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
             onClick={() => setActive(nav.title)}
           >
-            <a href={`#${nav.id}`}>{nav.title}</a>
+            <a href={`${nav.link}`}>{nav.title}</a>
           </li>
 
+
         ))}
-        <button type="button" className={`py-2.5 px-9 mx-6 font-poppins font-medium text-[16px] text-snow bg-blue-gradient hover:text-gris rounded-[6px] hover:bg-blue-gradientHover routline-none ${styles} shadow` }>
+                <Link to="/login">
+        <button type="button" className={`py-2.5 px-9 mx-6 font-poppins font-medium text-[16px] text-snow bg-blue-gradient hover:text-gris rounded-[6px] hover:bg-blue-gradientHover routline-none ${styles} shadow` }
+        >
           Login
         </button>
+        </Link>
       </ul>
 
       <div className="sm:hidden flex flex-1 justify-end items-center">
@@ -49,7 +53,7 @@ const Navbar = () => {
                   } ${index === navLinks.length - 1 ? "mb-0" : "mb-4"}`}
                 onClick={() => setActive(nav.title)}
               >
-                <a href={`#${nav.id}`}>{nav.title}</a>
+                <a href={`${nav.link}`}>{nav.title}</a>
               </li>
             ))
             
