@@ -9,7 +9,7 @@ import {
 import { MdCheckCircle, MdCancel, MdOutlineError } from "react-icons/md";
 import { useMemo } from "react";
 import Progress from "../../../../components/progress";
-const ComplexTable = (props) => {
+const ProjectTable = (props) => {
   const { columnsData, tableData } = props;
 
   const columns = useMemo(() => columnsData, [columnsData]);
@@ -36,15 +36,15 @@ const ComplexTable = (props) => {
   initialState.pageSize = 5;
 
   return (
-    <Card extra={"w-full h-full px-6 pb-6 sm:overflow-x-auto"}>
-      <div class="relative flex items-center justify-between pt-4">
+    <Card extra={"w-full h-full p-4 sm:overflow-x-auto"}>
+      <div class="relative flex items-center justify-between">
         <div class="text-xl font-bold text-navy-700 dark:text-white">
-          Complex Table
+          Projects
         </div>
         <CardMenu />
       </div>
 
-      <div class="mt-8 overflow-x-scroll xl:overflow-hidden">
+      <div class="mt-8 h-full overflow-x-scroll xl:overflow-hidden">
         <table {...getTableProps()} className="w-full">
           <thead>
             {headerGroups.map((headerGroup, index) => (
@@ -100,7 +100,7 @@ const ComplexTable = (props) => {
                         </p>
                       );
                     } else if (cell.column.Header === "PROGRESS") {
-                      data = <Progress width="w-[108px]" value={cell.value} />;
+                      data = <Progress width="w-[68px]" value={cell.value} />;
                     }
                     return (
                       <td
@@ -122,4 +122,4 @@ const ComplexTable = (props) => {
   );
 };
 
-export default ComplexTable;
+export default ProjectTable;

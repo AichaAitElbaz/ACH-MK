@@ -13,7 +13,7 @@ import {
 } from "react-table";
 import Progress from "../../../../components/progress";
 
-const DevelopmentTable = (props) => {
+const UsersTable = (props) => {
   const { columnsData, tableData } = props;
 
   const columns = useMemo(() => columnsData, [columnsData]);
@@ -43,7 +43,7 @@ const DevelopmentTable = (props) => {
     <Card extra={"w-full h-full p-4"}>
       <div class="relative flex items-center justify-between">
         <div class="text-xl font-bold text-navy-700 dark:text-white">
-          Development Table
+          Users Table
         </div>
         <CardMenu />
       </div>
@@ -157,4 +157,4 @@ const DevelopmentTable = (props) => {
   );
 };
 
-export default DevelopmentTable;
+export default UsersTable;

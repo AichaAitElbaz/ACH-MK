@@ -3,6 +3,8 @@ import React from "react";
 import Checkbox from "../../../../components/checkbox";
 import { MdDragIndicator, MdCheckCircle } from "react-icons/md";
 import Card from "../../../../components/card";
+import { MdCreate } from "react-icons/md";
+
 
 const TaskCard = () => {
   return (
@@ -14,73 +16,42 @@ const TaskCard = () => {
             <MdCheckCircle className="h-6 w-6 text-brand-500 dark:text-white" />
           </div>
           <h4 className="ml-4 text-xl font-bold text-navy-700 dark:text-white">
-            Tasks
+            Free Uses
           </h4>
         </div>
-        <CardMenu />
+       
       </div>
 
       {/* task content */}
 
       <div className="h-full w-full">
-        <div className="mt-5 flex items-center justify-between p-2">
-          <div className="flex items-center justify-center gap-2">
-            <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Landing Page Design
-            </p>
-          </div>
-          <div>
-            <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
-          </div>
-        </div>
 
-        <div className="mt-2 flex items-center justify-between p-2">
-          <div className="flex items-center justify-center gap-2">
-            <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Mobile App Design
-            </p>
-          </div>
-          <div>
-            <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
-          </div>
-        </div>
+      <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center ">
+        <p className="font-dm text-sm font-medium text-gray-600">Set monthly limit for free graph generation to manage usage.</p>
+      </div>
 
-        <div className="mt-2 flex items-center justify-between p-2">
-          <div className="flex items-center justify-center gap-2">
-            <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Dashboard Builder
-            </p>
-          </div>
-          <div>
-            <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
-          </div>
-        </div>
+    <Card className="justify-evenly m-4 bg-lightPrimary-100 flex ">
+      <div className="h-160 w-16 ml-4 flex  flex-col justify-center rounded-lg bg-white p-3 dark:bg-navy-700">
+        <p className=" justify-items-center font-dm text-lg font-medium text-gray-600">4</p>
+        <hr />
+      
+      </div>
+      <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center ">
+        <div className="rounded-full bg-white p-3 dark:bg-navy-700">
+          <span className="flex items-center text-brand-500 dark:text-white">
+            <button>
+            <MdCreate className="h-7 w-7" />
 
-        <div className="mt-2 flex items-center justify-between p-2">
-          <div className="flex items-center justify-center gap-2">
-            <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Landing Page Design
-            </p>
-          </div>
-          <div>
-            <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
-          </div>
+            </button>
+          </span>
         </div>
+      </div>
 
-        <div className="mt-2 flex items-center justify-between p-2">
-          <div className="flex items-center justify-center gap-2">
-            <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Dashboard Builder
-            </p>
-          </div>
-          <div>
-            <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
-          </div>
+     
+    </Card>
+
+        <div >
+
         </div>
       </div>
     </Card>
