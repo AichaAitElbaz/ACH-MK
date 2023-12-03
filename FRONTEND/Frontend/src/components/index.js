@@ -7,6 +7,7 @@ import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import AboutUs from "./AboutUs";
 import Activate from "./Activate";
+import ContactUs from "./ContactUs";
 
 export {
   Navbar,
@@ -18,4 +19,5 @@ export {
   SignUp,
   Activate,
   AboutUs,
+  ContactUs
 };

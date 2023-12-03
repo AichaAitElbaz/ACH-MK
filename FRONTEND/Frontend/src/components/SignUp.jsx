@@ -1,20 +1,21 @@
-
 import React, { useState } from 'react';
 import styles, { layout } from "../style";
 
-const SignUp = ({ signup, isAuthenticated }) => {
-  const navigate = useNavigate();
-  const [accountCreated, setAccountCreated] = useState(false);
+const SignUp = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    re_password: ''
+    confirmPassword: '',
   });
-  const { firstname, lastname, email, password, re_password } = formData;
 
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [error, setError] = useState('');
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,9 +73,8 @@ const SignUp = ({ signup, isAuthenticated }) => {
             className={`${styles.input}`}
             type="email"
             name="email"
-            value={email}
-            onChange={e => onChange(e)}
-            required
+            value={formData.email}
+            onChange={handleInputChange}
           />
         </div>
         <div className="flex flex-col  py-2">
@@ -83,10 +83,8 @@ const SignUp = ({ signup, isAuthenticated }) => {
             className={`${styles.input}`}
             type="password"
             name="password"
-            value={password}
-            onChange={e => onChange(e)}
-            minLength='8'
-            required
+            value={formData.password}
+            onChange={handleInputChange}
           />
         </div>
         <div className="flex flex-col  py-2">
@@ -94,11 +92,9 @@ const SignUp = ({ signup, isAuthenticated }) => {
           <input
             className={`${styles.input}`}
             type="password"
-            name="re_password"
-            value={re_password}
-            onChange={e => onChange(e)}
-            minLength='8'
-            required
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
           />
         </div>
         
@@ -115,14 +111,8 @@ const SignUp = ({ signup, isAuthenticated }) => {
           Already have an account? <a href="/login">Sign In</a>
         </p>
       </form>
-      <ToastContainer />
     </div>
-    
   );
 };
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
-});
 
-
-export default connect(mapStateToProps, { signup })(SignUp);
+export default SignUp;

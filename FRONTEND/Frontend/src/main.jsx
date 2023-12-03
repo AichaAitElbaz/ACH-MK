@@ -11,8 +11,11 @@ import SignIn from './components/SignIn.jsx'
 import SignUp from './components/SignUp.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
+import { Provider } from 'react-redux';
+import store from './store';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
+  <Provider store={store}> 
   <BrowserRouter>
     <Routes>
       <Route path='/' element={<React.StrictMode>
@@ -48,5 +51,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </React.StrictMode>}></Route>
     </Routes>
   </BrowserRouter>
+  </Provider>
 
 )
