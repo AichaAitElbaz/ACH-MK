@@ -1,7 +1,8 @@
-import React from 'react'
+import React from 'react';
 import styles from "./style";
 
-import { GenerateForm, Footer, Navbar,  Hero } from "./components";
+import { GenerateForm, Footer, Navbar, Hero, SignIn, AboutUs, ContactUs } from "./components";
+
 
 const App
   = () => (
