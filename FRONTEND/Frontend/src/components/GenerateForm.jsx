@@ -5,6 +5,9 @@ import { updown, down, logo ,close} from '../assets';
 initTE({ Select });
 
 const GenerateForm = () => {
+     // Access the email from localStorage
+     const userEmail = localStorage.getItem('userEmail');
+     console.log('User Email:', userEmail);
     return (
         <section id="generate" className='bg-discount-gradient px-16 py-6' >
             <div className="flex flex-row justify-between items-center w-full">

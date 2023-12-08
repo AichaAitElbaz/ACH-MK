@@ -23,6 +23,7 @@ const onSubmit = e => {
   try {
     login(email, password);
     console.log('success');
+    localStorage.setItem('userEmail', email);
     navigate('/')
 
   
