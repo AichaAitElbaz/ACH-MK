@@ -13,6 +13,8 @@ import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import { Provider } from 'react-redux';
 import store from './store';
+import ProtectedRoutes from './PrivateRoute.jsx';
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}> 
@@ -41,14 +43,20 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path='/register' element={<React.StrictMode>
         <SignUp />
       </React.StrictMode>}></Route>
-    
-      <Route path='/client/*' element={<React.StrictMode>
+      <Route element={<ProtectedRoutes/>}>
+      <Route path='/client/*' element={
+      <React.StrictMode>
         <AppClient/>
-      </React.StrictMode>}></Route>
+      </React.StrictMode>}>
+        
+      </Route>
 
       <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
-      </React.StrictMode>}></Route>
+      </React.StrictMode>}>
+      </Route>
+      </Route>
+
     </Routes>
   </BrowserRouter>
   </Provider>

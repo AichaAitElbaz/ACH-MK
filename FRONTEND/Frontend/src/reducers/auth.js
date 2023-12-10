@@ -33,6 +33,7 @@ const initialState = {
 export default function(state = initialState, action) {
     const { type, payload } = action;
 
+
     switch(type) {
         case AUTHENTICATED_SUCCESS:
             return {
@@ -41,6 +42,16 @@ export default function(state = initialState, action) {
             }
         case LOGIN_SUCCESS:
             toast.success("Authentication successful");
+            localStorage.setItem('access', payload.access);
+            localStorage.setItem('refresh', payload.refresh);
+            return {
+                ...state,
+                isAuthenticated: true,
+                access: payload.access,
+                refresh: payload.refresh
+            }
+
+
         case GOOGLE_AUTH_SUCCESS:
         case FACEBOOK_AUTH_SUCCESS:
             localStorage.setItem('access', payload.access);

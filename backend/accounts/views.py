@@ -1,11 +1,17 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .models import Graph
+from .models import Guest
+from django.contrib.auth.decorators import login_required
+
 
 User = get_user_model()
 
 
-from .models import Guest
 
 def my_view(request):
     user_ip = request.META.get('REMOTE_ADDR')
@@ -20,8 +26,6 @@ def my_view(request):
     return render(request, 'template.html', {'user_ip': user_ip})
 
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt  # Nécessaire si vous n'avez pas de gestion appropriée des CORS dans votre application
 def add_graph_backend(request):
@@ -76,8 +80,7 @@ def count_users(request):
 
     return JsonResponse({'error': 'Invalid request method'})
 
-from django.http import JsonResponse
-from .models import Graph
+
 
 def count_total_graphs(request):
     if request.method == 'GET':
@@ -102,3 +105,19 @@ def display_all_users(request):
         })
 
     return JsonResponse({'users': user_data})
+
+@login_required
+def count_user_graphs(request):
+    if request.method == 'GET':
+        user_graphs_count = Graph.objects.filter(user=request.user).count()
+        return JsonResponse({'user_graphs_count': user_graphs_count})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+@login_required
+def count_user_files(request):
+    if request.method == 'GET':
+        user_files_count = Graph.objects.filter(user=request.user).count()
+        return JsonResponse({'user_files_count': user_files_count})
+
+    return JsonResponse({'error': 'Invalid request method'})

@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { IoBagHandle, IoPieChart, IoPeople, IoCart } from 'react-icons/io5'
+import { useDispatch, useSelector } from 'react-redux';
+import { load_user_graph_number, load_user_file_number } from '../../../actions/user';
 
 export default function DashboardStatsGrid() {
+	const dispatch = useDispatch();
+    const userGraphsCount = useSelector(state => state.userGraphsCount); 
+	const userFilesCount = useSelector(state => state.userFilesCount)
+
+    useEffect(() => {
+        dispatch(load_user_graph_number());
+		dispatch(load_user_file_number());
+    }, [dispatch]);
 	return (
 		<div className="flex gap-4">
 			<BoxWrapper>
@@ -11,8 +21,7 @@ export default function DashboardStatsGrid() {
 				<div className="pl-4">
 					<span className="text-sm text-gray-500 font-light">Total Graphs</span>
 					<div className="flex items-center">
-						<strong className="text-xl text-gray-700 font-semibold">54232</strong>
-						<span className="text-sm text-green-500 pl-2">+343</span>
+						<strong className="text-xl text-gray-700 font-semibold">{userGraphsCount}</strong>
 					</div>
 				</div>
 			</BoxWrapper>
@@ -23,8 +32,7 @@ export default function DashboardStatsGrid() {
 				<div className="pl-4">
 					<span className="text-sm text-gray-500 font-light">Total Files</span>
 					<div className="flex items-center">
-						<strong className="text-xl text-gray-700 font-semibold">3423</strong>
-						<span className="text-sm text-green-500 pl-2">-343</span>
+						<strong className="text-xl text-gray-700 font-semibold">{userFilesCount}</strong>
 					</div>
 				</div>
 			</BoxWrapper>
