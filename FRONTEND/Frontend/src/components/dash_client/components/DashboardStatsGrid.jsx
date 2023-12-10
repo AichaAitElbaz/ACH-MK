@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { IoBagHandle, IoPieChart, IoPeople, IoCart } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux';
 import { load_user_graph_number, load_user_file_number } from '../../../actions/user';
+import { load_user } from '../../../actions/auth';
+
 
 export default function DashboardStatsGrid() {
 	const dispatch = useDispatch();
@@ -9,6 +11,7 @@ export default function DashboardStatsGrid() {
 	const userFilesCount = useSelector(state => state.userFilesCount)
 
     useEffect(() => {
+		dispatch(load_user());
         dispatch(load_user_graph_number());
 		dispatch(load_user_file_number());
     }, [dispatch]);

@@ -170,6 +170,7 @@ export const login = (email, password) => async dispatch => {
             type: LOGIN_SUCCESS,
             payload: res.data
         });
+        localStorage.setItem('access', res.data.access);
 
         dispatch(load_user());
 

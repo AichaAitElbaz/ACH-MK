@@ -69,8 +69,11 @@ export default function(state = initialState, action) {
                 isAuthenticated: false
             }
         case USER_LOADED_SUCCESS:
+            console.log('User data loaded successfully:', payload);
+
             return {
                 ...state,
+                
                 user: payload
             }
         case AUTHENTICATED_FAIL:
@@ -79,6 +82,8 @@ export default function(state = initialState, action) {
                 isAuthenticated: false
             }
         case USER_LOADED_FAIL:
+            console.log('User dloaded successfully:', payload);
+
             return {
                 ...state,
                 user: null

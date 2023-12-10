@@ -16,6 +16,7 @@ import store from './store';
 import ProtectedRoutes from './PrivateRoute.jsx';
 
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}> 
   <BrowserRouter>
@@ -50,12 +51,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </React.StrictMode>}>
         
       </Route>
+      </Route>
 
+      <Route element={<ProtectedRoutes/>}>
       <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
       </React.StrictMode>}>
       </Route>
-      </Route>
+      /</Route>
 
     </Routes>
   </BrowserRouter>
