@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Graph
 from .models import Guest
+from .models import UserAccount
 from django.contrib.auth.decorators import login_required
 
 
