@@ -5,17 +5,16 @@ import { useSelector } from 'react-redux';
 
 const useAuth = () => {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-    const role = useSelector(state => state.auth.role);
-    return { isAuthenticated, role };
+    return isAuthenticated;
 };
 
 
 
 
 const ProtectedRoutes = () => {
-    const { isAuthenticated, role } = useAuth();
+    const isAuth = useAuth();
 
-return isAuthenticated && role === 'user' ? <Outlet /> : <SignIn />;
+    return isAuth ? <Outlet /> : <SignIn />;
 };
 
 export default ProtectedRoutes;

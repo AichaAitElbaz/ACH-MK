@@ -53,12 +53,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </Route>
       </Route>
 
-      <Route element={<ProtectedRoutes/>}>
       <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
       </React.StrictMode>}>
       </Route>
-      /</Route>
 
     </Routes>
   </BrowserRouter>
