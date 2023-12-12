@@ -356,24 +356,39 @@ const GenerateForm = () => {
       }
     // const puppeteer = require('puppeteer');
 
+ 
     const generatePDF = () => {
-        const doc = new jsPDF();
+      const doc = new jsPDF();
       
-        // Capture le composant React en tant qu'image avec html2canvas.
-        const chart = document.getElementById('chart');
-        // const text = document.getElementById('text');
-      
-        html2canvas(chart).then((canvas) => {
-          const chartImage = canvas.toDataURL('image/png');
-
-
-        doc.addImage(chartImage, 'JPEG', 20, 20, 90, 70);
-
-        // doc.text(10, 120, text.textContent);
-
+      // Capture the React component as an image with html2canvas.
+      const chart = document.getElementById('chart');
+      const interpretation = document.getElementById('interpretation').innerText; // Get text from the 'interpretation' element
+    
+      html2canvas(chart).then((canvas) => {
+        const chartImage = canvas.toDataURL('image/png');
+    
+        const imageWidth = 90; // Adjust as needed
+        const imageHeight = 70; // Adjust as needed
+        const imageX = (doc.internal.pageSize.width - imageWidth) / 2; // Center horizontally
+        const imageY = (doc.internal.pageSize.height - imageHeight) / 2; // Center vertically
+    
+        doc.addImage(chartImage, 'JPEG', imageX, imageY, imageWidth, imageHeight);
+    
+        // Reduce the font size for the text
+        const fontSize = 12; // Adjust as needed
+        doc.setFontSize(fontSize);
+    
+        // Calculate text width and position it in the center
+        const textWidth = doc.getStringUnitWidth(interpretation) * fontSize / doc.internal.scaleFactor;
+        const textX = (doc.internal.pageSize.width - textWidth) / 2; // Center horizontally
+    
+        // Add the content from the 'interpretation' element to the PDF
+        doc.text(textX, imageY + imageHeight + 10, interpretation); // Positioned below the image
+    
         doc.save('ACH_MK.pdf');
-        });
-      };
+      });
+    };
+    
       
 
 
@@ -786,7 +801,9 @@ const GenerateForm = () => {
       {interpretation && (
         <div>
           <h3>Graph Interpretation:</h3>
-          <p>{interpretation}</p>
+          {/* <p contentEditable="true" id='interpretation'>{interpretation}</p> */}
+          <p contentEditable="true" id='interpretation'>{interpretation}</p>
+
         </div>
       )}
     </div>
