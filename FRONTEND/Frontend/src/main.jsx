@@ -14,6 +14,7 @@ import Footer from './components/Footer.jsx'
 import { Provider } from 'react-redux';
 import store from './store';
 import ProtectedRoutes from './PrivateRoute.jsx';
+import ProtectedAdminRoutes from './PrivateAdminRoute.jsx'
 
 
 
@@ -52,11 +53,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         
       </Route>
       </Route>
-
+      <Route element={<ProtectedAdminRoutes/>}>
       <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
       </React.StrictMode>}>
       </Route>
+      /</Route>
 
     </Routes>
   </BrowserRouter>

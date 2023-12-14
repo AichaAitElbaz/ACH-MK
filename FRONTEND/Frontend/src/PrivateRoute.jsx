@@ -5,7 +5,9 @@ import { useSelector } from 'react-redux';
 
 const useAuth = () => {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-    const role = useSelector(state => state.auth.role);
+    const role = useSelector(state => state.auth.user.role);
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('role:', role);
     return { isAuthenticated, role };
 };
 
