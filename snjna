@@ -1,0 +1,505 @@
+[33mcommit ac1ade2de9e9baf4f7e812ec71600b8b041bef7f[m[33m ([m[1;36mHEAD -> [m[1;32mmina_dev[m[33m)[m
+Merge: f0c35d6 4369fc9
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Tue Dec 12 21:29:55 2023 +0100
+
+    Merge branch 'master' of https://github.com/AichaAitElbaz/ACH-MK into mina_dev
+
+[33mcommit 4369fc981bc90938a5489b9a73505571ba8bdc6f[m
+Author: Axel <aichaelbaz191220@gmail.com>
+Date:   Tue Dec 12 00:34:05 2023 +0100
+
+    aicha
+
+[33mcommit f0c35d60c58db12fe0bedc53fd8d9efcb740a05f[m[33m ([m[1;31morigin/mina_dev[m[33m)[m
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Sat Dec 9 22:17:17 2023 +0100
+
+    liaison dashbord admin
+
+[33mcommit 3c24eedfcc8caaa19d88fd1d6c2060f682151c3c[m
+Merge: dfefd63 24cd3cf
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Fri Dec 8 21:43:03 2023 +0100
+
+    rien
+
+[33mcommit dfefd63cc22256b7d60f69543abcf10b5d3778dc[m
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Fri Dec 8 21:37:30 2023 +0100
+
+    my version
+
+[33mcommit 24cd3cf48e540131bbf3d7eb8898d4ed6960b000[m
+Merge: 15e42fe 8d28dad
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 21:06:58 2023 +0100
+
+    Merge branch 'chaima_dev'
+
+[33mcommit 8d28dad8709ac2864ac411caeb2554592bd561a2[m[33m ([m[1;31morigin/chaima_dev[m[33m)[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 21:05:46 2023 +0100
+
+    linking login/register with backend for app v1.1
+
+[33mcommit 15e42feedbaa531e574865eceab6aad7954824e3[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 21:02:27 2023 +0100
+
+    Linking login/register with backend
+
+[33mcommit 13340e77a414eb4b62eb4d3a8c9075a23d3b0374[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 16:44:42 2023 +0100
+
+    Version 1.1 of app
+
+[33mcommit 67eda55886745232548be180800233ae7fdf6a98[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 16:36:24 2023 +0100
+
+    Version 1 of app
+
+[33mcommit 190b04d7fb8ed225c247368518d57e3e99be6406[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 15:31:46 2023 +0100
+
+    test
+
+[33mcommit b7c6c66cdb89fab6e127167b25145a193cf57c00[m
+Merge: e5feefc c88b3b2
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 14:58:43 2023 +0100
+
+    Merge remote-tracking branch 'origin/kaoutar_dev' into chaima_dev
+
+[33mcommit e5feefcf51f7ce6fc9fde340995f36939d851aba[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 14:52:00 2023 +0100
+
+    changes
+
+[33mcommit c88b3b212efab0560bbd3b8bb15e6a142cdfdca3[m[33m ([m[1;31morigin/kaoutar_dev[m[33m)[m
+Merge: 9498f02 030adce
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Dec 3 13:51:41 2023 +0100
+
+    FRONTEND-VARSION1
+
+[33mcommit 814383afd16ca2726e27a34305b5de6415666241[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Dec 3 12:16:39 2023 +0100
+
+    Adding graph functions
+
+[33mcommit 9498f0274f16527bb6dca280496c9df8d9d149cf[m
+Merge: 5226c11 18224ab
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Dec 3 10:22:07 2023 +0100
+
+    Merge changes from aicha_dev into kaoutar_dev
+
+[33mcommit 5226c115f34d11cdd3755966f77c70273dd32200[m
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Dec 3 09:55:09 2023 +0100
+
+    sign-in
+
+[33mcommit d5be572d493c24e9eb132d8070e5b980446d1971[m
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Dec 3 00:10:41 2023 +0100
+
+    all files
+
+[33mcommit 138d1472e51a960b34df258c490e6c8e5ebf4aac[m
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Dec 3 00:06:51 2023 +0100
+
+    last version
+
+[33mcommit 175c3de55306212b0f03505f5a54b64a2cdda9fe[m
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Dec 3 00:03:06 2023 +0100
+
+    last version
+
+[33mcommit 9baa07a73a21d63a7c01cfa8f35380c442392b34[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sat Dec 2 22:49:26 2023 +0100
+
+    Modifying gitignore
+
+[33mcommit 87478e53e2402bd9016beef589e17e316ef22888[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sat Dec 2 22:44:36 2023 +0100
+
+    Modifying gitignore
+
+[33mcommit c3872ed9ef1ee5102f125b94713c2ab70855cf2b[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sat Dec 2 22:09:37 2023 +0100
+
+    Handling errors Login/Signup
+
+[33mcommit 18224ab7ff24d31e2f694396d1c3b2bd6d5a94ab[m
+Author: Axel <aichaelbaz191220@gmail.com>
+Date:   Sat Dec 2 13:32:43 2023 +0100
+
+    satrt interpretation
+
+[33mcommit 22691ccb320ff30e7338de89aeeb4dc150263e6e[m
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Tue Nov 28 15:33:09 2023 +0100
+
+    fixing problem
+
+[33mcommit 030adcedbc11c5e06e13c0b4c91800e05a68131c[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Tue Nov 28 01:03:29 2023 +0100
+
+    hiba 11/28
+
+[33mcommit 857aa1ba9594f4efe7127fd8ddc09d7695682d8a[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Mon Nov 13 12:00:52 2023 +0100
+
+    11/13 dashboardClient
+
+[33mcommit e637b67c3760ad54c59d0539e3b44010669c707a[m
+Author: Axel <aichaelbaz191220@gmail.com>
+Date:   Mon Nov 13 11:52:37 2023 +0100
+
+    final graph generation'
+
+[33mcommit 8f9fa37e1013765c5fe01af036b67466e9215e6d[m
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Sun Nov 12 23:30:13 2023 +0100
+
+    chaima's version
+
+[33mcommit b95d24a180514f606c52bb36fde73e44924f8bce[m
+Merge: 5e5bc67 91bce62
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Sun Nov 12 23:27:05 2023 +0100
+
+    nothing
+
+[33mcommit 5e5bc67de87fc73a9166ff437f401290631865e8[m
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Sun Nov 12 23:18:49 2023 +0100
+
+    run front from back
+
+[33mcommit 91bce626210dac5c235fbc8ac0e6c5f98bad1359[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Nov 12 23:09:22 2023 +0100
+
+    production back/front
+
+[33mcommit 4306e88e79c43a0343b1e2c09890cb1a156d9d0c[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Sun Nov 12 00:27:36 2023 +0100
+
+    hiba 11/12
+
+[33mcommit 93320290dc8a85a410c9672d8432d56dd64827fe[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Sat Nov 4 17:57:42 2023 +0100
+
+    hiba admin 11/4/2023
+
+[33mcommit e247d1763f70e5c517141f06c784032493ddaf97[m
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Mon Oct 30 14:02:17 2023 +0100
+
+    message
+
+[33mcommit 11e81bb3af1a11944c75f90d59791139d3dd6694[m
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Sun Oct 29 21:24:06 2023 +0100
+
+    adding changes
+
+[33mcommit 478c30354f7fef8d04621d662de14d2de83dc5d3[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 29 18:42:55 2023 +0100
+
+    linking sign_up component with backend
+
+[33mcommit da2f5d487e5ea7fc02f96b191317a66a9a5cb8ea[m[33m ([m[1;32mchaima_dev[m[33m)[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 29 10:45:47 2023 +0100
+
+    linking back and front sign_in
+
+[33mcommit d6379b640d920f7aa2ac3f59c329d5908131c9fb[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Mon Oct 23 17:49:40 2023 +0100
+
+    adding front files
+
+[33mcommit 937fda5f7d04ec391e577018ada2fd3d3710f44b[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Mon Oct 23 17:40:39 2023 +0100
+
+    pulling front
+
+[33mcommit 98c79c30a030806f886a26431893e0d2745e2f57[m
+Merge: e0a13cc 58c0fee
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Mon Oct 23 17:34:07 2023 +0100
+
+    Merge branch 'kaoutar_dev' of https://github.com/AichaAitElbaz/ACH-MK into chaima_dev
+
+[33mcommit e0a13cc91fddf6f1e5ec6ed1f71803290417bf59[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Mon Oct 23 17:18:30 2023 +0100
+
+    error front
+
+[33mcommit 39a5454963a2ea86a90b603894affef43ff8ac14[m
+Merge: 5fa06d6 cdc3f59
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Mon Oct 23 17:11:09 2023 +0100
+
+    Merge branch 'aicha_dev' of https://github.com/AichaAitElbaz/ACH-MK into chaima_dev
+
+[33mcommit 5fa06d6cdecd32a0f1282c8cd9e8155c518b153a[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Mon Oct 23 17:03:33 2023 +0100
+
+    fixing conflicts
+
+[33mcommit 0850de0cbd8e8e8a3bb447f624e218397ff3e70b[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Thu Oct 19 20:48:48 2023 +0100
+
+    modifying admin adding dispaly list for graphs
+
+[33mcommit 9d0d4125598c7e10e18a3ca6d9ab94e1ab365fbc[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Mon Oct 23 16:16:38 2023 +0100
+
+    liason sign_in
+
+[33mcommit 1279969505a7dc75cca6a9195a25086810d3a580[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Sun Oct 22 20:30:29 2023 +0100
+
+    DasboardAdmin Setup
+
+[33mcommit 58c0fee0ec769bd9b02b088bcb61f7fc81597284[m
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Oct 22 19:49:29 2023 +0100
+
+    ContactUs
+
+[33mcommit f596b5710493d0d5c121a3b750661855a4a63e20[m
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Oct 22 18:49:26 2023 +0100
+
+    AboutUS
+
+[33mcommit fd3353ec6183948ef35860e9ad0fc778fe6314f7[m
+Merge: 35a87f4 d463be3
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 22 17:19:32 2023 +0100
+
+    Merge remote-tracking branch 'origin/kaoutar_dev' into chaima_dev
+
+[33mcommit 35a87f4bbeb779e45dc34a56d9e39c79380497ef[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 22 17:08:33 2023 +0100
+
+    adding dependecies
+
+[33mcommit d463be3b78c12b29ac889e767fb85d902dcc2a24[m
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Sun Oct 22 16:54:38 2023 +0100
+
+    SignUP&SignIn
+
+[33mcommit cdc3f59ed3416999619aa4ec9d060745e1bdcc5d[m
+Author: Axel <aichaelbaz191220@gmail.com>
+Date:   Sun Oct 22 00:17:13 2023 +0100
+
+    Graph generation 2
+
+[33mcommit e4b90c413e2f99834353b207775725cf59a50bb9[m
+Author: Axel <aichaelbaz191220@gmail.com>
+Date:   Sat Oct 21 23:49:16 2023 +0100
+
+    Graph generation
+
+[33mcommit cb035d500a8142d5c068cedd5d18ce2625f1af84[m
+Merge: 5020a5d 17268c3
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Fri Oct 20 13:33:57 2023 +0100
+
+    resolve conflicts
+
+[33mcommit 17268c347d738b327076721288adaf688e5531ed[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Thu Oct 19 22:15:03 2023 +0100
+
+    modifying frontend structure
+
+[33mcommit 998763a501b7c6ecacf53a88533cd371d4609152[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Thu Oct 19 21:37:01 2023 +0100
+
+    deleting duplicate
+
+[33mcommit 28202fa46008c6ac28fbc3b91388e08d041e7a64[m
+Author: Kaoutar <kaoutarmghar@gmail.com>
+Date:   Thu Oct 19 21:29:27 2023 +0100
+
+    Interface
+
+[33mcommit 56f2c2abd0e0a7f66d7e1ca1f669cf2659d6dbdb[m
+Merge: 4f0cdd6 c9f77a8
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Thu Oct 19 20:56:03 2023 +0100
+
+    Merge branch 'master' of https://github.com/AichaAitElbaz/ACH-MK
+
+[33mcommit 4f0cdd6c5094be9285bebd625896ddc6a9573d01[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Thu Oct 19 20:55:20 2023 +0100
+
+    adding frontend first version
+
+[33mcommit 5020a5dda80948354726d37428bd66e3fe27cdc9[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Thu Oct 19 20:48:48 2023 +0100
+
+    modifying admin adding dispaly list for graphs
+
+[33mcommit c9f77a885f71a99e74bfeea5cf69bbfb63b876e1[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Wed Oct 18 22:03:26 2023 +0100
+
+    remove FRONTEND
+
+[33mcommit 785fcbd05ea628ff10eefefa61b08d0b681beeee[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Wed Oct 18 21:59:26 2023 +0100
+
+    Added FRONTEND directoryuu
+
+[33mcommit eecdcb9341182418bce57cdf48e43454676e1d2e[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Wed Oct 18 21:37:43 2023 +0100
+
+    testremove
+
+[33mcommit 20177d27429534b649a25c1a458aa69392763ce0[m
+Author: HibaEssamih <essamih.hiba@gmail.com>
+Date:   Wed Oct 18 21:23:20 2023 +0100
+
+    frontend added
+
+[33mcommit cbe4e106796fb4bf5decb6980cd60c6ead07e14b[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 12:46:12 2023 +0100
+
+    updating admin panel
+
+[33mcommit 0816be917ada67ff949ae85988d7a3ae3c796feb[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 12:42:02 2023 +0100
+
+    auth and graph
+
+[33mcommit d55544f60abf37fa505dea541442bd20e57b37ca[m
+Merge: 305528e e46c881
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 12:39:05 2023 +0100
+
+    Merge branch 'chaima_dev'
+
+[33mcommit 305528e7cde3b95eb8e58e70882b5acf248ac46e[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 12:18:58 2023 +0100
+
+    updating gitignore
+
+[33mcommit e46c8816952ad74adf9481309b4c3f9a6dbc7d9d[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 12:17:18 2023 +0100
+
+    updating gitignore
+
+[33mcommit efd206e0863068741dc833a0dd54282bc76e7125[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 12:08:02 2023 +0100
+
+    updating gitignore
+
+[33mcommit 36fc13002f4ac5b6b2df7ed78a3cd63061b94124[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 11:58:59 2023 +0100
+
+    updating gitignore to merge
+
+[33mcommit e69a784b3f92163eeefe1c981aca359125be5dfa[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 11:47:20 2023 +0100
+
+    Réorganiser les fichiers dans le sous-répertoire backend
+
+[33mcommit 0876c9139850e41bda163720e39f557e529d9ecd[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 11:45:05 2023 +0100
+
+    Réorganiser les fichiers dans le sous-répertoire backend
+
+[33mcommit 9e5f370a45a2b4589c8aef6546c85302bf0c59b8[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Tue Oct 17 11:28:54 2023 +0100
+
+    adding graph model
+
+[33mcommit 552c5f8f225bdb6d9ef9ba4bcaf2edbdb16aef5d[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 15 19:57:21 2023 +0100
+
+    merge master with chaima_dev
+
+[33mcommit 2bd22e6215359a61b1cb5103c96d5189daf23e59[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 15 19:52:15 2023 +0100
+
+    merged master into chaima_dev
+
+[33mcommit dde6d06a58ee0d8808cc0ff531c8662b44467ec8[m
+Merge: 04f96b1 174cf14
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 15 19:50:32 2023 +0100
+
+    Merge branch 'master' of https://github.com/AichaAitElbaz/ACH-MK into chaima_dev
+
+[33mcommit 174cf14fb0ebc44a3c6e8344bbe90ff1367e508b[m
+Author: idahmed mina <mina.idahmed@gmail.com>
+Date:   Sun Oct 15 19:31:02 2023 +0200
+
+    adress ip
+
+[33mcommit 04f96b17f125ec973883c4bd7f57de6e4fff0498[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 15 13:29:00 2023 +0100
+
+    adding stmp config
+
+[33mcommit 6ee4c9ba37f3c319632eb161ec52dc60f220a984[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Sun Oct 15 12:20:15 2023 +0100
+
+    displaying users on admin panel
+
+[33mcommit b28a9eb3c1e42eda1a9956badcc791c52b104b4f[m
+Author: Chaima Ben Jaafar <chaima.benjaafar.chaima@gmail.com>
+Date:   Fri Oct 13 18:58:51 2023 +0100
+
+    initial Auth
