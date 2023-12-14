@@ -8,7 +8,7 @@ import Projects from './pages/Projects.jsx';
 function App() {
   return (
     <Routes>
-      <Route path="/client" element={<Layout />}>
+      <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
       </Route>

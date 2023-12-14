@@ -21,10 +21,8 @@ const SignIn = ({ login, isAuthenticated}) => {
 const onSubmit = async (e) => {
   e.preventDefault();
   await login(email, password);
-  if (isAuthenticated) {
-    // Navigate to the dashboard or any other route you want
-    navigate('/client');
-  }
+  console.log(state.auth.role);
+
 
 };
 
