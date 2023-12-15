@@ -16,7 +16,7 @@ class UserAccountManager(BaseUserManager):
     
     def create_superuser(self, email, password=None, **kwargs):
         user = self.model(email=email, role='admin', **kwargs)
-
+        user.set_password(password)
         user.is_staff = True
         user.is_superuser = True
         user.save(using= self._db)
