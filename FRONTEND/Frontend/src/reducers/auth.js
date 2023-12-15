@@ -27,7 +27,8 @@ const initialState = {
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
-    user: null
+    user:null,
+    role:null,
 };
 
 export default function(state = initialState, action) {
@@ -38,20 +39,20 @@ export default function(state = initialState, action) {
         case AUTHENTICATED_SUCCESS:
             return {
                 ...state,
-                isAuthenticated: true
+                isAuthenticated: true,
             }
         case LOGIN_SUCCESS:
             toast.success("Authentication successful");
+            console.log(payload);
             localStorage.setItem('access', payload.access);
             localStorage.setItem('refresh', payload.refresh);
             return {
-                ...state,
-                isAuthenticated: true,
-                access: payload.access,
-                refresh: payload.refresh
-            }
-
-
+                    ...state,
+                    isAuthenticated: true,
+                    access: payload.access,
+                    role : payload.role,
+                    refresh: payload.refresh
+                }
         case GOOGLE_AUTH_SUCCESS:
         case FACEBOOK_AUTH_SUCCESS:
             localStorage.setItem('access', payload.access);
@@ -73,8 +74,8 @@ export default function(state = initialState, action) {
 
             return {
                 ...state,
-                
-                user: payload
+                user: payload,
+                role :payload.role,
             }
         case AUTHENTICATED_FAIL:
             return {
@@ -103,7 +104,9 @@ export default function(state = initialState, action) {
                 access: null,
                 refresh: null,
                 isAuthenticated: false,
-                user: null
+                user: null,
+                role:null
+
             }
         case PASSWORD_RESET_SUCCESS:
         case PASSWORD_RESET_FAIL:

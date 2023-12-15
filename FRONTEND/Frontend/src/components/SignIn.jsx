@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import styles, { layout } from "../style";
 
 
-const SignIn = ({ login, isAuthenticated}) => {
+const SignIn = ({ login, isAuthenticated, role}) => {
   
   
   const navigate = useNavigate();
@@ -18,13 +18,18 @@ const SignIn = ({ login, isAuthenticated}) => {
   });
   const { email, password } = formData;
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-const onSubmit = async (e) => {
-  e.preventDefault();
-  await login(email, password);
-  console.log(state.auth.role);
-
-
-};
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    await login(email, password);
+  
+    if (isAuthenticated && role === 'user') {
+      navigate("/client");
+    } else if (isAuthenticated && role === 'admin') {
+      navigate("/admin");
+    } else {
+      toast.error('Error');
+    }
+  };
 
   
   
@@ -88,7 +93,8 @@ const onSubmit = async (e) => {
   
 
   const mapStateToProps = state => ({
-      isAuthenticated: state.auth.isAuthenticated
+      isAuthenticated: state.auth.isAuthenticated,
+      role : state.auth.role,
       
   });
   
