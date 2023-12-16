@@ -8,23 +8,13 @@ from .models import Graph
 from .models import Guest
 from .models import UserAccount
 from django.contrib.auth.decorators import login_required
+import ipaddress
 
 
 User = get_user_model()
 
 
 
-def my_view(request):
-    user_ip = request.META.get('REMOTE_ADDR')
-
-    # Vérifiez si l'adresse IP existe déjà dans la base de données
-    guest, created = Guest.objects.get_or_create(ip_address=user_ip)
-
-    # Incrémentez le compteur de visites
-    guest.visit_counter += 1
-    guest.save()
-
-    return render(request, 'template.html', {'user_ip': user_ip})
 
 
 
@@ -122,3 +112,34 @@ def count_user_files(request):
         return JsonResponse({'user_files_count': user_files_count})
 
     return JsonResponse({'error': 'Invalid request method'})
+
+def get_guest_visits(request):
+    if request.method == 'GET':
+        user_ip = request.META.get('REMOTE_ADDR')
+
+        # Vérifiez si l'adresse IP existe déjà dans la base de données
+        guest, created = Guest.objects.get_or_create(ip_address=user_ip)
+        
+
+        # Incrémentez le compteur de visites
+        visits = guest.visit_counter + 1
+        guest.save()
+
+        # Return the guest visit information as JSON
+        return JsonResponse({'user_ip': user_ip, 'total_visits': visits})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+@csrf_exempt
+def update_visitor(request):
+    user_ip = request.META.get('REMOTE_ADDR')
+
+    # Vérifiez si l'adresse IP existe déjà dans la base de données
+    guest, created = Guest.objects.get_or_create(ip_address=user_ip)
+
+    # Incrémentez le compteur de visites
+    guest.visit_counter += 1
+    guest.save()
+
+    response_data = {'success': True, 'ip_address': guest.ip_address, 'visit_counter': guest.visit_counter}
+    return JsonResponse(response_data)

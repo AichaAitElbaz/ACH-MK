@@ -59,7 +59,7 @@ class Graph(models.Model):
   
 
 class Guest(models.Model):
-    ip_address = models.CharField(max_length=15)  # Utilisez CharField pour stocker des adresses IP
+    ip_address = models.GenericIPAddressField(unique=True) # Utilisez CharField pour stocker des adresses IP
     visit_counter = models.PositiveIntegerField(default=0)
 
     def __str__(self):
