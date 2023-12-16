@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect,useSelector } from 'react-redux';
 import { login } from '../actions/auth';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -8,27 +8,34 @@ import 'react-toastify/dist/ReactToastify.css';
 import styles, { layout } from "../style";
 
 
-const SignIn = ({ login, isAuthenticated, role}) => {
-  
+const SignIn = ({ login, isAuthenticated}) => {
   
   const navigate = useNavigate();
+  const userRole = useSelector(state => state.auth.role);
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [loading, setLoading] = useState(false);
+
   const { email, password } = formData;
+  useEffect(() => {
+    if (userRole) {
+      setLoading(false); 
+      if (userRole === 'admin') {
+        navigate('/admin');
+      } else if (userRole === 'user') {
+        navigate('/client');
+      }
+    }
+  }, [userRole, navigate]);
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     await login(email, password);
-  
-    if (isAuthenticated && role === 'user') {
-      navigate("/client");
-    } else if (isAuthenticated && role === 'admin') {
-      navigate("/admin");
-    } else {
-      toast.error('Error');
-    }
+
   };
 
   
@@ -94,7 +101,6 @@ const SignIn = ({ login, isAuthenticated, role}) => {
 
   const mapStateToProps = state => ({
       isAuthenticated: state.auth.isAuthenticated,
-      role : state.auth.role,
       
   });
   

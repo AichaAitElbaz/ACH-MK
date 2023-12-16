@@ -1,7 +1,7 @@
 import React from "react";
 import Dropdown from "../dropdown/index";
 import { FiAlignJustify } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import navbarimage from "../../Data/img/robot.png";
 import { BsArrowBarUp } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
@@ -11,10 +11,21 @@ import {
   IoMdInformationCircleOutline,
 } from "react-icons/io";
 import avatar from "../../Data/img/avatar4.png";
+import { logout } from '../../../../actions/auth';
+import { useDispatch } from 'react-redux';
+
 
 const Navbar = (props) => {
   const { onOpenSidenav, brandText } = props;
   const [darkmode, setDarkmode] = React.useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login')
+  };
 
   return (
     <nav className="sticky top-4 z-40 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
@@ -211,6 +222,7 @@ const Navbar = (props) => {
                 <a
                   href=" "
                   className="mt-3 text-sm font-medium text-red-500 hover:text-red-500"
+                  onClick={handleLogout}
                 >
                   Log Out
                 </a>

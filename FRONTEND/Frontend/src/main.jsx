@@ -45,30 +45,30 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path='/register' element={<React.StrictMode>
         <SignUp />
       </React.StrictMode>}></Route>
-      {/* <Route element={<ProtectedRoutes/>}>
+      <Route element={<ProtectedRoutes/>}>
       <Route path='/client/*' element={
       <React.StrictMode>
         <AppClient/>
       </React.StrictMode>}>
         
       </Route>
+      </Route>
+      {/* <Route path='/client/*' element={
+      <React.StrictMode>
+        <AppClient/>
+      </React.StrictMode>}>
+        
       </Route> */}
-      <Route path='/client/*' element={
-      <React.StrictMode>
-        <AppClient/>
-      </React.StrictMode>}>
-        
-      </Route>
-      {/* <Route element={<ProtectedAdminRoutes/>}>
+      <Route element={<ProtectedAdminRoutes/>}>
       <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
       </React.StrictMode>}>
       </Route>
-      /</Route> */}
-      <Route path='/admin/*' element={<React.StrictMode>
-        <AppAdmin />
-      </React.StrictMode>}>
       /</Route>
+      {/* <Route path='/admin/*' element={<React.StrictMode>
+        <AppAdmin />
+      </React.StrictMode>}>
+      /</Route> */}
 
     </Routes>
   </BrowserRouter>

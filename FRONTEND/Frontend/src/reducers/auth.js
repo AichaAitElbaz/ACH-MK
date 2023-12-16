@@ -71,7 +71,8 @@ export default function(state = initialState, action) {
             }
         case USER_LOADED_SUCCESS:
             console.log('User data loaded successfully:', payload);
-
+            localStorage.setItem('access', payload.access);
+            localStorage.setItem('refresh', payload.refresh);
             return {
                 ...state,
                 user: payload,
@@ -93,6 +94,7 @@ export default function(state = initialState, action) {
         case FACEBOOK_AUTH_FAIL:
         case LOGIN_FAIL:
             toast.error('Incorrect Credentials');
+            
         case SIGNUP_FAIL:
             toast.error('Error');
 
