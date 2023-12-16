@@ -1,0 +1,4 @@
+.venv/
+/backend/accounts/migrations/
+/backend/accounts/__pycache__/
+
