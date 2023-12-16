@@ -11,6 +11,7 @@ import SignIn from './components/SignIn.jsx'
 import SignUp from './components/SignUp.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
+import NotFound from './components/NotFound.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -41,11 +42,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     
       <Route path='/client/*' element={<React.StrictMode>
         <AppClient/>
-      </React.StrictMode>}></Route>
+      </React.StrictMode>}>  
+      </Route>
 
       <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
-      </React.StrictMode>}></Route>
+      </React.StrictMode>}>
+      </Route>
+      <Route path="*" element={<React.StrictMode><NotFound /></React.StrictMode>} />
     </Routes>
   </BrowserRouter>
 
