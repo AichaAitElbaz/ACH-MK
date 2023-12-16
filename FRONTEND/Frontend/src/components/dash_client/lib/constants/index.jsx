@@ -36,15 +36,15 @@ export const DASHBOARD_SIDEBAR_LINKS = [
 	// 	icon: <HiOutlineUsers />
 	// },
 	{
-		key: 'transactions',
-		label: 'Transactions',
-		path: '/client/transactions',
+		key: 'YourProfile',
+		label: 'Your Profile',
+		path: '/client/profile',
 		icon: <HiOutlineDocumentText />
 	},
 	{
 		key: 'messages',
 		label: 'Messages',
-		path: '/client/messages',
+		path: '/client/message',
 		icon: <HiOutlineAnnotation />
 	},
 	{
