@@ -2,6 +2,7 @@ from django.urls import path
 from .views import my_view
 from .views import add_graph_backend, get_user_graphs_backend, delete_graph_backend,count_users,count_total_graphs,display_all_users
 from .views import count_user_graphs, count_user_files
+from .views import my_view,generate_interpretation
 
 urlpatterns = [
     path('', my_view),
@@ -13,6 +14,7 @@ urlpatterns = [
     path('api/users/', display_all_users, name='all_users_api'),
     path('api/count_user_graphs/', count_user_graphs, name='count_user_graphs'),
     path('api/count_user_files/', count_user_files, name='count_user_files'),
+    path('generate_interpretation/', generate_interpretation, name='generate_interpretation'),
 
 
 ]

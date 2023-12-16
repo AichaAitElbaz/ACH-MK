@@ -9,6 +9,12 @@ from .models import Guest
 from .models import UserAccount
 from django.contrib.auth.decorators import login_required
 
+import openai
+from .models import Guest
+import os
+import json
+
+
 
 User = get_user_model()
 
@@ -28,11 +34,13 @@ def my_view(request):
 
 
 
-@csrf_exempt  # Nécessaire si vous n'avez pas de gestion appropriée des CORS dans votre application
+ # Nécessaire si vous n'avez pas de gestion appropriée des CORS dans votre application
+@csrf_exempt
 def add_graph_backend(request):
     if request.method == 'POST':
         source_file = request.FILES['source']
         graph_file = request.FILES['graph']
+
         interpretation_file = request.FILES['interpretation']
         
         user_id = request.POST.get('userid')
@@ -51,12 +59,14 @@ def add_graph_backend(request):
     # Si la méthode n'est pas POST, vous pouvez également retourner une réponse appropriée
     return JsonResponse({'error': 'Invalid request method'})
 
-@csrf_exempt
+
+from django.core.serializers.json import DjangoJSONEncoder
+
 def get_user_graphs_backend(request, user_id):
     if request.method == 'GET':
-        user_graphs = Graph.objects.filter(user_id=user_id).values()
-        # Retournez une réponse JSON ou tout autre format approprié pour votre application
-        return JsonResponse({'user_graphs': list(user_graphs)})
+        user_graphs = list(Graph.objects.filter(user_id=user_id).values())
+        # Use DjangoJSONEncoder to serialize the datetime field in the QuerySet
+        return JsonResponse({'user_graphs': user_graphs}, encoder=DjangoJSONEncoder)
 
     return JsonResponse({'error': 'Invalid request method'})
 
@@ -122,3 +132,46 @@ def count_user_files(request):
         return JsonResponse({'user_files_count': user_files_count})
 
     return JsonResponse({'error': 'Invalid request method'})
+
+
+@csrf_exempt
+def generate_interpretation(request):
+    print("ggggggggggggggggg")
+    if request.method == 'POST':
+        #openai.api_key = os.getenv('API_KEY')  # Retrieve API key from environment variable
+        print(openai.api_key)
+        openai.api_key = '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'
+        try:
+            # Get the JSON data from the request body
+            data = json.loads(request.body)
+            chart_content = data.get('chart_content', {})  # Fetch chart content sent from frontend
+
+            if chart_content:
+                chart_type = chart_content.get('chartType', '')
+                # Assuming 'chart_content' is the data you want to generate an interpretation for
+                interpretation = generate_chart_interpretation(chart_content)
+
+                return JsonResponse({'interpretation': interpretation})  # Return interpretation as JSON response
+
+            else:
+                return JsonResponse({'error': 'Empty chart_content'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+def generate_chart_interpretation(chart_data):
+    # Prepare the data for the GPT API request
+    prompt = f"Interpret the implications and trends present in a {chart_data.get('chartType')} chart with data: {chart_data.get('chartData')}"
+
+    # Send the prompt to the GPT API
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=200
+    )
+
+    # Extract the generated interpretation from the API response
+    interpretation = response.choices[0].text.strip()
+    return interpretation

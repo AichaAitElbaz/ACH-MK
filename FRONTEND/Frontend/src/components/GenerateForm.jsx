@@ -1,15 +1,20 @@
 import React, { useState, useRef,useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import Chart from 'react-apexcharts';
-
+import axios from 'axios';
 import Modal from 'react-modal';
 import styles, { layout } from "../style";
 import { Select, initTE } from "tw-elements";
+import * as XLSX from 'xlsx';
 import { updown, down, logo ,close} from '../assets';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-const GenerateForm = () => {
+import { useSelector } from 'react-redux';
+import { toBase64Image } from 'chartjs-to-image';
 
+const GenerateForm = () => {
+    const [csvContent, setCSVContent] = useState('');
+    const [interpretation, setInterpretation] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     
     const [graphiqueType, setGraphiqueType] = useState('Barre');
@@ -22,6 +27,7 @@ const GenerateForm = () => {
     const [fontFamily, setFontFamily] = useState('textStyle');
     const [fontStyle, setFontStyle] = useState('textStyle');
     const [textColor, setTextColor] = useState('textColor');
+    const [filename, setFilename] = useState('');
 
     const fontSizeOptions = [];
     const [chartLayout, setChartLayout] = useState('vertical'); // Initialisez la disposition à "vertical"
@@ -29,6 +35,9 @@ const GenerateForm = () => {
     
     const [x, setX] = useState('x');
     const [y, setY] = useState('y');
+    const [yData, setYData] = useState('yData');
+    const [xData, setXData] = useState('xData');
+
     const[yMin,setYMin]= useState('yMin');
     const[yMax,setYMax]= useState('yMax');
 
@@ -38,8 +47,114 @@ const GenerateForm = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const chartRef = useRef(null);
     const chartRef1 = useRef(null);
+    const [showManualInput, setShowManualInput] = useState(false);
 
-    useEffect(() => {
+
+    const [interpretationFile, setInterpretationFile] = useState(null);
+  
+    const user = useSelector(state => state.auth.user);
+    const [userId, setUserId] = React.useState(null);
+
+
+
+    const handleeSubmit = async () => {
+      // Utilize useSelector to retrieve the user from the Redux state
+      setUserId(user.id);
+      const formData = new FormData();
+      const chart = document.getElementById('chart');
+    
+      // Convert the chart to a PDF document using jsPDF
+      const doc = new jsPDF();
+     html2canvas(chart).then(async (canvas) => {
+        const chartImage = canvas.toDataURL('image/png');
+        doc.addImage(chartImage, 'JPEG', 10, 10, 90, 70);
+  // Save the PDF document content as a Blob
+        const pdfBlob = doc.output('blob');
+         // Create a File object from the Blob
+        const pdfFile = new File([pdfBlob],  `${filename}_chart.pdf`, { type: 'application/pdf' });
+        // Append the PDF file to the FormData for the 'graph' key
+        formData.append('graph', pdfFile);
+
+
+        const doc2 = new jsPDF();
+        const fontSize = 12; // Ajustez selon vos besoins
+        doc2.setFontSize(fontSize);
+        const textX = 10; // Ajustez selon vos besoins
+        
+        // Ajouter la chaîne interpretation à doc2
+        const interpretationText = interpretation || 'Aucune interprétation disponible';
+        
+        // Positionner le texte au centre horizontalement
+        const textWidth = doc2.getStringUnitWidth(interpretationText) * fontSize / doc2.internal.scaleFactor;
+        const textXCentered = (doc2.internal.pageSize.width - textWidth) / 2;
+        
+        // Ajouter le contenu de la chaîne interpretation à doc2
+        doc2.text(textXCentered, 10, interpretationText); // 10 est la coordonnée y, ajustez selon vos besoins
+        
+        // Générer le fichier PDF
+        const pdfBlob2 = doc2.output('blob');
+        const pdfFile2 = new File([pdfBlob2],  `${filename}_interpretation.pdf`, { type: 'application/pdf' });
+        formData.append('interpretation', pdfFile2); 
+
+
+
+      
+        
+    
+        if (selectedFile) {
+          // Si selectedFile existe, l'ajouter à formData
+          formData.append('source', selectedFile);
+        } else {
+       
+         
+          const doc = new jsPDF();
+
+          // Ajouter le contenu du graphique dans le PDF
+          doc.text(10, 10, 'Labels: ' + chartData.labels.join(', ')); // Ajoutez les étiquettes
+          doc.text(10, 20, 'Series: ' + JSON.stringify(chartData.series)); // Ajoutez les séries
+        
+          // Générer le Blob du PDF
+          const pdfBlob3 = doc.output('blob');
+        
+          const pdfFile3 = new File([pdfBlob3], 'DATA.pdf', { type: 'application/pdf' });
+        
+          // Ajouter le Blob du PDF à formData
+          formData.append('source', pdfFile3);
+          
+        }
+     
+        formData.append('userid', user.id);
+    
+        try {
+          const response = await fetch('http://localhost:8000/account/api/add_graph/', {
+            method: 'POST',
+            body: formData,
+          });
+    
+          if (response.ok) {
+            console.log('Graph added successfully');
+            // Add your logic for success here
+          } else {
+            console.error('Failed to add graph');
+            // Add your logic for failure here
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          // Handle the error here
+        }
+      });
+    };
+    
+
+
+
+
+
+
+
+
+
+         useEffect(() => {
 
       if (chartRef.current && isModalOpen) {
         // Le graphique est prêt, capturez l'image
@@ -50,33 +165,19 @@ const GenerateForm = () => {
           link.click();
         });
       }
-        // Analyse le texte pour extraire les données (c'est un exemple simple).
-    // const data = textData.match(/\d+/g).map(Number); // Extrait les nombres du texte.
-
-    // Crée un tableau d'objets pour ApexCharts.
-    // const chartData = {
-    //   series: [
-    //     {
-    //       name: 'Données',
-    //       data: data,
-    //     },
-    //   ],
-    //   options: {
-    //     chart: {
-    //       type: 'bar',
-    //     },
-    //     xaxis: {
-    //       categories: ['Catégorie 1', 'Catégorie 2', 'Catégorie 3', 'Catégorie 4'],
-    //     },
-    //   },
-    // };
-
-    // Met à jour le graphique avec les données.
-    // chartRef.current.updateSeries(chartData.series);
+      
     }, [isModalOpen]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
+        if (file) {
+          // Obtenez le nom du fichier
+          const fileName = file.name;
+          setFilename(fileName);
+         
+      
+          
+        }
         setSelectedFile(file);
       };
     const handleGraphiqueTypeChange = (event) => {
@@ -120,23 +221,31 @@ const GenerateForm = () => {
     const handleYChange = (event) => {
         setY(event.target.value);
     }; 
+    const handleYDataChange = (event) => {
+      setYData(event.target.value);
+  }; 
+  const handleXDataChange = (event) => {
+    setXData(event.target.value);
+}; 
     const handleYMinChange = (event) => {
         setYMin(event.target.value);
     }; 
     const handleYMaxChange = (event) => {
         setYMax(event.target.value);
     }; 
-    const generateChart = () => {
+    const isValidData = (data) => {
+      return data.every((value) => value !== null && value !== undefined);
+    };
+
+    const generateChartFromFile= () => {
         if (!selectedFile) {
           alert('Please select a file.');
           return;
-        }
-    
-        if (!x || !y) {
+        }if (!x || !y) {
           alert('Please specify both X and Y columns.');
           return;
         }
-    
+
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
@@ -150,14 +259,22 @@ const GenerateForm = () => {
     
             const xData = sheetData.map((row) => row[x]);
             const yData = sheetData.map((row) => row[y]);
-            const yMin = Math.min(...yData);
-            const yMax = Math.max(...yData);
+
+          
             let series = [];
+             
+
+            if (!isValidData(xData) || !isValidData(yData) ) {
+              // Gérer les valeurs manquantes ici (remplacement par des valeurs par défaut, suppression, etc.)
+              alert('please check your data');
+              return;
+            }
+
             if (graphiqueType === 'line' || graphiqueType === 'bar'|| graphiqueType==='area' 
             || graphiqueType==='radar'||graphiqueType==='scatter' || graphiqueType==='heatmap') {
                 series = [{ name: y, data: yData }];
               } else if (graphiqueType === 'donut' || graphiqueType === 'pie') {
-                series = yData;
+                series = yData
               } else if (graphiqueType === 'boxplot') {
                 // Utilisez les données de xData comme labels des boîtes
                 const labels = xData;
@@ -184,9 +301,7 @@ const GenerateForm = () => {
               series: series,
             };
       
-              
             setChartData(chartData);
-            setPieChartData(pieChartData);
             openModal();
           } catch (error) {
             console.error('Error reading file or creating chart:', error);
@@ -195,42 +310,118 @@ const GenerateForm = () => {
     
         reader.readAsArrayBuffer(selectedFile);
       };
+      const generateChartManual = () => {
+        let series = [];
+
+      if (graphiqueType === 'line' || graphiqueType === 'bar'|| graphiqueType==='area' 
+        || graphiqueType==='radar'||graphiqueType==='scatter' || graphiqueType==='heatmap') {
+            series = [{ name: y, data: yData.split('\n').map(value => value.trim()) }];
+          } else if (graphiqueType === 'donut' || graphiqueType === 'pie') {
+           series = yData.split('\n').map(value => parseFloat(value.trim())); 
+            
+          } else if (graphiqueType === 'boxplot') {
+            // Utilisez les données de xData comme labels des boîtes
+            const labels = xData.split('\n').map(value => value.trim());
+            
+            // Utilisez les données de yData pour créer les séries de boîtes
+            series = yData.map((data, index) => {
+              return {
+                name: labels[index],  // Nommez chaque boîte avec l'étiquette correspondante
+                data: data,  // Données pour chaque boîte (quartiles Q1, médiane, Q3, min, max)
+              };
+            });
+        }else if (graphiqueType === 'bubble') {
+            // Utilisez les données de xData, yData et sizeData pour créer les séries de données
+            series = (xData.split('\n').map(value => value.trim())).map((x, index) => {
+              return {
+                x: x,           // Valeur x
+                y:( yData.split('\n').map(value => value.trim()))[index], // Valeur y
+                z: sizeData[index], // Taille de la bulle
+              };
+            });
+          };
+        const chartData = {
+          labels: xData.split('\n').map(value => value.trim()),
+          series: series,
+        };
+  
+        setChartData(chartData);
+        openModal();
+        console.log(chartData)
+     
+      };
+      const generateChart = () => {
+        if (selectedFile && (xData || yData)) {
+          alert('Please select just one method to insert data.');
+          return;
    
+        } else if (selectedFile) {
+          // Si un fichier a été sélectionné mais aucune donnée manuelle n'a été saisie
+          generateChartFromFile();
+        } else if (xData || yData) {
+          // Si des données manuelles ont été saisies sans sélection de fichier
+          generateChartManual();
+        } else {
+          alert('Please select insert data.');
+          return;
+
+        }
+      };
+      const handleManualDataInput = () => {
+ 
+        console.log(chartData);
+
+  
+      };
 
       const options = {
-      
+
         xaxis: {
           categories: chartData.labels,
         },
-        // yaxis:{
-        //     min: yMin,
-        //     max: yMax,
-        // },
-        theme: {
-            palette: 'palette2'
-          },
+        labels: chartData.labels,
+
+   
         colors: [color], 
         chart: {
             type: graphiqueType,
-            options3d: {
-              enabled: true,
-              alpha: 15,
-              beta: 15,
-              depth: 50,
-              viewDistance: 25,
-            },
           },
         plotOptions: {
-            bar: {
+            
+             bar: {
                 horizontal: chartLayout === 'horizontal',
               },
-             
-              
+              line: {
+                horizontal: chartLayout === 'horizontal',
+              },
           },
        
        
         };
-   
+ 
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+    
+          // Extract relevant chart content data here from your existing variables
+          const chartContent = {
+            chartType: graphiqueType,
+            chartData:chartData
+            // Add other necessary data properties from your chart if needed
+          };
+        
+          try {
+           const response = await axios.post('http://localhost:8000/account/generate_interpretation/', { chart_content: chartContent });
+            setInterpretation(response.data.interpretation);
+
+            const doc = new jsPDF();
+
+            // Add the interpretation text to the PDF
+            doc.text(interpretationText, 10, 10);
+            setInterpretationFile(doc);
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        };
       const openModal = () => {
         setIsModalOpen(true);
       };
@@ -238,7 +429,6 @@ const GenerateForm = () => {
       const closeModal = () => {
         setIsModalOpen(false);
       };
-      console.log(fontSize)
       const textStyle = {
         fontSize: `${fontSize}px` , 
         fontFamily: fontFamily,
@@ -254,39 +444,47 @@ const GenerateForm = () => {
       }
     // const puppeteer = require('puppeteer');
 
+ 
     const generatePDF = () => {
-        const doc = new jsPDF();
+      const doc = new jsPDF();
       
-        // Capture le composant React en tant qu'image avec html2canvas.
-        const chart = document.getElementById('chart');
-        // const text = document.getElementById('text');
-      
-        html2canvas(chart).then((canvas) => {
-          const chartImage = canvas.toDataURL('image/png');
-
-
-        doc.addImage(chartImage, 'JPEG', 20, 20, 90, 70);
-
-        // doc.text(10, 120, text.textContent);
-
+      // Capture the React component as an image with html2canvas.
+      const chart = document.getElementById('chart');
+     const interpretation = document.getElementById('interpretation').innerText; // Get text from the 'interpretation' element
+    
+      html2canvas(chart).then((canvas) => {
+        const chartImage = canvas.toDataURL('image/png');
+    
+        const imageWidth = 90; // Adjust as needed
+        const imageHeight = 70; // Adjust as needed
+        const imageX = (doc.internal.pageSize.width - imageWidth) / 2; // Center horizontally
+        const imageY = (doc.internal.pageSize.height - imageHeight) / 2; // Center vertically
+         
+        doc.addImage(chartImage, 'JPEG', imageX, imageY, imageWidth, imageHeight);
+    
+        // Reduce the font size for the text
+        const fontSize = 12; // Adjust as needed
+        doc.setFontSize(fontSize);
+    
+        // Calculate text width and position it in the center
+        const textWidth = doc.getStringUnitWidth(interpretation) * fontSize / doc.internal.scaleFactor;
+        const textX = (doc.internal.pageSize.width - textWidth) / 2; // Center horizontally
+    
+        // Add the content from the 'interpretation' element to the PDF
+        doc.text(textX, imageY + imageHeight + 10, interpretation); // Positioned below the image
+       
         doc.save('ACH_MK.pdf');
-        });
-      };
-      
-
-
-      
-      
-      
-    return (
-        <section id="generate" className=' px-16 py-6 ' >
+      });
+    };
+  return (
+        <section id="generate" className=' px-16 py-6' >
             <div className="flex flex-row justify-between items-center w-full">
                 <h1 className="flex-1 font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris ss:leading-[95px] leading-[45px]">
                     Chart Settings
                 </h1>
 
             </div>
-            <div className=' border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md bg-white'>
+            <div className='bg-white border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md '>
 
             <div className="text-center" style={{ paddingTop: "20px" }}>
         <input
@@ -295,10 +493,44 @@ const GenerateForm = () => {
           onChange={handleFileChange}
          
         />
-      </div>
-                <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1  ">
+        
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ marginRight: '20px' }}>
+          <label htmlFor="xDataTextarea">Données X :</label>
+          <textarea
+            id="xDataTextarea"
+            value={xData}
+            onChange={handleXDataChange}
+            rows={10} // Nombre de lignes pour la zone de texte
+            cols={50} // Nombre de colonnes pour la zone de texte
+            placeholder="Saisissez vos données X ici (une valeur par ligne)..."
+          />
+        </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6 bg-[] ">
+        <div>
+          <label htmlFor="yDataTextarea">Données Y :</label>
+          <textarea
+            id="yDataTextarea"
+            value={yData}
+            onChange={handleYDataChange}
+            rows={10} // Nombre de lignes pour la zone de texte
+            cols={50} // Nombre de colonnes pour la zone de texte
+            placeholder="Saisissez vos données Y ici (une valeur par ligne)..."
+          />
+        </div>
+   
+      </div>
+      {/* <button onClick={handleManualDataInput}>
+        Insérer 
+      </button> */}
+      {/* Graphique et autres éléments ici */}
+      ...
+  
+
+      </div>
+                <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1 ">
+
+                    <div class="inline-block relative w-56 mx-2 my-6">
       
       
                         <label className={`${styles.label}`}>Graphique Type</label>
@@ -326,7 +558,7 @@ const GenerateForm = () => {
 
                     <div class="inline-block relative w-56 mx-2 my-6" id='test'>
                         <label className={`${styles.label}`}>Width</label>
-                        <select className={`${styles.select}`}>
+                        <select className={`${styles.select}`} value={width} onChange={handleWidthChange}>
                             <option >400</option>
                             <option >500</option>
                             <option >600</option>
@@ -346,7 +578,7 @@ const GenerateForm = () => {
                     </div>
                     <div class="inline-block relative w-56 mx-2 my-6">
                         <label className={`${styles.label}`}>Height</label>
-                        <select className={`${styles.select}`}>
+                        <select className={`${styles.select}`} value={height} onChange={handleHeightChange}>
                             <option >400</option>
                             <option >500</option>
                             <option >600</option>
@@ -366,16 +598,15 @@ const GenerateForm = () => {
                     </div>
                     <div class="inline-block relative w-56 mx-2 my-6">
                         <label className={`${styles.label}`}>BG Color</label>
-                        <select className={`${styles.select}`}>
-                            <option >vert</option>
-                            <option >orange</option>
-                            <option >bleu</option>
-                            <option >red</option>
-                            <option >white</option>
-                            <option >black</option>
-                            <option >purple</option>
-                            <option >gris</option>
-                            <option >yellow</option>
+                        <select className={`${styles.select}`} value={color} onChange={handleColorChange}>
+                            <option value={'#70c58f'}>green</option>
+                            <option value={'#E7870B'}>orange</option>
+                            <option value={'#0F43C8'}>bleu</option>
+                            <option value={'#d8102c'}>red</option>
+                            <option value={'#010A0E'}>black</option>
+                            <option value={'#720FAC'}>purple</option>
+                            <option value={'#57525A'}>gris</option>
+                            <option value={'#DFE810'}>yellow</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-gris ">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -385,11 +616,11 @@ const GenerateForm = () => {
                         </div>
                     </div>
                     <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>X</label>
-                        <select className={`${styles.select}`}>
-                            <option >Horizontal</option>
-                            <option >Vertical</option>
-                            <option >Diagonal</option>
+                        <label className={`${styles.label}`}>Chart Layout</label>
+                        <select className={`${styles.select}`} value={chartLayout} onChange={handleChartLayoutChange}>
+                        <option value="vertical">Vertical</option>
+                        <option value="horizontal">Horizontal</option>
+                        <option >Diagonal</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-gris ">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -401,52 +632,67 @@ const GenerateForm = () => {
 
                     <div class="inline-block relative w-56 mx-2 my-6">
                         <label className={`${styles.label}`}>Graphique Title</label>
-                        <input type="text" className={`${styles.input}`} />
+                        <input type="text" className={`${styles.input}`} value={title} onChange={handleTitleChange} />
                     </div>
 
                     <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>Sous Title</label>
-                        <input className={`${styles.input}`} />
+                        <label className={`${styles.label}`}>Graphique SubTitle</label>
+                        <input className={`${styles.input}`} value={subTitle} onChange={handleSubTitleChange}/>
                     </div>
 
                     <div class="inline-block relative w-56 mx-2 my-6">
                         <label className={`${styles.label}`}>Axe X Title</label>
-                        <input type="text" className={`${styles.input}`} />
+                        <input type="text" className={`${styles.input}`} onChange={handleXChange} value={x}/>
                     </div>
 
                     <div class="inline-block relative w-56 mx-2 my-6">
                         <label className={`${styles.label}`}>Axe Y Title</label>
-                        <input type="text" className={`${styles.input}`} />
+                        <input type="text" className={`${styles.input}`} onChange={handleYChange} value={y}/>
                     </div>
+                </div>
+              
+            </div>
+ <div className="flex flex-row justify-between items-center w-full">
+                <h1 className="flex-1 font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris ss:leading-[95px] leading-[45px]">
+                    Text Settings
+                </h1>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>Source</label>
-                        <input type="text" className={`${styles.input}`} />
-                    </div>
+            </div>
+            <div className='bg-white border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md '>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>Text Style</label>
-                        <select className={`${styles.select}`}>
-                            <option >Gras</option>
-                            <option >Normal</option>
-                            <option >Gras Italic</option>
-                            <option >Normal Italic</option>
+                <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1 ">
+ <div class="inline-block relative w-56 mx-2 my-6">
+                        <label className={`${styles.label}`}>Color</label>
+                        <select className={`${styles.select}`} value={textColor} onChange={handleTextColorChange}>
+                          <option value={'#70c58f'}>green</option>
+                            <option value={'#E7870B'}>orange</option>
+                            <option value={'#0F43C8'}>bleu</option>
+                            <option value={'#d8102c'}>red</option>
+                            <option value={'#010A0E'}>black</option>
+                            <option value={'#720FAC'}>purple</option>
+                            <option value={'#57525A'}>gris</option>
+                            <option value={'#DFE810'}>yellow</option>
                         </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-white ">
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-gris ">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                             </svg>
 
                         </div>
-                    </div>
-                    <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>Etiquette Style</label>
-                        <select className={`${styles.select}`}>
-                            <option >Gras</option>
-                            <option >Normal</option>
-                            <option >Gras Italic</option>
-                            <option >Normal Italic</option>
-                        </select>
+                        </div>
+                  
+
+               <div class="inline-block relative w-56 mx-2 my-6">
+                        <label className={`${styles.label}`}>Police</label>
+                        <select className={`${styles.select}`} value={fontFamily} onChange={handleFontFamilyChange}>
+                            <option value={'Goudy Bookletter 1911,sans-erif'} >Goudy Bookletter 1911</option>
+                            <option value={'Georgia, serif'}>Georgia</option>
+                            <option value={'cursive'} >cursive</option>
+                            <option value={'Gill Sans, sans-serif'} >Gill Sans</option>
+
+                        </select>   
+                    
+                        
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-gris ">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
@@ -455,74 +701,41 @@ const GenerateForm = () => {
                         </div>
                     </div>
                     <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>Y Minimal</label>
-                        <input type="text" className={`${styles.input}`} />
-                    </div>
+                        <label className={`${styles.label}`}>Style</label>
+                        <select className={`${styles.select}`} value={fontStyle} onChange={handleFontStyleChange}>
+                            <option value={'normal'} >Norml</option>
+                            <option value={'italic'}>Italic</option>
+                            <option value={'oblique'} >Oblique</option>
 
+                        </select>   
+                    
+                        
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-gris ">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                            </svg>
+
+                        </div>
+                    </div>
                     <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>Y Maximal</label>
-                        <input type="text" className={`${styles.input}`} />
-                    </div>
+                        <label className={`${styles.label}`}>Size</label>
+                        <select className={`${styles.select}`} value={fontSize} onChange={handleFontSizeChange}>
+        {fontSizeOptions}
+      </select>
+      
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 py-3 text-white ">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                            </svg>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>threshold line</label>
-                        <input type="text" className={`${styles.input}`} />
+                        </div>
                     </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>In 3D</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Grid</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Legend</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Show Values</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>
-                            Plot color</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Rounded corners</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Color Gradient</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Transparent</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Shadow</label>
-                    </div>
-
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Border</label>
-                    </div>
-
+             
                 </div>
-                <div className='flex justify-center'>
-                    <button type="button" className={` w-56 py-3 px-6 m-3 font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px] outline-none ${styles}`}>
+               
+            </div>
+            <div className='flex justify-center'>
+                    <button type="button" onClick={generateChart} className={` w-56 py-3 px-6 m-3 font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px] outline-none ${styles}`}>
                         Generate
                     </button>
                     <Modal id='modal'
@@ -557,23 +770,34 @@ const GenerateForm = () => {
       >
         <h2 style={textStyle}>{title}</h2>
         <h4 >{subTitle}</h4>
-        <Chart id='chart' ref={chartRef} type={graphiqueType}   width={width} height={height}         series={chartData.series}
- options={options} />
+        <Chart id='chart' ref={chartRef}  type={graphiqueType}   width={width} height={height}   series={chartData.series} options={options} />
         <div id='modalbtns'>
-          <button className="modalbtns">Save</button>
+       
+          <button className="modalbtns"   onClick={handleeSubmit} >Save</button>
           <button className="modalbtns" onClick={generatePDF}>Download</button>
-          <button className="modalbtns">Interpret</button>
+          <button className="modalbtns"  onClick={handleSubmit} >Interpret</button>
           <button className="modalbtns" onClick={closeModal}>Close</button>
 
         </div>
+        <div>
+ 
+
+      {interpretation && (
+        <div>
+          <h3>Graph Interpretation:</h3>
+          {/* <p contentEditable="true" id='interpretation'>{interpretation}</p> */}
+          <p contentEditable="true" id='interpretation'>{interpretation}</p>
+
+        </div>
+      )}
+    </div>
       </Modal>
       <div>
 
     </div>
                 </div>
-            </div>
-
         </section>
+      
     )
 }
 
