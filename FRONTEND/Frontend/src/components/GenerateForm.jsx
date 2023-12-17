@@ -295,18 +295,24 @@ const GenerateForm = () => {
 
             <div className="text-center" style={{ paddingTop: "20px" }}>
 
-            {/* <DragDropFiles
+            <DragDropFiles
                 onFileChange={(files) => onFileChange(files)}
                 accept=".xlsx, .xls"
-            />   */}
+            />  
 
-        <input
+        {/* <input
           type="file"
           accept=".xlsx, .xls"
           onChange={handleFileChange}
          
-        />
-      </div>
+        /> */}
+            </div>
+            <div className='text-center py-8 mt-10 '>
+              <h1  className='text-orangee text-4xl font-[400]'>
+              Customize Your Chart for a Personal Touch
+              </h1>
+            </div>
+     
                 <div className=" grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1  ">
 
                     <div className={`${styles.fomatLabel}`}>
@@ -448,12 +454,12 @@ const GenerateForm = () => {
                         <input type="text" className={`${styles.input}`}  value={yMax} onChange={handleYMaxChange}/>
                     </div>
 
-                    <div className={`${styles.fomatLabel}`}>
+                    {/* <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>threshold line</label>
                         <input type="text" className={`${styles.input}`} />
-                    </div>
+                    </div> */}
 
-                    <div className={`${styles.fomatLabel}`}>
+                    {/* <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>In 3D</label>
                     </div>
@@ -502,7 +508,7 @@ const GenerateForm = () => {
                     <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Border</label>
-                    </div>
+                    </div> */}
 
                 </div>
               

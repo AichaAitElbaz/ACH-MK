@@ -39,7 +39,7 @@ import {
     {
       
       name: "John Michael",
-      email: "john@creative-tim.com",
+      email: "john@creative-tim.com", 
       message: "Hello, I'm experiencing an issue with the generation",
       date: "23/04/18",
       number: "+234567890",
