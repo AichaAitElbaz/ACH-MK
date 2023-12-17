@@ -1,4 +1,6 @@
 .venv/
 /backend/accounts/migrations/
 /backend/accounts/__pycache__/
+/backend/full_graphs/__pycache__/
+
 
