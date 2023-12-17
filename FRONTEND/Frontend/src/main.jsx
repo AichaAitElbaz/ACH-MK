@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <App />
       </React.StrictMode>}></Route>
 
-      <Route path='/about' element={<React.StrictMode>
+      <Route path='/aboutUs' element={<React.StrictMode>
         <Navbar />
         <AboutUs />
         <Footer />
