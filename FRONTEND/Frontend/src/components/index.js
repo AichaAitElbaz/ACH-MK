@@ -7,6 +7,8 @@ import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import AboutUs from "./AboutUs";
 import ContactUs from "./ContactUs";
+import DragDropFiles from "./DragDropFile/DragDropFiles";
+import LandingPage from "./LandingPage";
 
 
 export {
@@ -18,5 +20,8 @@ export {
   SignIn,
   SignUp,
   AboutUs,
-  ContactUs
+  ContactUs,
+  DragDropFiles,
+  LandingPage
+  
 };

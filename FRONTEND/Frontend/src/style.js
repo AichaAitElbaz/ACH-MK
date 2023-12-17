@@ -25,6 +25,7 @@ const styles = {
 
     select: `block appearance-none w-full text-gray-400 bg-transparent border border-gray-400 hover:border-gray-500 px-4 py-3 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline`,
   
+    fomatLabel:`inline-block relative xl:w-55.5 lg:w-48 md:w-38 sm:w-34 mx-2 my-6`,
   };
   
   export const layout = {

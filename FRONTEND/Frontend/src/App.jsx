@@ -12,8 +12,8 @@ const App
       </div>
     </div>
 
-    <div className={` ${styles.flexStart}`}>
-      <div className={`${styles.boxWidth}`}>
+    {/* <div className={` ${styles.flexStart}`}>
+      <div className={`${styles.boxWidth}`}> */}
     <Routes>
       <Route path='/' element={<Hero/>}></Route>
       <Route path='/aboutUs' element={<AboutUs/>}></Route>
@@ -21,8 +21,8 @@ const App
       <Route path='/projects' element={<Hero/>}></Route>
       <Route path='/contactUs' element={<ContactUs/>}></Route>
     </Routes>
-    </div>
-    </div>
+    {/* </div>
+    </div> */}
 
     <div className={`  ${styles.flexCenter}`}>
       <div className={`${styles.boxWidth} `}>

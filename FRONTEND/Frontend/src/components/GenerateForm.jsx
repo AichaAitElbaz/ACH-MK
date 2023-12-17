@@ -9,6 +9,9 @@ import * as XLSX from 'xlsx';
 import { updown, down, logo ,close} from '../assets';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import {DragDropFiles} from './index';
+
+
 const GenerateForm = () => {
 
     const [selectedFile, setSelectedFile] = useState(null);
@@ -280,26 +283,33 @@ const GenerateForm = () => {
       
       
     return (
-        <section id="generate" className=' px-16 py-6 ' >
+        <section id="generate" className=' xl:px-16 lg:px-14 md:px-10 sm:px-6 py-6 ' >
             <div className="flex flex-row justify-between items-center w-full">
                 <h1 className="flex-1 font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris ss:leading-[95px] leading-[45px]">
                     Chart Settings
                 </h1>
 
             </div>
+
             <div className=' border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md bg-white'>
 
             <div className="text-center" style={{ paddingTop: "20px" }}>
-        <input
+
+            <DragDropFiles
+                onFileChange={(files) => onFileChange(files)}
+                accept=".xlsx, .xls"
+            />  
+
+        {/* <input
           type="file"
           accept=".xlsx, .xls"
           onChange={handleFileChange}
          
-        />
+        /> */}
       </div>
-                <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1  ">
+                <div className=" grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1  ">
 
-                    <div class="inline-block relative w-56 mx-2 my-6 bg-[] ">
+                    <div className={`${styles.fomatLabel}`}>
       
       
                         <label className={`${styles.label}`}>Graphique Type</label>
@@ -325,7 +335,7 @@ const GenerateForm = () => {
                         </div>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6" id='test'>
+                    <div className={`${styles.fomatLabel}`} id='test'>
                         <label className={`${styles.label}`}>Width</label>
                         <select className={`${styles.select}`} value={width} onChange={handleWidthChange}>
                             <option >400</option>
@@ -345,7 +355,7 @@ const GenerateForm = () => {
 
                         </div>
                     </div>
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Height</label>
                         <select className={`${styles.select}`} value={height} onChange={handleHeightChange}>
                             <option >400</option>
@@ -365,7 +375,7 @@ const GenerateForm = () => {
 
                         </div>
                     </div>
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>BG Color</label>
                         <select className={`${styles.select}`} value={color} onChange={handleColorChange}>
                             <option value={'#70c58f'}>green</option>
@@ -384,7 +394,7 @@ const GenerateForm = () => {
 
                         </div>
                     </div>
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Chart Layout</label>
                         <select className={`${styles.select}`} value={chartLayout} onChange={handleChartLayoutChange}>
                         <option value="vertical">Vertical</option>
@@ -399,22 +409,22 @@ const GenerateForm = () => {
                         </div>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Graphique Title</label>
                         <input type="text" className={`${styles.input}`} value={title} onChange={handleTitleChange} />
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Graphique SubTitle</label>
                         <input className={`${styles.input}`} value={subTitle} onChange={handleSubTitleChange}/>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Axe X Title</label>
                         <input type="text" className={`${styles.input}`} onChange={handleXChange} value={x}/>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Axe Y Title</label>
                         <input type="text" className={`${styles.input}`} onChange={handleYChange} value={y}/>
                     </div>
@@ -428,68 +438,68 @@ const GenerateForm = () => {
                    
                    
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Y Minimal</label>
                         <input type="text" className={`${styles.input}`} value={yMin} onChange={handleYMinChange}/>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Y Maximal</label>
                         <input type="text" className={`${styles.input}`}  value={yMax} onChange={handleYMaxChange}/>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>threshold line</label>
                         <input type="text" className={`${styles.input}`} />
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>In 3D</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Grid</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Legend</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Show Values</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>
                             Plot color</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Rounded corners</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Color Gradient</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Transparent</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Shadow</label>
                     </div>
 
-                    <div class="inline-block relative w-56 mx-2 my-2 text-center">
+                    <div className={`${styles.fomatLabel}`}>
                         <input type="checkbox" value="" className={`${styles.inputCheck}`} />
                         <label for="default-checkbox" className={`${styles.labelCheck}`}>Border</label>
                     </div>
@@ -513,7 +523,7 @@ const GenerateForm = () => {
 
             
 
-                <div class="inline-block relative w-56 mx-2 my-6">
+                <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Color</label>
                         <select className={`${styles.select}`} value={textColor} onChange={handleTextColorChange}>
                           <option value={'#70c58f'}>green</option>
@@ -542,7 +552,7 @@ const GenerateForm = () => {
                 
                
          
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Police</label>
                         <select className={`${styles.select}`} value={fontFamily} onChange={handleFontFamilyChange}>
                             <option value={'Goudy Bookletter 1911,sans-erif'} >Goudy Bookletter 1911</option>
@@ -560,7 +570,7 @@ const GenerateForm = () => {
 
                         </div>
                     </div>
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Style</label>
                         <select className={`${styles.select}`} value={fontStyle} onChange={handleFontStyleChange}>
                             <option value={'normal'} >Norml</option>
@@ -577,7 +587,7 @@ const GenerateForm = () => {
 
                         </div>
                     </div>
-                    <div class="inline-block relative w-56 mx-2 my-6">
+                    <div className={`${styles.fomatLabel}`}>
                         <label className={`${styles.label}`}>Size</label>
                         <select className={`${styles.select}`} value={fontSize} onChange={handleFontSizeChange}>
         {fontSizeOptions}

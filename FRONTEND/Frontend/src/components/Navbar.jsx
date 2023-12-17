@@ -12,12 +12,12 @@ const Navbar = () => {
     <nav className=" flex py-4 justify-between items-center navbar border-b-2 ">
       <img src={logo} alt="hoobank" className="w-[124px] h-[48px]" />
 
-      <ul className="list-none sm:flex hidden justify-end items-center flex-1">
+      <ul className="list-none mdt:flex hidden justify-end items-center flex-1">
         {navLinks.map((nav, index) => (
           <li
             key={nav.id}
-            className={`font-poppins font-normal cursor-pointer text-[16px] ${active === nav.title ? "text-schemes" : "text-gris"
-              } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
+            className={`font-poppins font-normal cursor-pointer lg:text-[16px] md:text-[14px] ${active === nav.title ? "text-schemes" : "text-gris"
+              } ${index === navLinks.length - 1 ? "mr-0" : "lg:mr-10 md:mr-8"}`}
             onClick={() => setActive(nav.title)}
           >
              <Link to={`/${nav.id}`}>{nav.title}</Link>
@@ -26,14 +26,14 @@ const Navbar = () => {
 
         ))}
                 <Link to="/login">
-        <button type="button" className={`py-2.5 px-9 mx-6 font-poppins font-medium text-[16px] text-snow bg-blue-gradient hover:text-gris rounded-[6px] hover:bg-blue-gradientHover routline-none ${styles} shadow` }
+        <button type="button" className={`py-2.5 px-9 lg:mx-6 md:mx-4 font-poppins font-medium lg:text-[16px] md:text-[14px] text-snow bg-blue-gradient hover:text-gris rounded-[6px] hover:bg-blue-gradientHover routline-none ${styles} shadow` }
         >
           Login
         </button>
         </Link>
       </ul>
 
-      <div className="sm:hidden flex flex-1 justify-end items-center">
+      <div className="mdt:hidden flex flex-1 justify-end items-center">
         <img
           src={toggle ? close : menu}
           alt="menu"
