@@ -55,7 +55,16 @@ class Graph(models.Model):
     def __str__(self):
         return f'Graph for {self.user.email}'
 
+class Message(models.Model):
+    sender_email = models.EmailField(max_length=255)
+    firstname = models.CharField(max_length=255)
+    lastname = models.CharField(max_length=255)
+    phone_number = models.IntegerField()  # Vous pouvez ajuster la longueur en fonction de vos besoins
+    message = models.TextField()
+    date_sent = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return f'Message from {self.sender_email}'
   
 
 class Guest(models.Model):

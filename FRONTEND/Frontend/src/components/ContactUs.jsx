@@ -1,24 +1,129 @@
-import { useState } from 'react'
-// import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { Switch } from '@headlessui/react'
-import Navbar from './Navbar'
-import Footer from './Footer'
+import { useState } from 'react';
+import { Switch } from '@headlessui/react';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(' ');
 }
+// ... (autres imports)
 
 const ContactUs = () => {
-  const [agreed, setAgreed] = useState(false)
+
+ 
+
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+  const [agreed, setAgreed] = useState(false); 
+  const [errors, setErrors] = useState({});
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+const [alertSeverity, setAlertSeverity] = useState('success');
+
+  const notifySuccess = () => {
+    setAlertSeverity('success');
+    setOpenSnackbar(true);
+    window.location.reload();
+  };
+  
+  const notifyError = () => {
+    setAlertSeverity('error');
+    setOpenSnackbar(true);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+  
+    // Validate all form fields for non-empty values
+    const formFields = ['first-name', 'last-name', 'email', 'phone-number', 'message'];
+  
+    formFields.forEach((field) => {
+      const value = document.getElementById(field).value.trim();
+  
+      // Check for non-empty values
+      if (!value) {
+        newErrors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
+      }
+  
+      // Check for a valid email address
+      if (field === 'email' && value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          newErrors.email = 'Enter a valid email address';
+        }
+      }
+  
+      // Check for numeric characters in the phone-number field
+      if (field === 'phone-number' && value) {
+        const numericRegex = /^[0-9]+$/;
+        if (!numericRegex.test(value)) {
+          newErrors['phone-number'] = 'Phone number must only contain numeric characters';
+        }
+      }
+    });
+  
+    setErrors(newErrors);
+  
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const isValid = validateForm();
+
+    if (isValid) {
+      const formData = {
+        'firstname': document.getElementById('first-name').value,
+        'lastname': document.getElementById('last-name').value,
+        'sender_email': document.getElementById('email').value,
+        'phone_number': document.getElementById('phone-number').value,
+        'message': document.getElementById('message').value,
+      };
+
+      // Si un utilisateur est connecté, ajoutez son ID au formulaire
+      if (user) {
+        formData.userid = user.id;
+      }
+
+      // Envoyez le formulaire au backend Django
+      const response = await fetch('http://localhost:8000/account/send_message/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        notifySuccess();
+      } else {
+        notifyError();
+      }
+    }
+  };
+
+
+
+  
 
   return (
-    <div className="isolate bg-[#e1f7f3] px-6 py-14  lg:px-8">
+    <div className="isolate bg-[#e1f7f3] px-6 py-14 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
       <h2 className="text-3xl font-bold tracking-tight text-[#424144] sm:text-4xl mt-0 pt-0">Contact Us</h2>
         <p className="mt-2 text-lg leading-8 text-[#424144]">
         Unlocking a New Era of Graph Intelligence        </p>
       </div>
-      <form action="#" method="POST" className="mx-auto mt-16 max-w-xl sm:mt-20 bg-white p-6 rounded-lg shadow-lg border-red-500 border">
+    
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto mt-16 max-w-xl sm:mt-20 bg-white p-6 rounded-lg shadow-lg border-red-500 border"
+      >
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div>
             <label htmlFor="first-name" className="block text-sm font-semibold leading-6 text-gray-900">
@@ -82,10 +187,7 @@ const ContactUs = () => {
                   <option>CA</option>
                   <option>EU</option>
                 </select>
-                {/* <ChevronDownIcon
-                  className="pointer-events-none absolute right-3 top-0 h-full w-5 text-gray-400"
-                  aria-hidden="true"
-                /> */}
+              
               </div>
               <input
                 type="tel"
@@ -140,22 +242,40 @@ const ContactUs = () => {
 
           </Switch.Group>
         </div>
-        <div className="mt-10">
-        <button
-  type="submit"
-  className="block w-full rounded-md bg-[#3ed0b0] text-white px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-[#86e1cd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
->
-  Let's talk
-</button>
 
+{Object.keys(errors).map((field) => (
+  <p key={field} className="mt-2 text-sm text-red-500">
+    {errors[field]}
+  </p>
+))}
+
+        <div className="mt-10">
+          <button
+            type="submit"
+            className="block w-full rounded-md bg-[#3ed0b0] text-white px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-[#86e1cd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Let's talk
+          </button>
         </div>
+
+        <Snackbar
+  open={openSnackbar}
+  autoHideDuration={6000}
+  onClose={() => setOpenSnackbar(false)}
+>
+  <Alert
+    onClose={() => setOpenSnackbar(false)}
+    severity={alertSeverity}
+    sx={{ width: '100%' }}
+  >
+    {alertSeverity === 'success'
+      ? 'Message sent successfully!'
+      : 'Failed to send message.'}
+  </Alert>
+</Snackbar>
       </form>
     </div>
 
-  )
-}
-
-
-export default ContactUs;
-
-
+    
+  );
+};export default ContactUs;

@@ -15,6 +15,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import ProtectedRoutes from './PrivateRoute.jsx';
 import ProtectedAdminRoutes from './PrivateAdminRoute.jsx'
+import ProtectedAdminRoutes from './PrivateAdminRoute.jsx'
 
 
 
