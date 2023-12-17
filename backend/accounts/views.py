@@ -12,8 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
-
-
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
 import openai
 from .models import Guest
 import os
@@ -121,27 +121,9 @@ def display_all_users(request):
         })
 
     return JsonResponse({'users': user_data})
-
-@login_required
-def count_user_graphs(request):
-    if request.method == 'GET':
-        user_graphs_count = Graph.objects.filter(user=request.user).count()
-        return JsonResponse({'user_graphs_count': user_graphs_count})
-
-    return JsonResponse({'error': 'Invalid request method'})
-
-@login_required
-def count_user_files(request):
-    if request.method == 'GET':
-        user_files_count = Graph.objects.filter(user=request.user).count()
-        return JsonResponse({'user_files_count': user_files_count})
-
-    return JsonResponse({'error': 'Invalid request method'})
-
-
 @csrf_exempt
 def generate_interpretation(request):
-    print("ggggggggggggggggg")
+
     if request.method == 'POST':
         #openai.api_key = os.getenv('API_KEY')  # Retrieve API key from environment variable
         print(openai.api_key)
@@ -265,6 +247,47 @@ def get_user_messages(request, user_email):
             ]
 
             return JsonResponse({'user_messages': user_messages_list})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+@csrf_exempt
+def count_user_graphs(request, user_id):
+    if request.method == 'GET':
+        try:
+            # Utilisation de Django Aggregation pour compter le nombre de graphes pour un utilisateur spécifique
+            user_graphs_count = Graph.objects.filter(user_id=user_id).count()
+
+            return JsonResponse({'user_id': user_id, 'graphs_count': user_graphs_count})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+
+
+@csrf_exempt
+def user_monthly_graphs(request, user_id):
+    if request.method == 'GET':
+        try:
+            # Utilisez TruncMonth pour grouper les graphiques par mois
+            monthly_graphs = Graph.objects.filter(user_id=user_id).annotate(
+                month=TruncMonth('date_uploaded')
+            ).values('month').annotate(graphCount=Count('id'))
+
+            # Construire la liste des données pour la réponse JSON
+            monthly_graphs_list = [
+                {
+                    'month': graph['month'].strftime('%b %Y'),  # Format de la date, par exemple, "Jan 2023"
+                    'graphCount': graph['graphCount']
+                }
+                for graph in monthly_graphs
+            ]
+
+            return JsonResponse({'monthlyGraphs': monthly_graphs_list})
 
         except Exception as e:
             return JsonResponse({'error': str(e)})

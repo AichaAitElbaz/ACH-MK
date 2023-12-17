@@ -1,9 +1,10 @@
 from django.urls import path
 from .views import my_view
 from .views import add_graph_backend,generate_interpretation, get_user_graphs_backend, delete_graph_backend,count_users,count_total_graphs,display_all_users
-from .views import count_user_graphs, count_user_files
+from .views import count_user_graphs
 from .views import my_view ,send_message
 from .views import get_all_messages, get_user_messages
+from .views import user_monthly_graphs
 
 urlpatterns = [
     path('', my_view),
@@ -13,8 +14,9 @@ urlpatterns = [
     path('api/count_users/', count_users, name='count_users'),
     path('api/count_total_graphs/', count_total_graphs, name='count_total_graphs'),
     path('api/users/', display_all_users, name='all_users_api'),
-    path('api/count_user_graphs/', count_user_graphs, name='count_user_graphs'),
-    path('api/count_user_files/', count_user_files, name='count_user_files'),
+    path('count-user-graphs/<int:user_id>/', count_user_graphs, name='count_user_graphs'),
+    path('user-monthly-graphs/<int:user_id>/', user_monthly_graphs, name='user_monthly_graphs'),
+
     path('generate_interpretation/', generate_interpretation, name='generate_interpretation'),
      path('send_message/', send_message, name='send_message'),
       path('get-all-messages/', get_all_messages, name='get_all_messages'),

@@ -447,10 +447,28 @@ const GenerateForm = () => {
  
     const generatePDF = () => {
       const doc = new jsPDF();
+      // Ajout de la bande horizontale en haut de la page
+      doc.setDrawColor(0); // Couleur du trait noir
+      doc.setFillColor(217, 240, 240); // Couleur de remplissage en #D9F0F0
+      doc.rect(0, 0, doc.internal.pageSize.width, 10, 'F'); // Dessiner un rectangle pour la bande horizontale
       
+      // Ajout du logo à gauche
+      const logoImg = new Image();
+      logoImg.src =logo
+      const logoWidth = 20; // Largeur du logo
+      const logoHeight =10; // Hauteur du logo
+      
+      logoImg.onload = function() {
+        doc.addImage(logoImg, 'PNG', 10, 1, logoWidth, logoHeight); // Ajouter le logo à la position spécifiée
+        addContent(doc,title,subTitle,textColor.valueOf,fontFamily.valueOf,fontStyle.valueOf,fontSize.valueOf); // Appeler la fonction pour ajouter le contenu principal après l'ajout de la bande horizontale et du logo
+      };
+    };
+    const addContent = (doc, graphTitle, graphSubTitle, textColor, fontFamily, fontStyle, fontSize) => {
+      const interpretationTitle = "Graph Interprétation"; // Titre "Interprétation"
+       fontSize=12;
       // Capture the React component as an image with html2canvas.
       const chart = document.getElementById('chart');
-     const interpretation = document.getElementById('interpretation').innerText; // Get text from the 'interpretation' element
+      const interpretation = document.getElementById('interpretation').innerText; // Get text from the 'interpretation' element
     
       html2canvas(chart).then((canvas) => {
         const chartImage = canvas.toDataURL('image/png');
@@ -458,21 +476,43 @@ const GenerateForm = () => {
         const imageWidth = 90; // Adjust as needed
         const imageHeight = 70; // Adjust as needed
         const imageX = (doc.internal.pageSize.width - imageWidth) / 2; // Center horizontally
-        const imageY = (doc.internal.pageSize.height - imageHeight) / 2; // Center vertically
-         
-        doc.addImage(chartImage, 'JPEG', imageX, imageY, imageWidth, imageHeight);
+        const imageY = 50; // Center vertically
     
-        // Reduce the font size for the text
-        const fontSize = 12; // Adjust as needed
-        doc.setFontSize(fontSize);
+        doc.addImage(chartImage, 'JPG', imageX, imageY, imageWidth, imageHeight);
+        const imageCenterX = imageX + imageWidth / 2;
+        const titleWidth = doc.getStringUnitWidth(graphTitle) * fontSize * 0.35;
+        const titleX = imageCenterX - titleWidth / 2; // Center title horizontally
+        const titleY = imageY - 20; // Position the title above the image
+      
+        doc.text(graphTitle, titleX, titleY); // Add the graph title
+      
+        // Subtitle
+        if (graphSubTitle) {
+          const subTitleWidth = doc.getStringUnitWidth(graphSubTitle) * (fontSize - 2) * 0.35;
+          const subTitleX = imageCenterX - subTitleWidth / 2; // Center subtitle horizontally
+          const subTitleY = titleY + fontSize + 5; // Position the subtitle below the title
+      
+          // doc.setFontStyle('italic');
+          doc.setFontSize(fontSize - 2);
+          doc.text(graphSubTitle, subTitleX, subTitleY); // Add the graph subtitle
+        }
+        // Reduce the font size for the text content
+        // doc.setFontSize(fontSize); // Adjust as needed
+        doc.setTextColor(0); // Content text color (black)
+        doc.text(interpretationTitle, 10,imageY + imageHeight + 20); // Interpretation title position and content
+
+        const lineHeight = 12 / doc.internal.scaleFactor; // Calculate line height based on font size
     
-        // Calculate text width and position it in the center
-        const textWidth = doc.getStringUnitWidth(interpretation) * fontSize / doc.internal.scaleFactor;
-        const textX = (doc.internal.pageSize.width - textWidth) / 2; // Center horizontally
+        const textLines = doc.splitTextToSize(interpretation, doc.internal.pageSize.width - 20); // Split text into lines that fit in the PDF width
     
-        // Add the content from the 'interpretation' element to the PDF
-        doc.text(textX, imageY + imageHeight + 10, interpretation); // Positioned below the image
-       
+        let textY = imageY + imageHeight + 40; // Initial Y position for the text after the logo and titles
+    
+        // Add each line of text to the PDF
+        textLines.forEach((line) => {
+          doc.text(10, textY, line); // Starting X position is 10, adjust as needed
+          textY += lineHeight + 2; // Increment Y position for next line
+        });
+    
         doc.save('ACH_MK.pdf');
       });
     };
