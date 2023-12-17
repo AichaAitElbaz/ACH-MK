@@ -3,4 +3,6 @@
 /backend/accounts/__pycache__/
 /backend/full_graphs/__pycache__/
 
-
+/FRONTEND/node_modules/
+/FRONTEND/package-lock.json
+/FRONTEND/package.json/
