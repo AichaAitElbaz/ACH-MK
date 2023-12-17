@@ -295,17 +295,17 @@ const GenerateForm = () => {
 
             <div className="text-center" style={{ paddingTop: "20px" }}>
 
-            <DragDropFiles
+            {/* <DragDropFiles
                 onFileChange={(files) => onFileChange(files)}
                 accept=".xlsx, .xls"
-            />  
+            />   */}
 
-        {/* <input
+        <input
           type="file"
           accept=".xlsx, .xls"
           onChange={handleFileChange}
          
-        /> */}
+        />
       </div>
                 <div className=" grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1  ">
 
@@ -599,13 +599,12 @@ const GenerateForm = () => {
                             </svg>
 
                         </div>
-                    </div>
-                   
+                    </div>           
 
                 
 
          
-                   
+            
              
 
                 </div>
