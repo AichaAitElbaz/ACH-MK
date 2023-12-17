@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import my_view
-from .views import add_graph_backend, get_user_graphs_backend, delete_graph_backend,count_users,count_total_graphs,display_all_users
+from .views import add_graph_backend,generate_interpretation, get_user_graphs_backend, delete_graph_backend,count_users,count_total_graphs,display_all_users
 from .views import count_user_graphs, count_user_files
-from .views import my_view,generate_interpretation
+from .views import my_view ,send_message
 
 urlpatterns = [
     path('', my_view),
@@ -15,6 +15,6 @@ urlpatterns = [
     path('api/count_user_graphs/', count_user_graphs, name='count_user_graphs'),
     path('api/count_user_files/', count_user_files, name='count_user_files'),
     path('generate_interpretation/', generate_interpretation, name='generate_interpretation'),
-
+     path('send_message/', send_message, name='send_message'),
 
 ]

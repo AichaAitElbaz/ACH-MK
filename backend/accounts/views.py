@@ -7,7 +7,12 @@ from django.http import JsonResponse
 from .models import Graph
 from .models import Guest
 from .models import UserAccount
+from .models import Message
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+
 
 import openai
 from .models import Guest
@@ -175,3 +180,38 @@ def generate_chart_interpretation(chart_data):
     # Extract the generated interpretation from the API response
     interpretation = response.choices[0].text.strip()
     return interpretation
+
+@csrf_exempt
+def send_message(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            sender_email = data.get('sender_email', '')
+            firstname = data.get('firstname', '')
+            lastname = data.get('lastname', '')
+            phone_number = data.get('phone_number', '')
+            message_text = data.get('message', '')
+
+            # Créer une instance de Message
+            message_instance = Message.objects.create(
+                sender_email=sender_email,
+                firstname=firstname,
+                lastname=lastname,
+                phone_number=phone_number,
+                message=message_text
+            )
+
+            # Envoie d'un e-mail
+            subject = 'Nouveau message de {} {}'.format(firstname, lastname)
+            message = render_to_string('email_template.txt', {'message': message_text})
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [settings.EMAIL_HOST_USER]
+
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+            return JsonResponse({'message': 'Message sent successfully'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'})
+
+    return JsonResponse({'error': 'Invalid request method'})
