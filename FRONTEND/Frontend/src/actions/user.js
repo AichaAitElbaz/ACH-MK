@@ -18,7 +18,7 @@ export const load_user_graph_number = () => async dispatch => {
         }; 
 
         try {
-            const res = await axios.get(`http://localhost:8000/account/api/count_user_graphs/`, config);
+            const res = await axios.get('http://localhost:8000/account/api/count_user_graphs/', config);
     
             dispatch({
                 type: COUNT_UGRAPHS_SUCCESS,
@@ -46,7 +46,7 @@ export const load_user_file_number = () => async dispatch => {
         }; 
 
         try {
-            const res = await axios.get(`http://localhost:8000/account/api/count_user_files/`, config);
+            const res = await axios.get('http://localhost:8000/account/api/count_user_files/', config);
     
             dispatch({
                 type: COUNT_UFILES_SUCCESS,
