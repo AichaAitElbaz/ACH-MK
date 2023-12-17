@@ -113,7 +113,7 @@ export default function(state = initialState, action) {
             toast.error('Incorrect Credentials');
             
         case SIGNUP_FAIL:
-            toast.error('Error');
+            toast.error('Error Occured, Email already used');
 
         case LOGOUT:
             localStorage.removeItem('access');
