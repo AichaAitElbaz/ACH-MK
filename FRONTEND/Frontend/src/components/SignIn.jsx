@@ -43,10 +43,63 @@ const onSubmit = async (e) => {
   }
 };
 
-    return(
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+  });
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
-      <div className="flex justify-center items-center h-screen bg-discount-gradient">
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    let formIsValid = true;
+
+    if (!formData.email) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: 'Please enter your email address.',
+      }));
+      formIsValid = false;
+    } else if (!validateEmail(formData.email)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: 'Please enter a valid email address.',
+      }));
+      formIsValid = false;
+    }
+
+    if (!formData.password) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: 'Please enter your password.',
+      }));
+      formIsValid = false;
+    }
+
+    if (formIsValid) {
+      // Add your login logic here
+      console.log('Form Data:', formData);
+    }
+  };
+
+  return (
+    <div className="flex justify-center items-center h-screen bg-discount-gradient">
               <ToastContainer/>
 
       <form className="max-w-[400px] w-full bg-[#E8E8E8] p-8 rounded-lg bg-white border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md"
@@ -70,17 +123,19 @@ const onSubmit = async (e) => {
           required/>
         </div>
         <div className="flex justify-between  py-2">
-          <p className="flex items-center font-semibold text-gradient-label dark:text-white text-sm"><input className="mr-2" type="checkbox" /> Remember Me</p>
+          <p className="flex items-center font-semibold text-gradient-label dark:text-white text-sm">
+            <input type="checkbox" /> Remember Me
+          </p>
           <p className="text-sm font-semibold text-gradient-label dark:text-white">Forgot Password?</p>
         </div>
         <div className="flex  items-center justify-center ">
         <button className="w-56 py-3 px-8 m-7  font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px]" type='submit'>Sign In</button>
         </div>
-        <p className="font-semibold text-gradient-label dark:text-white text-center text-sm"><a href="/register">Don't Have an Account? Sign Up</a></p>
+        <p className="font-semibold text-gradient-label dark:text-white text-center text-sm">
+          <a href="/register">Don't Have an Account? Sign Up</a>
+        </p>
       </form>
     </div>
-     
-      
   );
     };
   
