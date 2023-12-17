@@ -1,20 +1,53 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoBagHandle, IoPieChart, IoPeople, IoCart } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux';
-import { load_user_graph_number, load_user_file_number } from '../../../actions/user';
 import { load_user } from '../../../actions/auth';
 
 
 export default function DashboardStatsGrid() {
 	const dispatch = useDispatch();
-    const userGraphsCount = useSelector(state => state.userGraphsCount); 
-	const userFilesCount = useSelector(state => state.userFilesCount)
+	const userId = useSelector(state => state.auth.user.id);
+	const [userGraphsCount, setUserGraphsCount] = useState(0);
+	const [userFilesCount, setUserFilesCount] = useState(0);
+
 
     useEffect(() => {
-		dispatch(load_user());
-        dispatch(load_user_graph_number());
-		dispatch(load_user_file_number());
-    }, [dispatch]);
+        const fetchUserGraphsCount = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/account/api/count_user_graphs/${userId}/`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserGraphsCount(data.user_graphs_count);
+                } else {
+                    // Handle non-successful response
+                    console.error('Error fetching user graphs count:', response.statusText);
+                }
+            } catch (error) {
+                // Handle fetch error
+                console.error('Error fetching user graphs count:', error);
+            }
+        };
+		const fetchUserFilesCount = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/account/api/count_user_files/${userId}/`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserFilesCount(data.user_files_count);
+                } else {
+                    // Handle non-successful response
+                    console.error('Error fetching user files count:', response.statusText);
+                }
+            } catch (error) {
+                // Handle fetch error
+                console.error('Error fetching user files count:', error);
+            }
+        };
+
+        fetchUserGraphsCount();
+		fetchUserFilesCount();
+    }, [userId]);
+
+ 
 	return (
 		<div className="flex gap-4">
 			<BoxWrapper>

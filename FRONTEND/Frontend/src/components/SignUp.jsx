@@ -20,7 +20,6 @@ const SignUp = ({ signup, isAuthenticated }) => {
   });
   const { firstname, lastname, email, password, re_password } = formData;
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-
   const [error, setError] = useState('');
 
 
@@ -28,9 +27,12 @@ const SignUp = ({ signup, isAuthenticated }) => {
 
   const onSubmit = e => {
     e.preventDefault();
-    signup(firstname, lastname, email, password, re_password);
-    setAccountCreated(true);
-    
+    if (password !== re_password) {
+      toast.error('Passwords mismatch');
+    } else {
+      signup(firstname, lastname, email, password, re_password);
+      setAccountCreated(true);
+    }
 };
 
 
@@ -62,6 +64,8 @@ const continueWithFacebook = async () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-discount-gradient">
+      <ToastContainer/>
+
       <form className=" max-w-[400px]   bg-white border-2  border-schemes rounded-[10px] py-[20px] px-4 shadow-md"
       onSubmit={e => onSubmit(e)}>
         <h2 className="font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris">SIGN UP</h2>
@@ -128,6 +132,7 @@ const continueWithFacebook = async () => {
             onChange={e => onChange(e)}
             minLength='8'
             required
+
           />
         </div>
         

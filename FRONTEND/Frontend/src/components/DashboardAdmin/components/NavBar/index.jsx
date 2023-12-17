@@ -12,12 +12,13 @@ import {
 } from "react-icons/io";
 import avatar from "../../Data/img/avatar4.png";
 import { logout } from '../../../../actions/auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const Navbar = (props) => {
   const { onOpenSidenav, brandText } = props;
   const [darkmode, setDarkmode] = React.useState(false);
+  const firstname = useSelector(state => state.auth.user.firstname);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -200,7 +201,7 @@ const Navbar = (props) => {
               <div className="p-4">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-bold text-navy-700 dark:text-white">
-                    👋 Hey, Adela
+                    👋 Hey, {firstname}
                   </p>{" "}
                 </div>
               </div>

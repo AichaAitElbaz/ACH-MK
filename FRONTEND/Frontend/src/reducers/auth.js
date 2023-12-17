@@ -20,6 +20,8 @@ import {
     GOOGLE_AUTH_FAIL,
     FACEBOOK_AUTH_SUCCESS,
     FACEBOOK_AUTH_FAIL,
+    UPDATE_USER_FAILURE,
+    UPDATE_USER_SUCCESS,
     LOGOUT
 } from '../actions/types';
 
@@ -29,10 +31,16 @@ const initialState = {
     isAuthenticated: null,
     user:null,
     role:null,
+    firstname:null,
+    lastname:null,
+    email:null,
+
+    
 };
 
 export default function(state = initialState, action) {
     const { type, payload } = action;
+    
 
 
     switch(type) {
@@ -46,11 +54,16 @@ export default function(state = initialState, action) {
             console.log(payload);
             localStorage.setItem('access', payload.access);
             localStorage.setItem('refresh', payload.refresh);
+            
             return {
                     ...state,
                     isAuthenticated: true,
                     access: payload.access,
+                    user: payload,
                     role : payload.role,
+                    firstname: payload.firstname,
+                    lastname: payload.lastname,
+                    email: payload.email,
                     refresh: payload.refresh
                 }
         case GOOGLE_AUTH_SUCCESS:
@@ -71,12 +84,16 @@ export default function(state = initialState, action) {
             }
         case USER_LOADED_SUCCESS:
             console.log('User data loaded successfully:', payload);
-            localStorage.setItem('access', payload.access);
-            localStorage.setItem('refresh', payload.refresh);
             return {
                 ...state,
                 user: payload,
+                access: payload.access,
+                refresh: payload.refresh,
                 role :payload.role,
+                firstname: payload.firstname,
+                lastname: payload.lastname,
+                email: payload.email,
+                isAuthenticated: true
             }
         case AUTHENTICATED_FAIL:
             return {
@@ -84,7 +101,7 @@ export default function(state = initialState, action) {
                 isAuthenticated: false
             }
         case USER_LOADED_FAIL:
-            console.log('User dloaded successfully:', payload);
+            console.log('User failed to load:', payload);
 
             return {
                 ...state,
@@ -111,6 +128,14 @@ export default function(state = initialState, action) {
 
             }
         case PASSWORD_RESET_SUCCESS:
+        case UPDATE_USER_FAILURE:
+            return { 
+                ...state, 
+                updateUserError: action.payload };
+        case UPDATE_USER_SUCCESS:
+            return { 
+                ...state, 
+                updateUserError: null };
         case PASSWORD_RESET_FAIL:
         case PASSWORD_RESET_CONFIRM_SUCCESS:
         case PASSWORD_RESET_CONFIRM_FAIL:

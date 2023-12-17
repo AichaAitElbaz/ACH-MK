@@ -9,7 +9,7 @@ import {
 } from './types';
 
 
-export const load_user_graph_number = () => async dispatch => {
+export const load_user_graph_number = (userId)  => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {
             headers: {
@@ -20,11 +20,11 @@ export const load_user_graph_number = () => async dispatch => {
         }; 
 
         try {
-            const res = await axios.get(`http://localhost:8000/account/api/count_user_graphs/`, config);
-    
+            const res = await axios.get(`http://localhost:8000/account/api/count_user_graphs/${userId}`, config);
+            console.log('hkkk',res.data)
             dispatch({
                 type: COUNT_UGRAPHS_SUCCESS,
-                payload: res.data
+                payload: res.data,
             });
         } catch (err) {
             dispatch({
@@ -37,7 +37,7 @@ export const load_user_graph_number = () => async dispatch => {
         });
     }
 };
-export const load_user_file_number = () => async dispatch => {
+export const load_user_file_number = (userId) => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {
             headers: {
@@ -48,7 +48,7 @@ export const load_user_file_number = () => async dispatch => {
         }; 
 
         try {
-            const res = await axios.get(`http://localhost:8000/account/api/count_user_files/`, config);
+            const res = await axios.get(`http://localhost:8000/account/api/count_user_files/${userId}`, config);
     
             dispatch({
                 type: COUNT_UFILES_SUCCESS,

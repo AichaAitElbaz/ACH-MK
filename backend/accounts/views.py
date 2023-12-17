@@ -8,7 +8,11 @@ from .models import Graph
 from .models import Guest
 from .models import UserAccount
 from django.contrib.auth.decorators import login_required
-import ipaddress
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+from django.contrib.auth.models import AnonymousUser
+import json
 
 
 User = get_user_model()
@@ -63,7 +67,7 @@ def delete_graph_backend(request, graph_id):
 
     return JsonResponse({'error': 'Invalid request method'})
 
-
+@csrf_exempt
 def count_users(request):
     if request.method == 'GET':
         user_count = User.objects.count()
@@ -72,7 +76,7 @@ def count_users(request):
     return JsonResponse({'error': 'Invalid request method'})
 
 
-
+@csrf_exempt
 def count_total_graphs(request):
     if request.method == 'GET':
         total_graphs_count = Graph.objects.count()
@@ -80,7 +84,7 @@ def count_total_graphs(request):
 
     return JsonResponse({'error': 'Invalid request method'})
 
-
+@csrf_exempt
 def display_all_users(request):
     users = User.objects.all()
     user_data = []
@@ -97,22 +101,23 @@ def display_all_users(request):
 
     return JsonResponse({'users': user_data})
 
-@login_required
-def count_user_graphs(request):
+@csrf_exempt
+def count_user_graphs(request, user_id):
     if request.method == 'GET':
-        user_graphs_count = Graph.objects.filter(user=request.user).count()
+        user_graphs_count = Graph.objects.filter(user=user_id).count()
         return JsonResponse({'user_graphs_count': user_graphs_count})
 
     return JsonResponse({'error': 'Invalid request method'})
 
-@login_required
-def count_user_files(request):
+@csrf_exempt
+def count_user_files(request, user_id):
     if request.method == 'GET':
-        user_files_count = Graph.objects.filter(user=request.user).count()
+        user_files_count = Graph.objects.filter(user=user_id).count()
         return JsonResponse({'user_files_count': user_files_count})
 
     return JsonResponse({'error': 'Invalid request method'})
 
+@csrf_exempt
 def get_guest_visits(request):
     if request.method == 'GET':
         user_ip = request.META.get('REMOTE_ADDR')
@@ -143,3 +148,22 @@ def update_visitor(request):
 
     response_data = {'success': True, 'ip_address': guest.ip_address, 'visit_counter': guest.visit_counter}
     return JsonResponse(response_data)
+
+@csrf_exempt
+def update_user_info(request, user_id):
+        data = json.loads(request.body)
+
+        first_name = data.get('firstName')
+        last_name = data.get('lastName')
+        email = data.get('email')
+        user = User.objects.get(id=user_id)
+              
+        user.firstname = first_name
+        user.lastname = last_name
+        user.email = email
+
+        user.save()
+
+        return JsonResponse({'message': 'User information updated successfully'})
+
+

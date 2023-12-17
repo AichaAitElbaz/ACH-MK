@@ -19,6 +19,8 @@ import {
     GOOGLE_AUTH_FAIL,
     FACEBOOK_AUTH_SUCCESS,
     FACEBOOK_AUTH_FAIL,
+    UPDATE_USER_FAILURE,
+    UPDATE_USER_SUCCESS,
     LOGOUT
 } from './types';
 
@@ -287,6 +289,24 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
         });
     }
 };
+export const updateUser = (userData) => async (dispatch) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    
+    try {
+      const response = await axios.put('http://localhost:8000/account/api/update_user/', userData, config);
+      dispatch({ 
+        type: UPDATE_USER_SUCCESS, 
+        payload: response.data });
+    } catch (error) {
+      dispatch({ 
+        type: UPDATE_USER_FAILURE, 
+        payload: error.response.data });
+    }
+  };
 
 export const logout = () => dispatch => {
     dispatch({
