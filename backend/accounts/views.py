@@ -12,13 +12,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
-
-
 import openai
 from .models import Guest
 import os
 import json
-
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -220,7 +217,59 @@ def send_message(request):
             return JsonResponse({'error': 'Invalid JSON data'})
 
     return JsonResponse({'error': 'Invalid request method'})
+@csrf_exempt
+def get_all_messages(request):
+    if request.method == 'GET':
+        try:
+            # Récupérer toutes les instances de Message
+            messages = Message.objects.all()
 
+            # Construire la liste des messages
+            messages_list = [
+                {
+                    'sender_email': message.sender_email,
+                    'firstname': message.firstname,
+                    'lastname': message.lastname,
+                    'phone_number': message.phone_number,
+                    'message': message.message,
+                    'date_sent': message.date_sent  # Ajoutez le champ timestamp si vous avez un champ pour la date/heure
+                }
+                for message in messages
+            ]
+
+            return JsonResponse({'messages': messages_list})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+@csrf_exempt
+def get_user_messages(request, user_email):
+    if request.method == 'GET':
+        try:
+            # Récupérer toutes les instances de Message pour un utilisateur spécifique
+            user_messages = Message.objects.filter(sender_email=user_email)
+
+            # Construire la liste des messages de l'utilisateur
+            user_messages_list = [
+                {
+                    'sender_email': message.sender_email,
+                    'firstname': message.firstname,
+                    'lastname': message.lastname,
+                    'phone_number': message.phone_number,
+                    'message': message.message,
+                    'date_sent': message.date_sent # Ajoutez le champ timestamp si vous avez un champ pour la date/heure
+                }
+                for message in user_messages
+            ]
+
+            return JsonResponse({'user_messages': user_messages_list})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    return JsonResponse({'error': 'Invalid request method'})
 
 @csrf_exempt
 def get_guest_visits(request):

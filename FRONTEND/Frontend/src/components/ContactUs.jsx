@@ -101,9 +101,9 @@ const [alertSeverity, setAlertSeverity] = useState('success');
       });
 
       if (response.ok) {
-        notifySuccess();
+        toast.success('Message sent, Thank you')
       } else {
-        notifyError();
+        toast.error('An error occured, Try Again')
       }
     }
   };
@@ -114,6 +114,8 @@ const [alertSeverity, setAlertSeverity] = useState('success');
 
   return (
     <div className="isolate bg-[#e1f7f3] px-6 py-14 lg:px-8">
+                    <ToastContainer/>
+
       <div className="mx-auto max-w-2xl text-center">
       <h2 className="text-3xl font-bold tracking-tight text-[#424144] sm:text-4xl mt-0 pt-0">Contact Us</h2>
         <p className="mt-2 text-lg leading-8 text-[#424144]">

@@ -1,4 +1,5 @@
-import React, { useState, useEffect  }  from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import avatar from '../../../Data/img/avatar4.png'
 import {MessageTable} from '../../../components/TableMessage'
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +9,30 @@ import { logout } from '../../../../../actions/auth';
 const index = () => {
   const username = useSelector(state => state.auth.user.firstname);
   const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+  const [adminMessages, setAdminMessages] = useState([]);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+
+  useEffect(() => {
+    const getAdminMessages = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/account/get-all-messages/`);
+        setAdminMessages(response.data.messages);
+      } catch (error) {
+        console.error('Error fetching users messages:', error);
+      }
+    };
+  
+    getAdminMessages();
+  }, []);
+
+  const handleClickMessage = (message) => {
+    setSelectedMessage(message);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMessage(null);
+  };
 
   const handleLogout = () => {
     dispatch(logout());
