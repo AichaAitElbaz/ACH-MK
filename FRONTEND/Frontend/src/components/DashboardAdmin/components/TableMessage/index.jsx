@@ -33,7 +33,7 @@ import {
     },
   ];
    
-  const TABLE_HEAD = ["Member", "Message", "Date", "Reply"];
+  const TABLE_HEAD = ["Member", "Message", "Date","Phone Number" ];
    
   const TABLE_ROWS = [
     {
@@ -42,6 +42,7 @@ import {
       email: "john@creative-tim.com",
       message: "Hello, I'm experiencing an issue with the generation",
       date: "23/04/18",
+      number: "+234567890",
     },
     {
       
@@ -49,6 +50,7 @@ import {
       email: "alexa@creative-tim.com",
       message: "Organization",
       date: "23/04/18",
+      number: "+234567890",
     },
     {
      
@@ -56,6 +58,7 @@ import {
       email: "laurent@creative-tim.com",
       message: "Organization",
       date: "19/09/17",
+      number: "+234567890",
     },
     {
       
@@ -63,6 +66,7 @@ import {
       email: "michael@creative-tim.com",
       message: "Organization",
       date: "24/12/08",
+      number: "+234567890",
     },
     {
       
@@ -70,6 +74,7 @@ import {
       email: "richard@creative-tim.com",
       message: "Organization",
       date: "04/10/21",
+      number: "+234567890",
     },
   ];
    
@@ -118,7 +123,7 @@ import {
             </thead>
             <tbody>
               {TABLE_ROWS.map(
-                ({ name, email, message, date }, index) => {
+                ({ name, email, message, date, number }, index) => {
                   const isLast = index === TABLE_ROWS.length - 1;
                   const classes = isLast
                     ? "p-4"
@@ -169,13 +174,23 @@ import {
                           {date}
                         </Typography>
                       </td>
+                      
                       <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {number}
+                        </Typography>
+                      </td>
+                      {/* <td className={classes}>
                         <Tooltip content="Edit User">
                           <IconButton variant="text">
                             <PencilIcon className="h-4 w-4" />
                           </IconButton>
                         </Tooltip>
-                      </td>
+                      </td> */}
                     </tr>
                   );
                 },
