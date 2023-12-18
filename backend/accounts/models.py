@@ -66,3 +66,10 @@ class Guest(models.Model):
 
     def __str__(self):
         return self.ip_address
+
+
+
+class OpenAIRequest(models.Model):
+    graph_type = models.CharField(max_length=50)
+    csv_content = models.TextField()
+    interpretation = models.TextField(blank=True, null=True)

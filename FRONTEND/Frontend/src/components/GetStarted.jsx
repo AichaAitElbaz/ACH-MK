@@ -12,8 +12,8 @@ const customStyles = {
     left: '50%',
     backgroundColor:'#FCFEFE',
     transform: 'translate(-50%, -50%)',
-    width: '100%', // Largeur du modal
-    height: '100%', // Hauteur maximale du modal
+    width: '90%', // Largeur du modal
+    height: '98%', // Hauteur maximale du modal
     overflowY: 'auto', // Activation du défilement vertical si nécessaire
     padding: '20px', // Espacement intérieur du contenu du modal
   },
