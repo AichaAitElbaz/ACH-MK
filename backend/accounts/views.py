@@ -19,6 +19,11 @@ from .models import Guest
 import os
 import json
 
+from django.utils import timezone
+from datetime import datetime
+#from django.db.models import Cast, models
+
+
 
 
 User = get_user_model()
@@ -269,22 +274,36 @@ def count_user_graphs(request, user_id):
 
 
 
+
+from django.db.models import Count
+from django.db.models.functions import ExtractMonth, ExtractYear
+
+from datetime import datetime
+
 @csrf_exempt
 def user_monthly_graphs(request, user_id):
     if request.method == 'GET':
         try:
-            # Utilisez TruncMonth pour grouper les graphiques par mois
-            monthly_graphs = Graph.objects.filter(user_id=user_id).annotate(
-                month=TruncMonth('date_uploaded')
-            ).values('month').annotate(graphCount=Count('id'))
+            # Récupérer tous les graphiques de l'utilisateur
+            user_graphs = Graph.objects.filter(user_id=user_id)
+
+            # Construire un dictionnaire pour stocker le nombre de graphiques par mois
+            monthly_graphs_count = {}
+
+            for graph in user_graphs:
+                # Extraire le mois à partir de la date
+                month_key = graph.date_uploaded.strftime('%b %Y')
+
+                # Incrémenter le nombre de graphiques pour le mois correspondant
+                monthly_graphs_count[month_key] = monthly_graphs_count.get(month_key, 0) + 1
 
             # Construire la liste des données pour la réponse JSON
             monthly_graphs_list = [
                 {
-                    'month': graph['month'].strftime('%b %Y'),  # Format de la date, par exemple, "Jan 2023"
-                    'graphCount': graph['graphCount']
+                    'month': month,
+                    'graphCount': count
                 }
-                for graph in monthly_graphs
+                for month, count in monthly_graphs_count.items()
             ]
 
             return JsonResponse({'monthlyGraphs': monthly_graphs_list})
