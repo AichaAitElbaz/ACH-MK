@@ -1,15 +1,31 @@
-<<<<<<< HEAD
-=======
-
+from django.shortcuts import render
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-import json
->>>>>>> 2f51fd1908884c87e2c7dfbd3c37c1684a71390a
-from django.shortcuts import render, redirect
 from .models import Graph
-from .models import UserAccount
 from .models import Guest
+from .models import UserAccount
+from .models import Message
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
 import openai
+from .models import Guest
+import os
+import json
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+from django.contrib.auth.models import AnonymousUser
+import json
+
+
+User = get_user_model()
+
+
 
 def my_view(request):
     user_ip = request.META.get('REMOTE_ADDR')
@@ -25,136 +41,113 @@ def my_view(request):
 
 
 
-
-<<<<<<< HEAD
-=======
-def generate_graph_interpretation(request):
+ # Nécessaire si vous n'avez pas de gestion appropriée des CORS dans votre application
+@csrf_exempt
+def add_graph_backend(request):
     if request.method == 'POST':
-        openai.api_key = os.getenv('OPENAI_API_KEY')
+        source_file = request.FILES['source']
+        graph_file = request.FILES['graph']
 
-        csv_content = request.POST.get('csv_content', '')
-        user_message = f"The following CSV data represents temperatures over the years:\n{csv_content}"
+        interpretation_file = request.FILES['interpretation']
+        
+        user_id = request.POST.get('userid')
+        user = UserAccount.objects.get(id=user_id)
 
-        messages = [
-            {"role": "system",
-             "content": "You are a scatter graph interpreter. Provide a detailed and insightful interpretation."},
-            {"role": "user", "content": user_message},
-        ]
-
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=messages,
-            max_tokens=300  # Adjust the token limit based on your needs
+        graph = Graph.objects.create(
+            source_file=source_file,
+            graph=graph_file,
+            interpretation=interpretation_file,
+            user=user
         )
 
-        return JsonResponse({'interpretation': completion['choices'][0]['message']['content']})
+        # Retournez une réponse JSON ou tout autre format approprié pour votre application
+        return JsonResponse({'message': 'Graph added successfully'})
+
+    # Si la méthode n'est pas POST, vous pouvez également retourner une réponse appropriée
+    return JsonResponse({'error': 'Invalid request method'})
+
+
+from django.core.serializers.json import DjangoJSONEncoder
+
+def get_user_graphs_backend(request, user_id):
+    if request.method == 'GET':
+        user_graphs = list(Graph.objects.filter(user_id=user_id).values())
+        # Use DjangoJSONEncoder to serialize the datetime field in the QuerySet
+        return JsonResponse({'user_graphs': user_graphs}, encoder=DjangoJSONEncoder)
 
     return JsonResponse({'error': 'Invalid request method'})
-def add_graph(request):
-    if request.method == 'POST':
-        source_file = request.FILES['source']
-        graph_file = request.FILES['graph']
-        interpretation_file = request.FILES['interpretation']
-        
-        user_id = request.POST.get('userid')
-        user = UserAccount.objects.get(id=user_id)
 
-        graph = Graph.objects.create(
-            source_file=source_file,
-            graph=graph_file,
-            interpretation=interpretation_file,
-            user=user
-        )
+@csrf_exempt
+def delete_graph_backend(request, graph_id):
+    if request.method == 'DELETE':
+        try:
+            graph = Graph.objects.get(id=graph_id)
+            user_id = graph.user.id
+            graph.delete()
+            return JsonResponse({'message': 'Graph deleted successfully'})
+        except Graph.DoesNotExist:
+            return JsonResponse({'error': 'Graph not found'})
 
-        return get_user_graphs(request, user_id)  # Redirigez vers la vue get_user_graphs avec l'ID de l'utilisateur
+    return JsonResponse({'error': 'Invalid request method'})
 
-    return render(request, 'addgraphtem.html')
+@csrf_exempt
+def count_users(request):
+    if request.method == 'GET':
+        user_count = User.objects.count()
+        return JsonResponse({'user_count': user_count})
 
-
-def get_user_graphs(request, user_id):
-    user_graphs = Graph.objects.filter(user_id=user_id)
-    return render(request, 'user_graphs.html', {'user_graphs': user_graphs})
+    return JsonResponse({'error': 'Invalid request method'})
 
 
-def delete_graph(request, graph_id):
-    graph = Graph.objects.get(id=graph_id)
-    user_id = graph.user.id  # Récupérer l'ID de l'utilisateur avant de supprimer le graphe
+@csrf_exempt
+def count_total_graphs(request):
+    if request.method == 'GET':
+        total_graphs_count = Graph.objects.count()
+        return JsonResponse({'total_graphs_count': total_graphs_count})
 
-    graph.delete()
-    return redirect('user_graphs', user_id=user_id) 
+    return JsonResponse({'error': 'Invalid request method'})
 
+@csrf_exempt
+def display_all_users(request):
+    users = User.objects.all()
+    user_data = []
 
+    for user in users:
+        user_data.append({
+            'id': user.id,
+            'email': user.email,
+            'firstname': user.firstname,
+            'lastname': user.lastname,
+            'date_joined': user.date_joined,
+            # Ajoutez d'autres champs si nécessaire
+        })
 
+    return JsonResponse({'users': user_data})
 
->>>>>>> 2f51fd1908884c87e2c7dfbd3c37c1684a71390a
-def add_graph(request):
-    if request.method == 'POST':
-        source_file = request.FILES['source']
-        graph_file = request.FILES['graph']
-        interpretation_file = request.FILES['interpretation']
-        
-        user_id = request.POST.get('userid')
-        user = UserAccount.objects.get(id=user_id)
+@csrf_exempt
+def count_user_graphs(request, user_id):
+    if request.method == 'GET':
+        user_graphs_count = Graph.objects.filter(user=user_id).count()
+        return JsonResponse({'user_graphs_count': user_graphs_count})
 
-        graph = Graph.objects.create(
-            source_file=source_file,
-            graph=graph_file,
-            interpretation=interpretation_file,
-            user=user
-        )
+    return JsonResponse({'error': 'Invalid request method'})
 
-        return get_user_graphs(request, user_id)  # Redirigez vers la vue get_user_graphs avec l'ID de l'utilisateur
+@csrf_exempt
+def count_user_files(request, user_id):
+    if request.method == 'GET':
+        user_files_count = Graph.objects.filter(user=user_id).count()
+        return JsonResponse({'user_files_count': user_files_count})
 
-    return render(request, 'addgraphtem.html')
-
-
-def get_user_graphs(request, user_id):
-    user_graphs = Graph.objects.filter(user_id=user_id)
-    return render(request, 'user_graphs.html', {'user_graphs': user_graphs})
-
-
-def delete_graph(request, graph_id):
-    graph = Graph.objects.get(id=graph_id)
-    user_id = graph.user.id  # Récupérer l'ID de l'utilisateur avant de supprimer le graphe
-
-    graph.delete()
-    return redirect('user_graphs', user_id=user_id) 
-
-<<<<<<< HEAD
-=======
-
-
-# @csrf_exempt
-# def generate_interpretation(request):
-#     if request.method == 'POST':
-#         openai.api_key = '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'
-
-#         try:
-#             # Get the JSON data from the request body
-#             data = json.loads(request.body)
-#             chart_content = data.get('chart_content', {})  # Fetch chart content sent from frontend
-
-#             if chart_content:
-#                 chart_type = chart_content.get('chartType', '')
-#                 print(chart_type)
-#                 print(chart_content)
-
-#                 return JsonResponse({'chart_content': chart_content})  # Return chart content as JSON response
-
-#             else:
-#                 return JsonResponse({'error': 'Empty chart_content'})
-
-#         except json.JSONDecodeError:
-#             return JsonResponse({'error': 'Invalid JSON data'})
-
-#     return JsonResponse({'error': 'Invalid request method'})
+    return JsonResponse({'error': 'Invalid request method'})
 
 
 @csrf_exempt
 def generate_interpretation(request):
+    print("ggggggggggggggggg")
     if request.method == 'POST':
-        openai.api_key = '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'
-
+        #openai.api_key = os.getenv('API_KEY')  # Retrieve API key from environment variable
+        print(openai.api_key)
+        openai.api_key = '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'
         try:
             # Get the JSON data from the request body
             data = json.loads(request.body)
@@ -188,6 +181,143 @@ def generate_chart_interpretation(chart_data):
 
     # Extract the generated interpretation from the API response
     interpretation = response.choices[0].text.strip()
-    print(interpretation)
     return interpretation
->>>>>>> 2f51fd1908884c87e2c7dfbd3c37c1684a71390a
+
+@csrf_exempt
+def send_message(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            sender_email = data.get('sender_email', '')
+            firstname = data.get('firstname', '')
+            lastname = data.get('lastname', '')
+            phone_number = data.get('phone_number', '')
+            message_text = data.get('message', '')
+
+            # Créer une instance de Message
+            message_instance = Message.objects.create(
+                sender_email=sender_email,
+                firstname=firstname,
+                lastname=lastname,
+                phone_number=phone_number,
+                message=message_text
+            )
+
+            # Envoie d'un e-mail
+            subject = 'Nouveau message de {} {}'.format(firstname, lastname)
+            message = render_to_string('email_template.txt', {'message': message_text})
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [settings.EMAIL_HOST_USER]
+
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+            return JsonResponse({'message': 'Message sent successfully'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'})
+
+    return JsonResponse({'error': 'Invalid request method'})
+@csrf_exempt
+def get_all_messages(request):
+    if request.method == 'GET':
+        try:
+            # Récupérer toutes les instances de Message
+            messages = Message.objects.all()
+
+            # Construire la liste des messages
+            messages_list = [
+                {
+                    'sender_email': message.sender_email,
+                    'firstname': message.firstname,
+                    'lastname': message.lastname,
+                    'phone_number': message.phone_number,
+                    'message': message.message,
+                    'date_sent': message.date_sent  # Ajoutez le champ timestamp si vous avez un champ pour la date/heure
+                }
+                for message in messages
+            ]
+
+            return JsonResponse({'messages': messages_list})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+@csrf_exempt
+def get_user_messages(request, user_email):
+    if request.method == 'GET':
+        try:
+            # Récupérer toutes les instances de Message pour un utilisateur spécifique
+            user_messages = Message.objects.filter(sender_email=user_email)
+
+            # Construire la liste des messages de l'utilisateur
+            user_messages_list = [
+                {
+                    'sender_email': message.sender_email,
+                    'firstname': message.firstname,
+                    'lastname': message.lastname,
+                    'phone_number': message.phone_number,
+                    'message': message.message,
+                    'date_sent': message.date_sent # Ajoutez le champ timestamp si vous avez un champ pour la date/heure
+                }
+                for message in user_messages
+            ]
+
+            return JsonResponse({'user_messages': user_messages_list})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+@csrf_exempt
+def get_guest_visits(request):
+    if request.method == 'GET':
+        user_ip = request.META.get('REMOTE_ADDR')
+
+        # Vérifiez si l'adresse IP existe déjà dans la base de données
+        guest, created = Guest.objects.get_or_create(ip_address=user_ip)
+        
+
+        # Incrémentez le compteur de visites
+        visits = guest.visit_counter + 1
+        guest.save()
+
+        # Return the guest visit information as JSON
+        return JsonResponse({'user_ip': user_ip, 'total_visits': visits})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+@csrf_exempt
+def update_visitor(request):
+    user_ip = request.META.get('REMOTE_ADDR')
+
+    # Vérifiez si l'adresse IP existe déjà dans la base de données
+    guest, created = Guest.objects.get_or_create(ip_address=user_ip)
+
+    # Incrémentez le compteur de visites
+    guest.visit_counter += 1
+    guest.save()
+
+    response_data = {'success': True, 'ip_address': guest.ip_address, 'visit_counter': guest.visit_counter}
+    return JsonResponse(response_data)
+
+@csrf_exempt
+def update_user_info(request, user_id):
+        data = json.loads(request.body)
+
+        first_name = data.get('firstName')
+        last_name = data.get('lastName')
+        email = data.get('email')
+        user = User.objects.get(id=user_id)
+              
+        user.firstname = first_name
+        user.lastname = last_name
+        user.email = email
+
+        user.save()
+
+        return JsonResponse({'message': 'User information updated successfully'})
+
+

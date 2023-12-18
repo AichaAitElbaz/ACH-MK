@@ -1,5 +1,5 @@
 import React from 'react';
-import { chart,about, chart2 } from '../assets';
+import { about } from '../assets';
 
 const AboutUs = () => {
   return (
@@ -25,34 +25,13 @@ const AboutUs = () => {
            
           </div>
 
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-center items-center mt-8">
-        <div className="image-content max-w-md mx-auto">
-            <img src={chart2} alt="second image" className="w-full h-auto rounded-md shadow-md" />
-          </div>
-          <div className="text-content max-w-xl mx-auto">
-            <h2 className="text-xl font-semibold">Live Data Visualization</h2>
-            <p className="text-s mt-4">
-              Just like live HD sports coverage, our service ensures that you don't miss a beat when it comes to charting your favorite data. We help you transform your data into dynamic, real-time visuals that can be accessed from anywhere in the world. Our charts provide you with the play-by-play action of your data, giving you the ability to interpret trends and insights as they happen.
-            </p>
-
-            <h2 className="text-xl font-semibold mt-4">Our Mission</h2>
-            <p className="text-s mt-4">
-              Our mission is to empower you to create, understand, and share charted data with ease and convenience. We believe that every data point, just like every premium channel or movie, should be at your fingertips, ready to be charted, analyzed, and interpreted.
-            </p>
-
-            <h2 className="text-xl font-semibold mt-4">Our Vision</h2>
-            <p className="text-s mt-4">
-              We envision a future where data visualization is accessible to all, without breaking the bank. That's why we offer the best subscription packages in the market, ensuring that you get the most value for your investment. We're here for you 24/7, providing dedicated support to assist with all your chart generation and interpretation needs. We're not just a service; we're your data visualization partner.
-            </p>
-          </div>
-
-         
+        <div className="image-content">
+          <img src="https://source.unsplash.com/random" alt="Company Logo" className="w-full h-auto rounded-md shadow-md" />
         </div>
       </div>
     </div>
-  );
+  </div>
+ );
 };
 
 export default AboutUs;

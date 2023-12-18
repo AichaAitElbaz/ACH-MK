@@ -16,8 +16,13 @@ import Progress from "../../../../components/progress";
 const GuestTable = (props) => {
   const { columnsData, tableData } = props;
 
+  console.log('tableData:', tableData); // Log tableData
   const columns = useMemo(() => columnsData, [columnsData]);
-  const data = useMemo(() => tableData, [tableData]);
+  const data = useMemo(() => {
+    const usersArray = tableData?.users || [];
+    console.log('data:', usersArray); // Log data
+    return usersArray;
+  }, [tableData?.users]);
 
   const tableInstance = useTable(
     {
@@ -28,7 +33,6 @@ const GuestTable = (props) => {
     useSortBy,
     usePagination
   );
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -40,22 +44,16 @@ const GuestTable = (props) => {
   initialState.pageSize = 11;
 
   return (
-    <Card extra={"w-full h-full p-4"}>
-      <div class="relative flex items-center justify-between">
-        <div class="text-xl font-bold text-navy-700 dark:text-white">
-          Guest Table
+    <Card extra={"w-full h-full p-4 sm:overflow-x-auto"}>
+      <div className="relative flex items-center justify-between">
+        <div className="text-xl font-bold text-navy-700 dark:text-white">
+          Complex Table
         </div>
         <CardMenu />
       </div>
 
-      <div class="h-full overflow-x-scroll xl:overflow-x-hidden">
-        <table
-          {...getTableProps()}
-          className="mt-8 h-max w-full"
-          variant="simple"
-          color="gray-500"
-          mb="24px"
-        >
+      <div className="mt-8 h-full overflow-x-scroll xl:overflow-hidden">
+        <table {...getTableProps()} className="w-full">
           <thead>
             {headerGroups.map((headerGroup, index) => (
               <tr {...headerGroup.getHeaderGroupProps()} key={index}>
@@ -79,49 +77,22 @@ const GuestTable = (props) => {
               return (
                 <tr {...row.getRowProps()} key={index}>
                   {row.cells.map((cell, index) => {
-                    let data = "";
-                    if (cell.column.Header === "NAME") {
+                    let data = cell.value;
+
+                    // Ajoutez des conditions pour chaque champ de l'utilisateur
+                    if (cell.column.Header === "EMAIL") {
                       data = (
                         <p className="text-sm font-bold text-navy-700 dark:text-white">
                           {cell.value}
                         </p>
                       );
-                    } else if (cell.column.Header === "TECH") {
+                    } else if (cell.column.Header === "FIRST") {
                       data = (
-                        <div className="flex items-center gap-2">
-                          {cell.value.map((item, key) => {
-                            if (item === "apple") {
-                              return (
-                                <div
-                                  key={key}
-                                  className="text-[22px] text-gray-600 dark:text-white"
-                                >
-                                  <DiApple />
-                                </div>
-                              );
-                            } else if (item === "android") {
-                              return (
-                                <div
-                                  key={key}
-                                  className="text-[21px] text-gray-600 dark:text-white"
-                                >
-                                  <DiAndroid />
-                                </div>
-                              );
-                            } else if (item === "windows") {
-                              return (
-                                <div
-                                  key={key}
-                                  className="text-xl text-gray-600 dark:text-white"
-                                >
-                                  <DiWindows />
-                                </div>
-                              );
-                            } else return null;
-                          })}
-                        </div>
+                        <p className="text-sm font-bold text-navy-700 dark:text-white">
+                          {cell.value}
+                        </p>
                       );
-                    } else if (cell.column.Header === "DATE") {
+                    } else if (cell.column.Header === "LAST") {
                       data = (
                         <p className="text-sm font-bold text-navy-700 dark:text-white">
                           {cell.value}

@@ -9,11 +9,14 @@ import * as XLSX from 'xlsx';
 import { updown, down, logo ,close} from '../assets';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+
 import {DragDropFiles} from './index';
 import './DragDropFile/drop.css';
 
 import { ImageConfig } from './DragDropFile/ImageConfig'; 
 import {uploadImg} from '../assets/index';
+import { useSelector } from 'react-redux';
+import { toBase64Image } from 'chartjs-to-image';
 
 
 const GenerateForm = () => {
@@ -37,6 +40,7 @@ const GenerateForm = () => {
 
           setSelectedFile(newFile);
           const filename = newFile.name;
+          setFilename(filename);
           
       }
 
@@ -62,6 +66,7 @@ const GenerateForm = () => {
     const [fontFamily, setFontFamily] = useState('textStyle');
     const [fontStyle, setFontStyle] = useState('textStyle');
     const [textColor, setTextColor] = useState('textColor');
+    const [filename, setFilename] = useState('');
 
     const fontSizeOptions = [];
     const [chartLayout, setChartLayout] = useState('vertical'); // Initialisez la disposition à "vertical"
@@ -83,12 +88,113 @@ const GenerateForm = () => {
     const chartRef1 = useRef(null);
     const [showManualInput, setShowManualInput] = useState(false);
 
- 
+
+    const [interpretationFile, setInterpretationFile] = useState(null);
   
+    const user = useSelector(state => state.auth.user);
+    const [userId, setUserId] = React.useState(null);
 
 
-  
-    useEffect(() => {
+
+    const handleeSubmit = async () => {
+      // Utilize useSelector to retrieve the user from the Redux state
+      setUserId(user.id);
+      const formData = new FormData();
+      const chart = document.getElementById('chart');
+    
+      // Convert the chart to a PDF document using jsPDF
+      const doc = new jsPDF();
+     html2canvas(chart).then(async (canvas) => {
+        const chartImage = canvas.toDataURL('image/png');
+        doc.addImage(chartImage, 'JPEG', 10, 10, 90, 70);
+  // Save the PDF document content as a Blob
+        const pdfBlob = doc.output('blob');
+         // Create a File object from the Blob
+        const pdfFile = new File([pdfBlob],  `${filename}_chart.pdf`, { type: 'application/pdf' });
+        // Append the PDF file to the FormData for the 'graph' key
+        formData.append('graph', pdfFile);
+
+
+        const doc2 = new jsPDF();
+        const fontSize = 12; // Ajustez selon vos besoins
+        doc2.setFontSize(fontSize);
+        const textX = 10; // Ajustez selon vos besoins
+        
+        // Ajouter la chaîne interpretation à doc2
+        const interpretationText = interpretation || 'Aucune interprétation disponible';
+        
+        // Positionner le texte au centre horizontalement
+        const textWidth = doc2.getStringUnitWidth(interpretationText) * fontSize / doc2.internal.scaleFactor;
+        const textXCentered = (doc2.internal.pageSize.width - textWidth) / 2;
+        
+        // Ajouter le contenu de la chaîne interpretation à doc2
+        doc2.text(textXCentered, 10, interpretationText); // 10 est la coordonnée y, ajustez selon vos besoins
+        
+        // Générer le fichier PDF
+        const pdfBlob2 = doc2.output('blob');
+        const pdfFile2 = new File([pdfBlob2],  `${filename}_interpretation.pdf`, { type: 'application/pdf' });
+        formData.append('interpretation', pdfFile2); 
+
+
+
+      
+        
+    
+        if (selectedFile) {
+          // Si selectedFile existe, l'ajouter à formData
+          formData.append('source', selectedFile);
+        } else {
+       
+         
+          const doc = new jsPDF();
+
+          // Ajouter le contenu du graphique dans le PDF
+          doc.text(10, 10, 'Labels: ' + chartData.labels.join(', ')); // Ajoutez les étiquettes
+          doc.text(10, 20, 'Series: ' + JSON.stringify(chartData.series)); // Ajoutez les séries
+        
+          // Générer le Blob du PDF
+          const pdfBlob3 = doc.output('blob');
+        
+          const pdfFile3 = new File([pdfBlob3], 'DATA.pdf', { type: 'application/pdf' });
+        
+          // Ajouter le Blob du PDF à formData
+          formData.append('source', pdfFile3);
+          
+        }
+     
+        formData.append('userid', user.id);
+    
+        try {
+          const response = await fetch('http://localhost:8000/account/api/add_graph/', {
+            method: 'POST',
+            body: formData,
+          });
+    
+          if (response.ok) {
+            console.log('Graph added successfully');
+            // Add your logic for success here
+          } else {
+            console.error('Failed to add graph');
+            // Add your logic for failure here
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          // Handle the error here
+        }
+      });
+    };
+    
+
+
+
+
+
+
+
+
+
+         useEffect(() => {
+
 
       if (chartRef.current && isModalOpen) {
         // Le graphique est prêt, capturez l'image
@@ -104,7 +210,17 @@ const GenerateForm = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        
+
+        if (file) {
+          // Obtenez le nom du fichier
+          const fileName = file.name;
+          setFilename(fileName);
+         
+      
+          
+        }
+       
+
       };
     const handleGraphiqueTypeChange = (event) => {
         setGraphiqueType(event.target.value);
@@ -167,9 +283,7 @@ const GenerateForm = () => {
         if (!selectedFile) {
           alert('Please select a file.');
           return;
-        }
-    
-        if (!x || !y) {
+        }if (!x || !y) {
           alert('Please specify both X and Y columns.');
           return;
         }
@@ -187,11 +301,10 @@ const GenerateForm = () => {
     
             const xData = sheetData.map((row) => row[x]);
             const yData = sheetData.map((row) => row[y]);
-            const yMin = Math.min(...yData);
-            const yMax = Math.max(...yData);
+
+          
             let series = [];
-            // Vérifier et traiter les valeurs manquantes dans xData, yData et sizeData
-             
+          
 
             if (!isValidData(xData) || !isValidData(yData) ) {
               // Gérer les valeurs manquantes ici (remplacement par des valeurs par défaut, suppression, etc.)
@@ -203,8 +316,9 @@ const GenerateForm = () => {
             || graphiqueType==='radar'||graphiqueType==='scatter' || graphiqueType==='heatmap') {
                 series = [{ name: y, data: yData }];
               } else if (graphiqueType === 'donut' || graphiqueType === 'pie') {
-                series = yData;
-                
+
+                series = yData
+
               } else if (graphiqueType === 'boxplot') {
                 // Utilisez les données de xData comme labels des boîtes
                 const labels = xData;
@@ -232,7 +346,6 @@ const GenerateForm = () => {
             };
       
             setChartData(chartData);
-            setPieChartData(pieChartData);
             openModal();
             console.log(chartData)
           } catch (error) {
@@ -243,47 +356,43 @@ const GenerateForm = () => {
         reader.readAsArrayBuffer(selectedFile);
       };
       const generateChartManual = () => {
-            let series = [];
+        let series = [];
 
-            const chartData = {
-              labels: xData.split('\n').map(value => value.trim()),
-              series: [{ name: y, data: yData.split('\n').map(value => value.trim()) }],
-            };
-            const piechartData = {
-              labels: xData.split('\n').map(value => value.trim()),
-              series : yData.split('\n').map(value => value.trim())
-            };
-           if (graphiqueType === 'donut' || graphiqueType === 'pie') {
-                series = yData
-                
-              } else if (graphiqueType === 'boxplot') {
-                // Utilisez les données de xData comme labels des boîtes
-                const labels = xData;
-                
-                // Utilisez les données de yData pour créer les séries de boîtes
-                series = yData.map((data, index) => {
-                  return {
-                    name: labels[index],  // Nommez chaque boîte avec l'étiquette correspondante
-                    data: data,  // Données pour chaque boîte (quartiles Q1, médiane, Q3, min, max)
-                  };
-                });
-            }else if (graphiqueType === 'bubble') {
-                // Utilisez les données de xData, yData et sizeData pour créer les séries de données
-                series = xData.map((x, index) => {
-                  return {
-                    x: x,           // Valeur x
-                    y: yData[index], // Valeur y
-                    z: sizeData[index], // Taille de la bulle
-                  };
-                });
-              };
-         
-      
-            setChartData(chartData);
-            setPieChartData(piechartData);
-            console.log(pieChartData)
-            openModal();
+      if (graphiqueType === 'line' || graphiqueType === 'bar'|| graphiqueType==='area' 
+        || graphiqueType==='radar'||graphiqueType==='scatter' || graphiqueType==='heatmap') {
+            series = [{ name: y, data: yData.split('\n').map(value => value.trim()) }];
+          } else if (graphiqueType === 'donut' || graphiqueType === 'pie') {
+           series = yData.split('\n').map(value => parseFloat(value.trim())); 
             
+          } else if (graphiqueType === 'boxplot') {
+            // Utilisez les données de xData comme labels des boîtes
+            const labels = xData.split('\n').map(value => value.trim());
+            
+            // Utilisez les données de yData pour créer les séries de boîtes
+            series = yData.map((data, index) => {
+              return {
+                name: labels[index],  // Nommez chaque boîte avec l'étiquette correspondante
+                data: data,  // Données pour chaque boîte (quartiles Q1, médiane, Q3, min, max)
+              };
+            });
+        }else if (graphiqueType === 'bubble') {
+            // Utilisez les données de xData, yData et sizeData pour créer les séries de données
+            series = (xData.split('\n').map(value => value.trim())).map((x, index) => {
+              return {
+                x: x,           // Valeur x
+                y:( yData.split('\n').map(value => value.trim()))[index], // Valeur y
+                z: sizeData[index], // Taille de la bulle
+              };
+            });
+          };
+        const chartData = {
+          labels: xData.split('\n').map(value => value.trim()),
+          series: series,
+        };
+  
+        setChartData(chartData);
+        openModal();
+        console.log(chartData)
      
       };
       const generateChart = () => {
@@ -304,13 +413,9 @@ const GenerateForm = () => {
         }
       };
       const handleManualDataInput = () => {
-      //  chartData.labels=xData.split('\n').map(value => value.trim()); // Séparer les valeurs de X par saut de ligne
-      //  chartData.series.yData=yData.split('\n').map(value => value.trim()); // Séparer les valeurs de Y par saut de ligne
-    
-        // Votre logique pour utiliser les valeurs de xValues et yValues ici
-        // ...
-    
+ 
         console.log(chartData);
+
   
       };
 
@@ -320,42 +425,26 @@ const GenerateForm = () => {
         xaxis: {
           categories: chartData.labels,
         },
+        labels: chartData.labels,
+
    
         colors: [color], 
         chart: {
             type: graphiqueType,
           },
         plotOptions: {
-            bar: {
+            
+             bar: {
                 horizontal: chartLayout === 'horizontal',
               },
-             
-              
+              line: {
+                horizontal: chartLayout === 'horizontal',
+              },
           },
        
        
         };
-      // const options = {
-      //   labels: chartData.labels,
-
-      //   xaxis: {
-      //     categories: chartData.labels,
-      //   },
-   
-      //   colors: [color], 
-      //   chart: {
-      //       type: graphiqueType,
-      //     },
-      //   plotOptions: {
-      //       bar: {
-      //           horizontal: chartLayout === 'horizontal',
-      //         },
-             
-              
-      //     },
-       
-       
-      //   };
+        
         const handleSubmit = async (e) => {
           e.preventDefault();
     
@@ -367,8 +456,14 @@ const GenerateForm = () => {
           };
         
           try {
-            const response = await axios.post('http://127.0.0.1:8000/generate_interpretation/', { chart_content: chartContent });
+           const response = await axios.post('http://localhost:8000/account/generate_interpretation/', { chart_content: chartContent });
             setInterpretation(response.data.interpretation);
+
+            const doc = new jsPDF();
+
+            // Add the interpretation text to the PDF
+            doc.text(interpretationText, 10, 10);
+            setInterpretationFile(doc);
           } catch (error) {
             console.error('Error:', error);
           }
@@ -395,21 +490,35 @@ const GenerateForm = () => {
       }
     // const puppeteer = require('puppeteer');
 
+ 
     const generatePDF = () => {
-        const doc = new jsPDF();
+      const doc = new jsPDF();
       
-        // Capture le composant React en tant qu'image avec html2canvas.
-        const chart = document.getElementById('chart');
-        // const text = document.getElementById('text');
-      
-        html2canvas(chart).then((canvas) => {
-          const chartImage = canvas.toDataURL('image/png');
-
-
-        doc.addImage(chartImage, 'JPEG', 20, 20, 90, 70);
-
-        // doc.text(10, 120, text.textContent);
-
+      // Capture the React component as an image with html2canvas.
+      const chart = document.getElementById('chart');
+     const interpretation = document.getElementById('interpretation').innerText; // Get text from the 'interpretation' element
+    
+      html2canvas(chart).then((canvas) => {
+        const chartImage = canvas.toDataURL('image/png');
+    
+        const imageWidth = 90; // Adjust as needed
+        const imageHeight = 70; // Adjust as needed
+        const imageX = (doc.internal.pageSize.width - imageWidth) / 2; // Center horizontally
+        const imageY = (doc.internal.pageSize.height - imageHeight) / 2; // Center vertically
+         
+        doc.addImage(chartImage, 'JPEG', imageX, imageY, imageWidth, imageHeight);
+    
+        // Reduce the font size for the text
+        const fontSize = 12; // Adjust as needed
+        doc.setFontSize(fontSize);
+    
+        // Calculate text width and position it in the center
+        const textWidth = doc.getStringUnitWidth(interpretation) * fontSize / doc.internal.scaleFactor;
+        const textX = (doc.internal.pageSize.width - textWidth) / 2; // Center horizontally
+    
+        // Add the content from the 'interpretation' element to the PDF
+        doc.text(textX, imageY + imageHeight + 10, interpretation); // Positioned below the image
+       
         doc.save('ACH_MK.pdf');
         });
       };
@@ -649,94 +758,10 @@ const GenerateForm = () => {
                         <label className={`${styles.label}`}>Axe Y Title</label>
                         <input type="text" className={`${styles.input}`} onChange={handleYChange} value={y}/>
                     </div>
-
-                    {/* <div class="inline-block relative w-56 mx-2 my-6">
-                        <label className={`${styles.label}`}>Source</label>
-                        <input type="text" className={`${styles.input}`} />
-                    </div> */}
-
-         
-                   
-                   
-{/* <<<<<<< HEAD
-
-                    <div className={`${styles.fomatLabel}`}>
-======= */}
-{/* 
-                    <div class="inline-block relative w-56 mx-2 my-6">
-
-                        <label className={`${styles.label}`}>Y Minimal</label>
-                        <input type="text" className={`${styles.input}`} value={yMin} onChange={handleYMinChange}/>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <label className={`${styles.label}`}>Y Maximal</label>
-                        <input type="text" className={`${styles.input}`}  value={yMax} onChange={handleYMaxChange}/>
-                    </div>
-
-                    {/* <div className={`${styles.fomatLabel}`}>
-                        <label className={`${styles.label}`}>threshold line</label>
-                        <input type="text" className={`${styles.input}`} />
-                    </div> */}
-
-                    {/* <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>In 3D</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Grid</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Legend</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Show Values</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>
-                            Plot color</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Rounded corners</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Color Gradient</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Transparent</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Shadow</label>
-                    </div>
-
-                    <div className={`${styles.fomatLabel}`}>
-                        <input type="checkbox" value="" className={`${styles.inputCheck}`} />
-                        <label for="default-checkbox" className={`${styles.labelCheck}`}>Border</label>
-                    </div> */}
-
                 </div>
               
             </div>
-
-
-
-            <div className="flex flex-row justify-between items-center w-full">
+ <div className="flex flex-row justify-between items-center w-full">
                 <h1 className="flex-1 font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris ss:leading-[95px] leading-[45px]">
                     Text Settings
                 </h1>
@@ -744,7 +769,6 @@ const GenerateForm = () => {
             </div>
             <div className='bg-white border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md '>
 
-       
                 <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1 ">
 
             
@@ -825,14 +849,8 @@ const GenerateForm = () => {
                             </svg>
 
                         </div>
-                    </div>           
-
-                
-
-         
-            
+                    </div>
              
-
                 </div>
                
             </div>
@@ -874,7 +892,8 @@ const GenerateForm = () => {
         <h4 >{subTitle}</h4>
         <Chart id='chart' ref={chartRef}  type={graphiqueType}   width={width} height={height}   series={chartData.series} options={options} />
         <div id='modalbtns'>
-          <button className="modalbtns">Save</button>
+       
+          <button className="modalbtns"   onClick={handleeSubmit} >Save</button>
           <button className="modalbtns" onClick={generatePDF}>Download</button>
           <button className="modalbtns"  onClick={handleSubmit} >Interpret</button>
           <button className="modalbtns" onClick={closeModal}>Close</button>
@@ -886,7 +905,9 @@ const GenerateForm = () => {
       {interpretation && (
         <div>
           <h3>Graph Interpretation:</h3>
-          <p>{interpretation}</p>
+          {/* <p contentEditable="true" id='interpretation'>{interpretation}</p> */}
+          <p contentEditable="true" id='interpretation'>{interpretation}</p>
+
         </div>
       )}
     </div>

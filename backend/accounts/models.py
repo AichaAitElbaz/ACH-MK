@@ -8,18 +8,15 @@ class UserAccountManager(BaseUserManager):
             raise ValueError("Users must have email address")
         
         email = self.normalize_email(email)
-        user = self.model(email=email, **kwargs)
+        user = self.model(email=email, role='user', **kwargs)
 
         user.set_password(password)
         user.save()
         return user
     
     def create_superuser(self, email, password=None, **kwargs):
-        user = self.create_user(
-            email,
-            password=password,
-            **kwargs
-        )
+        user = self.model(email=email, role='admin', **kwargs)
+        user.set_password(password)
         user.is_staff = True
         user.is_superuser = True
         user.save(using= self._db)
@@ -34,6 +31,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    role = models.CharField(max_length=10, default='user')
     
 
     objects = UserAccountManager()
@@ -57,19 +55,21 @@ class Graph(models.Model):
     def __str__(self):
         return f'Graph for {self.user.email}'
 
+class Message(models.Model):
+    sender_email = models.EmailField(max_length=255)
+    firstname = models.CharField(max_length=255)
+    lastname = models.CharField(max_length=255)
+    phone_number = models.IntegerField()  # Vous pouvez ajuster la longueur en fonction de vos besoins
+    message = models.TextField()
+    date_sent = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return f'Message from {self.sender_email}'
   
 
 class Guest(models.Model):
-    ip_address = models.CharField(max_length=15)  # Utilisez CharField pour stocker des adresses IP
+    ip_address = models.GenericIPAddressField(unique=True) # Utilisez CharField pour stocker des adresses IP
     visit_counter = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.ip_address
-
-
-
-class OpenAIRequest(models.Model):
-    graph_type = models.CharField(max_length=50)
-    csv_content = models.TextField()
-    interpretation = models.TextField(blank=True, null=True)

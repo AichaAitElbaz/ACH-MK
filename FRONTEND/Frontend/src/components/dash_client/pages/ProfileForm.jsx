@@ -1,12 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { load_user } from '../../../actions/auth';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProfileForm = () => {
+
+  
+  const dispatch = useDispatch();
+  const user_id = useSelector(state => state.auth.user.id);
+  const user = useSelector(state => state.auth.user);
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
   });
 
+  useEffect(() => {
+    dispatch(load_user());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.firstname || '',
+        lastName: user.lastname || '',
+        email: user.email || '',
+      });
+    }
+  }, [user]);
+
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -15,21 +41,44 @@ const ProfileForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
-    // Add logic to send data to the backend if needed
+
+    try {
+      const response = await axios.put(`http://localhost:8000/account/api/update_user/${user_id}/`, {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `JWT ${localStorage.getItem('access')}`,
+          'Accept': 'application/json'
+
+        },
+      });
+
+      console.log(response.data.message);
+      toast.success('Updated success');
+    } catch (error) {
+      console.error('Error updating user information:', error);
+      toast.error('update fail');
+
+    }
   };
 
+
+
+
   const handleCancel = () => {
-    // Add logic for cancel action, if needed
     console.log('Update cancelled');
   };
 
   return (
     <div>
+      <ToastContainer/>
       <h2 className="text-2xl font-bold mb-4">Your Information</h2>
-      <form className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
+      <form className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md" method='put'>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
             First Name

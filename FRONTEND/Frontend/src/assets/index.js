@@ -11,8 +11,7 @@ import twitter from "./twitter.png";
 import updown from "./up-down-Arrow.svg";
 import down from "./down-Arrow.svg";
 import login from "./login.jpg";
-import chart from "./chart.jpg";
-import chart2 from "./chart2.jpg";
+
 import about from "./about.png";
 import uploadImg from "./upload_file.png"
 import xlsx from "./xlsx_file.png";
@@ -33,11 +32,12 @@ export {
     updown,
     down,
     login,
-    chart,
-    chart2,
+    
     about,
     uploadImg,
     xlsx,
     landing1,
     landing2,
+
+
 };

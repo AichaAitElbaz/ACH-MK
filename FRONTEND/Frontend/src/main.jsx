@@ -11,16 +11,24 @@ import SignIn from './components/SignIn.jsx'
 import SignUp from './components/SignUp.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
+import { Provider } from 'react-redux';
+import store from './store';
+import ProtectedRoutes from './PrivateRoute.jsx';
+import ProtectedAdminRoutes from './PrivateAdminRoute.jsx'
 import NotFound from './components/NotFound.jsx'
 
+
+
+
 ReactDOM.createRoot(document.getElementById('root')).render(
+  <Provider store={store}> 
   <BrowserRouter>
     <Routes>
       <Route path='/' element={<React.StrictMode>
         <App />
       </React.StrictMode>}></Route>
 
-      <Route path='/about' element={<React.StrictMode>
+      <Route path='/aboutUs' element={<React.StrictMode>
         <Navbar />
         <AboutUs />
         <Footer />
@@ -30,7 +38,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Navbar />
         <ContactUs />
         <Footer />
-      </React.StrictMode>}></Route>
+      </React.StrictMode>}></Route>  
 
       <Route path='/login' element={<React.StrictMode>
         <SignIn />
@@ -39,18 +47,25 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path='/register' element={<React.StrictMode>
         <SignUp />
       </React.StrictMode>}></Route>
-    
-      <Route path='/client/*' element={<React.StrictMode>
+      <Route element={<ProtectedRoutes/>}>
+      <Route path='/client/*' element={
+      <React.StrictMode>
         <AppClient/>
-      </React.StrictMode>}>  
+      </React.StrictMode>}>
+        
       </Route>
-
+      </Route>
+     
+      <Route element={<ProtectedAdminRoutes/>}>
       <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
       </React.StrictMode>}>
       </Route>
+      /</Route>
+     
       <Route path="*" element={<React.StrictMode><NotFound /></React.StrictMode>} />
     </Routes>
   </BrowserRouter>
+  </Provider>
 
 )

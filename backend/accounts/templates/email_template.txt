@@ -1,0 +1,7 @@
+Nouveau message de {{ firstname }} {{ lastname }}
+
+Adresse e-mail de l'expéditeur : {{ sender_email }}
+Numéro de téléphone : {{ phone_number }}
+
+Message :
+{{ message }}

@@ -1,8 +1,44 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import avatar from '../../../Data/img/avatar4.png'
 import {MessageTable} from '../../../components/TableMessage'
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../../../../actions/auth';
+
+
 
 const index = () => {
+  const username = useSelector(state => state.auth.user.firstname);
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+  const [adminMessages, setAdminMessages] = useState([]);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+
+  useEffect(() => {
+    const getAdminMessages = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/account/get-all-messages/`);
+        setAdminMessages(response.data.messages);
+      } catch (error) {
+        console.error('Error fetching users messages:', error);
+      }
+    };
+  
+    getAdminMessages();
+  }, []);
+
+  const handleClickMessage = (message) => {
+    setSelectedMessage(message);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMessage(null);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login')
+  };
   return (
     <>
      <main className="profile-page -mx-8 -mt-40">
@@ -60,6 +96,9 @@ const index = () => {
                         className="bg-violet-700 active:bg-violet-400 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
                         type="button"
                         style={{ transition: "all .15s ease" }}
+                        onClick={handleLogout}
+
+
                       >
                         Log Out
                       </button>
@@ -69,7 +108,8 @@ const index = () => {
                 </div>
                 <div className="text-center mt-12">
                   <h3 className="text-4xl font-semibold leading-normal text-gray-800 mb-2 dark:text-white">
-                    Admin Name
+                   {username}
+
                   </h3>
                   <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
                   {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
