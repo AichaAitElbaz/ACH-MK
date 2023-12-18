@@ -1,5 +1,4 @@
 from django.shortcuts import render
-<<<<<<< HEAD
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.http import JsonResponse
@@ -27,14 +26,6 @@ import json
 User = get_user_model()
 
 
-=======
-import openai
-from .models import Guest
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-import os
-import json
->>>>>>> ad0ec3493942f5aa92a7bcfc593c0c4b1a2342c9
 
 def my_view(request):
     user_ip = request.META.get('REMOTE_ADDR')
@@ -49,7 +40,6 @@ def my_view(request):
     return render(request, 'template.html', {'user_ip': user_ip})
 
 
-<<<<<<< HEAD
 
  # Nécessaire si vous n'avez pas de gestion appropriée des CORS dans votre application
 @csrf_exempt
@@ -158,14 +148,6 @@ def generate_interpretation(request):
         #openai.api_key = os.getenv('API_KEY')  # Retrieve API key from environment variable
         print(openai.api_key)
         openai.api_key = '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'
-=======
-@csrf_exempt
-def generate_interpretation(request):
-    if request.method == 'POST':
-        openai.api_key = os.getenv('API_KEY')  # Retrieve API key from environment variable
-        print('openai.api_key',openai.api_key)
-        # openai.api_key = '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'
->>>>>>> ad0ec3493942f5aa92a7bcfc593c0c4b1a2342c9
         try:
             # Get the JSON data from the request body
             data = json.loads(request.body)
@@ -200,7 +182,6 @@ def generate_chart_interpretation(chart_data):
     # Extract the generated interpretation from the API response
     interpretation = response.choices[0].text.strip()
     return interpretation
-<<<<<<< HEAD
 
 @csrf_exempt
 def send_message(request):
@@ -340,5 +321,3 @@ def update_user_info(request, user_id):
         return JsonResponse({'message': 'User information updated successfully'})
 
 
-=======
->>>>>>> ad0ec3493942f5aa92a7bcfc593c0c4b1a2342c9
