@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import React, { useEffect, useState } from 'react'
 import { IoBagHandle, IoPieChart, IoPeople, IoCart } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux';
 import { load_user } from '../../../actions/auth';
@@ -70,7 +69,7 @@ export default function DashboardStatsGrid() {
 				<div className="pl-4">
 					<span className="text-sm text-gray-500 font-light">Total Files</span>
 					<div className="flex items-center">
-						<strong className="text-xl text-gray-700 font-semibold">{}</strong>
+						<strong className="text-xl text-gray-700 font-semibold">{userFilesCount}</strong>
 					</div>
 				</div>
 			</BoxWrapper>

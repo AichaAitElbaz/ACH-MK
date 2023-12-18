@@ -222,23 +222,6 @@ def send_message(request):
 
 
 
-
-@csrf_exempt
-def count_user_graphs(request, user_id):
-    if request.method == 'GET':
-        try:
-            # Utilisation de Django Aggregation pour compter le nombre de graphes pour un utilisateur spécifique
-            user_graphs_count = Graph.objects.filter(user_id=user_id).count()
-
-            return JsonResponse({'user_id': user_id, 'graphs_count': user_graphs_count})
-
-        except Exception as e:
-            return JsonResponse({'error': str(e)})
-
-    return JsonResponse({'error': 'Invalid request method'})
-
-
-
 @csrf_exempt
 def user_monthly_graphs(request, user_id):
     if request.method == 'GET':
