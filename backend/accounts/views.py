@@ -149,7 +149,7 @@ def generate_interpretation(request):
     if request.method == 'POST':
         #openai.api_key = os.getenv('API_KEY')  # Retrieve API key from environment variable
         print(openai.api_key)
-        openai.api_key = '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'
+        openai.api_key = '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'
         try:
             # Get the JSON data from the request body
             data = json.loads(request.body)
