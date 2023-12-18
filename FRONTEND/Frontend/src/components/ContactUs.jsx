@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Switch } from '@headlessui/react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+// import { ChevronDownIcon } from '@heroicons/react/20/solid'
+// import { Switch } from '@headlessui/react'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');

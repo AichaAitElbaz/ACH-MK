@@ -5,6 +5,7 @@ import MainDashboard from "./views/admin/default/index";
 import Profile from "./views/admin/profile/index";
 import DataTables from "./views/admin/tables/index";
 
+
 // Icon Imports
 import {
   MdHome,
@@ -36,5 +37,6 @@ const routes = [
     icon: <MdPerson className="h-6 w-6" />,
     component: <Profile />,
   },
+ 
 ];
 export default routes;

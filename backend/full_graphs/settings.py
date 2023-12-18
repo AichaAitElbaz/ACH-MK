@@ -28,8 +28,14 @@ SECRET_KEY = 'django-insecure-hus$p2=^%ijzo_ca$+2czq2k+tp8-7le*%$f1va1y-ew#msrq7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
+=======
+ALLOWED_HOSTS = []
+CORS_ALLOW_ALL_ORIGINS = True  # This allows requests from all origins
+
+>>>>>>> 2f51fd1908884c87e2c7dfbd3c37c1684a71390a
 
 # Application definition
 
@@ -43,11 +49,14 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework',
     'djoser',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -94,8 +103,9 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'chaima.benjaafar.chaima@gmail.com'
-EMAIL_HOST_PASSWORD = 'ggflszvilooeqpgh'
+
+EMAIL_HOST_USER = 'ACHMK.graphs@gmail.com'
+EMAIL_HOST_PASSWORD = 'ndfqvvfvbqfqavrk'
 EMAIL_USE_TLS = True
 
 REST_FRAMEWORK = {

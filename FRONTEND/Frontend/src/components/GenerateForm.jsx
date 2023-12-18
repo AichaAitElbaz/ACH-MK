@@ -1,7 +1,7 @@
 import React, { useState, useRef,useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import Chart from 'react-apexcharts';
-
+import axios from 'axios';
 import Modal from 'react-modal';
 import styles, { layout } from "../style";
 import { Select, initTE } from "tw-elements";
@@ -10,11 +10,47 @@ import { updown, down, logo ,close} from '../assets';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import {DragDropFiles} from './index';
+import './DragDropFile/drop.css';
+
+import { ImageConfig } from './DragDropFile/ImageConfig'; 
+import {uploadImg} from '../assets/index';
 
 
 const GenerateForm = () => {
+  const wrapperRef = useRef(null);
 
-    const [selectedFile, setSelectedFile] = useState(null);
+  const [fileList, setFileList] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+    
+
+  const onDragEnter = () => wrapperRef.current.classList.add('dragover');
+
+  const onDragLeave = () => wrapperRef.current.classList.remove('dragover');
+
+  const onDrop = () => wrapperRef.current.classList.remove('dragover');
+
+  const onFileDrop = (e) => {
+      const newFile = e.target.files[0];
+      if (newFile) {
+          const updatedList = [newFile];
+          setFileList(updatedList);
+
+          setSelectedFile(newFile);
+          const filename = newFile.name;
+          
+      }
+
+      
+  }
+
+  const fileRemove = (file) => {
+      const updatedList = [...fileList];
+      updatedList.splice(fileList.indexOf(file), 1);
+      setFileList(updatedList);
+      props.onFileChange(updatedList);
+  }
+    const [csvContent, setCSVContent] = useState('');
+    const [interpretation, setInterpretation] = useState('');
     
     const [graphiqueType, setGraphiqueType] = useState('Barre');
     const [width, setWidth] = useState('400');
@@ -33,6 +69,9 @@ const GenerateForm = () => {
     
     const [x, setX] = useState('x');
     const [y, setY] = useState('y');
+    const [yData, setYData] = useState('yData');
+    const [xData, setXData] = useState('xData');
+
     const[yMin,setYMin]= useState('yMin');
     const[yMax,setYMax]= useState('yMax');
 
@@ -42,7 +81,13 @@ const GenerateForm = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const chartRef = useRef(null);
     const chartRef1 = useRef(null);
+    const [showManualInput, setShowManualInput] = useState(false);
 
+ 
+  
+
+
+  
     useEffect(() => {
 
       if (chartRef.current && isModalOpen) {
@@ -54,34 +99,12 @@ const GenerateForm = () => {
           link.click();
         });
       }
-        // Analyse le texte pour extraire les données (c'est un exemple simple).
-    // const data = textData.match(/\d+/g).map(Number); // Extrait les nombres du texte.
-
-    // Crée un tableau d'objets pour ApexCharts.
-    // const chartData = {
-    //   series: [
-    //     {
-    //       name: 'Données',
-    //       data: data,
-    //     },
-    //   ],
-    //   options: {
-    //     chart: {
-    //       type: 'bar',
-    //     },
-    //     xaxis: {
-    //       categories: ['Catégorie 1', 'Catégorie 2', 'Catégorie 3', 'Catégorie 4'],
-    //     },
-    //   },
-    // };
-
-    // Met à jour le graphique avec les données.
-    // chartRef.current.updateSeries(chartData.series);
+      
     }, [isModalOpen]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setSelectedFile(file);
+        
       };
     const handleGraphiqueTypeChange = (event) => {
         setGraphiqueType(event.target.value);
@@ -124,13 +147,23 @@ const GenerateForm = () => {
     const handleYChange = (event) => {
         setY(event.target.value);
     }; 
+    const handleYDataChange = (event) => {
+      setYData(event.target.value);
+  }; 
+  const handleXDataChange = (event) => {
+    setXData(event.target.value);
+}; 
     const handleYMinChange = (event) => {
         setYMin(event.target.value);
     }; 
     const handleYMaxChange = (event) => {
         setYMax(event.target.value);
     }; 
-    const generateChart = () => {
+    const isValidData = (data) => {
+      return data.every((value) => value !== null && value !== undefined);
+    };
+
+    const generateChartFromFile= () => {
         if (!selectedFile) {
           alert('Please select a file.');
           return;
@@ -140,7 +173,7 @@ const GenerateForm = () => {
           alert('Please specify both X and Y columns.');
           return;
         }
-    
+
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
@@ -157,11 +190,21 @@ const GenerateForm = () => {
             const yMin = Math.min(...yData);
             const yMax = Math.max(...yData);
             let series = [];
+            // Vérifier et traiter les valeurs manquantes dans xData, yData et sizeData
+             
+
+            if (!isValidData(xData) || !isValidData(yData) ) {
+              // Gérer les valeurs manquantes ici (remplacement par des valeurs par défaut, suppression, etc.)
+              alert('please check your data');
+              return;
+            }
+
             if (graphiqueType === 'line' || graphiqueType === 'bar'|| graphiqueType==='area' 
             || graphiqueType==='radar'||graphiqueType==='scatter' || graphiqueType==='heatmap') {
                 series = [{ name: y, data: yData }];
               } else if (graphiqueType === 'donut' || graphiqueType === 'pie') {
                 series = yData;
+                
               } else if (graphiqueType === 'boxplot') {
                 // Utilisez les données de xData comme labels des boîtes
                 const labels = xData;
@@ -188,10 +231,10 @@ const GenerateForm = () => {
               series: series,
             };
       
-              
             setChartData(chartData);
             setPieChartData(pieChartData);
             openModal();
+            console.log(chartData)
           } catch (error) {
             console.error('Error reading file or creating chart:', error);
           }
@@ -199,30 +242,88 @@ const GenerateForm = () => {
     
         reader.readAsArrayBuffer(selectedFile);
       };
+      const generateChartManual = () => {
+            let series = [];
+
+            const chartData = {
+              labels: xData.split('\n').map(value => value.trim()),
+              series: [{ name: y, data: yData.split('\n').map(value => value.trim()) }],
+            };
+            const piechartData = {
+              labels: xData.split('\n').map(value => value.trim()),
+              series : yData.split('\n').map(value => value.trim())
+            };
+           if (graphiqueType === 'donut' || graphiqueType === 'pie') {
+                series = yData
+                
+              } else if (graphiqueType === 'boxplot') {
+                // Utilisez les données de xData comme labels des boîtes
+                const labels = xData;
+                
+                // Utilisez les données de yData pour créer les séries de boîtes
+                series = yData.map((data, index) => {
+                  return {
+                    name: labels[index],  // Nommez chaque boîte avec l'étiquette correspondante
+                    data: data,  // Données pour chaque boîte (quartiles Q1, médiane, Q3, min, max)
+                  };
+                });
+            }else if (graphiqueType === 'bubble') {
+                // Utilisez les données de xData, yData et sizeData pour créer les séries de données
+                series = xData.map((x, index) => {
+                  return {
+                    x: x,           // Valeur x
+                    y: yData[index], // Valeur y
+                    z: sizeData[index], // Taille de la bulle
+                  };
+                });
+              };
+         
+      
+            setChartData(chartData);
+            setPieChartData(piechartData);
+            console.log(pieChartData)
+            openModal();
+            
+     
+      };
+      const generateChart = () => {
+        if (selectedFile && (xData || yData)) {
+          alert('Please select just one method to insert data.');
+          return;
    
+        } else if (selectedFile) {
+          // Si un fichier a été sélectionné mais aucune donnée manuelle n'a été saisie
+          generateChartFromFile();
+        } else if (xData || yData) {
+          // Si des données manuelles ont été saisies sans sélection de fichier
+          generateChartManual();
+        } else {
+          alert('Please select insert data.');
+          return;
+
+        }
+      };
+      const handleManualDataInput = () => {
+      //  chartData.labels=xData.split('\n').map(value => value.trim()); // Séparer les valeurs de X par saut de ligne
+      //  chartData.series.yData=yData.split('\n').map(value => value.trim()); // Séparer les valeurs de Y par saut de ligne
+    
+        // Votre logique pour utiliser les valeurs de xValues et yValues ici
+        // ...
+    
+        console.log(chartData);
+  
+      };
 
       const options = {
-      
+        labels: xData.split('\n').map(value => value.trim()),
+
         xaxis: {
           categories: chartData.labels,
         },
-        // yaxis:{
-        //     min: yMin,
-        //     max: yMax,
-        // },
-        theme: {
-            palette: 'palette2'
-          },
+   
         colors: [color], 
         chart: {
             type: graphiqueType,
-            options3d: {
-              enabled: true,
-              alpha: 15,
-              beta: 15,
-              depth: 50,
-              viewDistance: 25,
-            },
           },
         plotOptions: {
             bar: {
@@ -234,7 +335,44 @@ const GenerateForm = () => {
        
        
         };
+      // const options = {
+      //   labels: chartData.labels,
+
+      //   xaxis: {
+      //     categories: chartData.labels,
+      //   },
    
+      //   colors: [color], 
+      //   chart: {
+      //       type: graphiqueType,
+      //     },
+      //   plotOptions: {
+      //       bar: {
+      //           horizontal: chartLayout === 'horizontal',
+      //         },
+             
+              
+      //     },
+       
+       
+      //   };
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+    
+          // Extract relevant chart content data here from your existing variables
+          const chartContent = {
+            chartType: graphiqueType,
+            chartData:chartData
+            // Add other necessary data properties from your chart if needed
+          };
+        
+          try {
+            const response = await axios.post('http://127.0.0.1:8000/generate_interpretation/', { chart_content: chartContent });
+            setInterpretation(response.data.interpretation);
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        };
       const openModal = () => {
         setIsModalOpen(true);
       };
@@ -242,7 +380,6 @@ const GenerateForm = () => {
       const closeModal = () => {
         setIsModalOpen(false);
       };
-      console.log(fontSize)
       const textStyle = {
         fontSize: `${fontSize}px` , 
         fontFamily: fontFamily,
@@ -295,16 +432,55 @@ const GenerateForm = () => {
 
             <div className="text-center" style={{ paddingTop: "20px" }}>
 
-            <DragDropFiles
+            {/* <DragDropFiles
                 onFileChange={(files) => onFileChange(files)}
                 accept=".xlsx, .xls"
-            />  
+            />   */}
+
+            {/* /Dreg file */}
+
+
+             <div
+                ref={wrapperRef}
+                className="drop-file-input "
+                onDragEnter={onDragEnter}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+            >
+                <div className="drop-file-input__label">
+                    <img src={uploadImg} alt="" />
+                    <p>Drag & Drop your files here</p>
+                </div>
+                <input type="file" accept=".xlsx, .xls" value="" onChange={onFileDrop}/>
+            </div>
+            {
+                fileList.length == 1 ? (
+                    <div className="drop-file-preview">
+                        <p className="drop-file-preview__title">
+                            Ready to upload
+                        </p>
+                        {
+                            fileList.map((item, index) => (
+                                <div key={index} className="drop-file-preview__item">
+                                    <img src={ImageConfig[item.type.split('/')[1]] || ImageConfig['default']} alt="" />
+                                    <div className="drop-file-preview__item__info">
+                                        <p>{item.name}</p>
+                                        <p>{item.size}B</p>
+                                    </div>
+                                    <span className="drop-file-preview__item__del" onClick={() => fileRemove(item)}>x</span>
+                                </div>
+                            ))
+                        }
+                    </div>
+                ) : null
+            }
 
         {/* <input
           type="file"
           accept=".xlsx, .xls"
           onChange={handleFileChange}
          
+
         /> */}
             </div>
             <div className='text-center py-8 mt-10 '>
@@ -314,6 +490,45 @@ const GenerateForm = () => {
             </div>
      
                 <div className=" grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1  ">
+
+       
+        
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ marginRight: '20px' }}>
+          <label htmlFor="xDataTextarea">Données X :</label>
+          <textarea
+            id="xDataTextarea"
+            value={xData}
+            onChange={handleXDataChange}
+            rows={10} // Nombre de lignes pour la zone de texte
+            cols={50} // Nombre de colonnes pour la zone de texte
+            placeholder="Saisissez vos données X ici (une valeur par ligne)..."
+          />
+        </div>
+
+        <div>
+          <label htmlFor="yDataTextarea">Données Y :</label>
+          <textarea
+            id="yDataTextarea"
+            value={yData}
+            onChange={handleYDataChange}
+            rows={10} // Nombre de lignes pour la zone de texte
+            cols={50} // Nombre de colonnes pour la zone de texte
+            placeholder="Saisissez vos données Y ici (une valeur par ligne)..."
+          />
+        </div>
+   
+      </div>
+      {/* <button onClick={handleManualDataInput}>
+        Insérer 
+      </button> */}
+      {/* Graphique et autres éléments ici */}
+      ...
+  
+
+      </div>
+                <div className=" grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 gap-4 content-evenly items-center py-6 grid-cols-1 ">
+
 
                     <div className={`${styles.fomatLabel}`}>
       
@@ -443,8 +658,13 @@ const GenerateForm = () => {
          
                    
                    
+{/* <<<<<<< HEAD
 
                     <div className={`${styles.fomatLabel}`}>
+======= */}
+{/* 
+                    <div class="inline-block relative w-56 mx-2 my-6">
+
                         <label className={`${styles.label}`}>Y Minimal</label>
                         <input type="text" className={`${styles.input}`} value={yMin} onChange={handleYMinChange}/>
                     </div>
@@ -652,15 +872,24 @@ const GenerateForm = () => {
       >
         <h2 style={textStyle}>{title}</h2>
         <h4 >{subTitle}</h4>
-        <Chart id='chart' ref={chartRef} type={graphiqueType}   width={width} height={height}         series={chartData.series}
- options={options} />
+        <Chart id='chart' ref={chartRef}  type={graphiqueType}   width={width} height={height}   series={chartData.series} options={options} />
         <div id='modalbtns'>
           <button className="modalbtns">Save</button>
           <button className="modalbtns" onClick={generatePDF}>Download</button>
-          <button className="modalbtns">Interpret</button>
+          <button className="modalbtns"  onClick={handleSubmit} >Interpret</button>
           <button className="modalbtns" onClick={closeModal}>Close</button>
 
         </div>
+        <div>
+ 
+
+      {interpretation && (
+        <div>
+          <h3>Graph Interpretation:</h3>
+          <p>{interpretation}</p>
+        </div>
+      )}
+    </div>
       </Modal>
       <div>
 
