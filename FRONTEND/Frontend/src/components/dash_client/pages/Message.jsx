@@ -19,21 +19,21 @@ export default function Message() {
         <table className="w-full text-gray-700">
           <thead>
             <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-              <th>Message</th>
+              <th className="text-center">First Name</th>
+              <th className="text-center">Last Name</th>
+              <th className="text-center">Email</th>
+              <th className="text-center">Phone Number</th>
+              <th className="text-center">Message</th>
             </tr>
           </thead>
           <tbody>
             {contactFormData.map((data) => (
               <tr key={data.id}>
-                <td>{data.firstName}</td>
-                <td>{data.lastName}</td>
-                <td>{data.email}</td>
-                <td>{data.phoneNumber}</td>
-                <td>{data.message}</td>
+                <td className="text-center">{data.firstName}</td>
+                <td className="text-center">{data.lastName}</td>
+                <td className="text-center">{data.email}</td>
+                <td className="text-center">{data.phoneNumber}</td>
+                <td className="text-center">{data.message}</td>
               </tr>
             ))}
           </tbody>
