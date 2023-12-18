@@ -1,4 +1,5 @@
 from django.urls import path
+<<<<<<< HEAD
 from .views import add_graph_backend,generate_interpretation, get_user_graphs_backend, delete_graph_backend,count_users,count_total_graphs,display_all_users
 from .views import count_user_graphs, count_user_files, get_guest_visits, update_visitor, update_user_info
 from .views import my_view ,send_message, get_all_messages,get_user_messages
@@ -20,5 +21,12 @@ urlpatterns = [
     path('api/update_guest_visits/', update_visitor, name='update_visitor'),
     path('api/update_user/<int:user_id>/', update_user_info, name='update_user_info'),
 
+=======
+from .views import my_view,generate_interpretation
+
+urlpatterns = [
+    path('', my_view),
+    path('generate_interpretation/', generate_interpretation, name='generate_interpretation'),
+>>>>>>> ad0ec3493942f5aa92a7bcfc593c0c4b1a2342c9
 
 ]

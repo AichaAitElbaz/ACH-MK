@@ -63,7 +63,7 @@ const SignIn = ({ login, isAuthenticated}) => {
       <div className="flex justify-center items-center h-screen bg-discount-gradient">
               <ToastContainer/>
 
-      <form className="max-w-[400px] w-full bg-[#E8E8E8] p-8 rounded-lg bg-white border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md"
+      <form className="max-w-[400px] w-full p-8 bg-white border-2 border-schemes rounded-[10px] py-[20px] px-4 shadow-md"
       onSubmit={e => onSubmit(e)}>
         <h2 className="font-poppins text-center font-medium ss:text-[38px] text-[22px] text-gris">SIGN IN</h2>
         <div className="flex flex-col text-[#2A3240] py-2">

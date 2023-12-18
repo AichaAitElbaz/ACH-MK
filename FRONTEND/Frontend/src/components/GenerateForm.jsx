@@ -496,7 +496,7 @@ const GenerateForm = () => {
       
       // Capture the React component as an image with html2canvas.
       const chart = document.getElementById('chart');
-     const interpretation = document.getElementById('interpretation').innerText; // Get text from the 'interpretation' element
+      const interpretation = document.getElementById('interpretation').innerText; // Get text from the 'interpretation' element
     
       html2canvas(chart).then((canvas) => {
         const chartImage = canvas.toDataURL('image/png');
@@ -520,8 +520,9 @@ const GenerateForm = () => {
         doc.text(textX, imageY + imageHeight + 10, interpretation); // Positioned below the image
        
         doc.save('ACH_MK.pdf');
-        });
-      };
+      });
+    };
+    
       
 
 

@@ -47,22 +47,31 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+<<<<<<< HEAD
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 
 ]
 CSRF_TRUSTED_ORIGINS = ['https://localhost:8000','http://localhost:5173']
+=======
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+]
+
+CSRF_TRUSTED_ORIGINS = ['https://localhost:8000']
+>>>>>>> ad0ec3493942f5aa92a7bcfc593c0c4b1a2342c9
 
 
 
 ROOT_URLCONF = 'full_graphs.urls'
 
+<<<<<<< HEAD
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -78,6 +87,27 @@ TEMPLATES = [
         },
     },
 ]
+=======
+
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [os.path.join(BASE_DIR, 'build')],  # Assurez-vous que le chemin est correct
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#                 'social_django.context_processors.backends',
+#                 'social_django.context_processors.login_redirect'
+
+#             ],
+#         },
+#     },
+# ]
+>>>>>>> ad0ec3493942f5aa92a7bcfc593c0c4b1a2342c9
 
 WSGI_APPLICATION = 'full_graphs.wsgi.application'
 
