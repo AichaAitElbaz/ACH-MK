@@ -11,6 +11,7 @@ import SignIn from './components/SignIn.jsx'
 import SignUp from './components/SignUp.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
+import NotFound from './components/NotFound.jsx'
 import { Provider } from 'react-redux';
 import store from './store';
 import ProtectedRoutes from './PrivateRoute.jsx';
@@ -63,6 +64,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path='/admin/*' element={<React.StrictMode>
         <AppAdmin />
       </React.StrictMode>}>
+      
       </Route>
       /</Route>
       {/* <Route path='/admin/*' element={<React.StrictMode>

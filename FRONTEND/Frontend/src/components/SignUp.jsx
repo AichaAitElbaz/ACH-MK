@@ -22,8 +22,15 @@ const SignUp = ({ signup, isAuthenticated }) => {
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
   const [error, setError] = useState('');
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const onSubmit = e => {
     e.preventDefault();
@@ -98,8 +105,7 @@ const continueWithFacebook = async () => {
   </div>
 </div>
 
-
-        <div className="flex flex-col  py-2">
+        <div className="flex flex-col py-2">
           <label className={`${styles.labelCheck}`}>Email</label>
           <input
             className={`${styles.input}`}
@@ -110,7 +116,7 @@ const continueWithFacebook = async () => {
             required
           />
         </div>
-        <div className="flex flex-col  py-2">
+        <div className="flex flex-col py-2">
           <label className={`${styles.labelCheck}`}>Password</label>
           <input
             className={`${styles.input}`}
@@ -122,7 +128,7 @@ const continueWithFacebook = async () => {
             required
           />
         </div>
-        <div className="flex flex-col  py-2">
+        <div className="flex flex-col py-2">
           <label className={`${styles.labelCheck}`}>Confirm Password</label>
           <input
             className={`${styles.input}`}
@@ -135,7 +141,7 @@ const continueWithFacebook = async () => {
 
           />
         </div>
-        
+
         <div className="flex items-center justify-center">
           <button
             className="w-56 py-3 px-8 m-7  font-poppins font-medium text-[18px] text-white  bg-blue-gradient rounded-[10px]"
@@ -144,7 +150,7 @@ const continueWithFacebook = async () => {
             Sign Up
           </button>
         </div>
-        
+
         <p className="font-semibold text-gradient-label dark:text-white text-center text-sm">
           Already have an account? <a href="/login">Sign In</a>
         </p>
