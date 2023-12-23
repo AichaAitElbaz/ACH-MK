@@ -300,23 +300,31 @@ def get_user_messages(request, user_email):
 
     return JsonResponse({'error': 'Invalid request method'})
 
+from django.db import transaction
+
 @csrf_exempt
 def get_guest_visits(request):
     if request.method == 'GET':
         user_ip = request.META.get('REMOTE_ADDR')
 
-        # Vérifiez si l'adresse IP existe déjà dans la base de données
-        guest, created = Guest.objects.get_or_create(ip_address=user_ip)
-        
+        try:
+            with transaction.atomic():
+                # Use get_or_create to ensure atomicity
+                guest, created = Guest.objects.get_or_create(ip_address=user_ip, defaults={'visit_counter': 0})
 
-        # Incrémentez le compteur de visites
-        visits = guest.visit_counter + 1
-        guest.save()
+                # If the Guest object already exists, increment the visit counter
+                if not created:
+                    guest.visit_counter += 1
+                    guest.save()
 
-        # Return the guest visit information as JSON
-        return JsonResponse({'user_ip': user_ip, 'total_visits': visits})
+                # Return the guest visit information as JSON
+                return JsonResponse({'user_ip': user_ip, 'total_visits': guest.visit_counter})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
 
     return JsonResponse({'error': 'Invalid request method'})
+
 
 @csrf_exempt
 def update_visitor(request):
