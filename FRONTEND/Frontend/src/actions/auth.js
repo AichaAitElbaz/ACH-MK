@@ -192,7 +192,7 @@ export const signup = (firstname, lastname, email, password, re_password) => asy
         }
     };
 
-    const body = JSON.stringify({ firstname, lastname, email, password, re_password });
+    const body = JSON.stringify({ firstname, lastname, email, password, re_password, is_active:true});
 
     try {
         const res = await axios.post(`http://localhost:8000/auth/users/`, body, config);

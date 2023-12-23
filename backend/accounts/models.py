@@ -8,8 +8,7 @@ class UserAccountManager(BaseUserManager):
             raise ValueError("Users must have email address")
         
         email = self.normalize_email(email)
-        user = self.model(email=email, role='user', **kwargs)
-
+        user = self.model(email=email, role='user', is_active=True, **kwargs)
         user.set_password(password)
         user.save()
         return user
