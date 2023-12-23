@@ -5,14 +5,12 @@ import { IoMdHome } from "react-icons/io";
 import { IoDocuments } from "react-icons/io5";
 import { MdBarChart, MdDashboard } from "react-icons/md";
 
-import { columnsDataCheck, columnsDataComplex } from "./variables/columnsData";
 
 import Widget from "../../../components/widget/Widget";
 
 import DailyTraffic from "./components/DailyTraffic";
 import RecentGraphs from "./components/RecentGraphs";
 import TaskCard from "./components/TaskCard";
-
 import React, { useState, useEffect } from "react";
 
 const Dashboard = () => {
@@ -78,7 +76,7 @@ const Dashboard = () => {
     <div>
       {/* Card widget */}
 
-      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-4 ">
+      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
           title={"number Of users"}
@@ -95,17 +93,20 @@ const Dashboard = () => {
           title={"Sales"}
           subtitle={"$574.34"}
         />
-        
         <Widget
           icon={<MdDashboard className="h-6 w-6" />}
-          title={"Subscribes"}
-          subtitle={"1,000"}
+          title={"Your Balance"}
+          subtitle={"$1,000"}
         />
-        
+        <Widget
+          icon={<MdBarChart className="h-7 w-7" />}
+          title={"New Tasks"}
+          subtitle={"145"}
+        />
         <Widget
           icon={<IoMdHome className="h-6 w-6" />}
-          title={"Users"}
-          subtitle={"433"}
+          title={"Total Projects"}
+          subtitle={"$2433"}
         />
       </div>
 
@@ -128,7 +129,7 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2">
           <DailyTraffic />
-          <PieChartCard />
+          <DailyTraffic />
         </div>
 
         {/* Complex Table , Task & Calendar */}
@@ -141,8 +142,6 @@ const Dashboard = () => {
             <MiniCalendar />
           </div>
         </div>
-
-       
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework',
     'djoser',
-    'corsheaders',
+     'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -53,13 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-
 ]
-CSRF_TRUSTED_ORIGINS = ['https://localhost:8000','http://localhost:5173']
-
-
 
 ROOT_URLCONF = 'full_graphs.urls'
 

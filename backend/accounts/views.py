@@ -12,15 +12,18 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
 import openai
 from .models import Guest
 import os
 import json
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status
-from django.contrib.auth.models import AnonymousUser
-import json
+
+from django.utils import timezone
+from datetime import datetime
+#from django.db.models import Cast, models
+
+
 
 
 User = get_user_model()
@@ -90,7 +93,7 @@ def delete_graph_backend(request, graph_id):
 
     return JsonResponse({'error': 'Invalid request method'})
 
-@csrf_exempt
+
 def count_users(request):
     if request.method == 'GET':
         user_count = User.objects.count()
@@ -99,7 +102,7 @@ def count_users(request):
     return JsonResponse({'error': 'Invalid request method'})
 
 
-@csrf_exempt
+
 def count_total_graphs(request):
     if request.method == 'GET':
         total_graphs_count = Graph.objects.count()
@@ -107,7 +110,7 @@ def count_total_graphs(request):
 
     return JsonResponse({'error': 'Invalid request method'})
 
-@csrf_exempt
+
 def display_all_users(request):
     users = User.objects.all()
     user_data = []
@@ -123,27 +126,9 @@ def display_all_users(request):
         })
 
     return JsonResponse({'users': user_data})
-
-@csrf_exempt
-def count_user_graphs(request, user_id):
-    if request.method == 'GET':
-        user_graphs_count = Graph.objects.filter(user=user_id).count()
-        return JsonResponse({'user_graphs_count': user_graphs_count})
-
-    return JsonResponse({'error': 'Invalid request method'})
-
-@csrf_exempt
-def count_user_files(request, user_id):
-    if request.method == 'GET':
-        user_files_count = Graph.objects.filter(user=user_id).count()
-        return JsonResponse({'user_files_count': user_files_count})
-
-    return JsonResponse({'error': 'Invalid request method'})
-
-
 @csrf_exempt
 def generate_interpretation(request):
-    print("ggggggggggggggggg")
+
     if request.method == 'POST':
         #openai.api_key = os.getenv('API_KEY')  # Retrieve API key from environment variable
         print(openai.api_key)
@@ -217,6 +202,8 @@ def send_message(request):
             return JsonResponse({'error': 'Invalid JSON data'})
 
     return JsonResponse({'error': 'Invalid request method'})
+
+
 @csrf_exempt
 def get_all_messages(request):
     if request.method == 'GET':
@@ -272,52 +259,56 @@ def get_user_messages(request, user_email):
     return JsonResponse({'error': 'Invalid request method'})
 
 @csrf_exempt
-def get_guest_visits(request):
+def count_user_graphs(request, user_id):
     if request.method == 'GET':
-        user_ip = request.META.get('REMOTE_ADDR')
+        try:
+            # Utilisation de Django Aggregation pour compter le nombre de graphes pour un utilisateur spécifique
+            user_graphs_count = Graph.objects.filter(user_id=user_id).count()
 
-        # Vérifiez si l'adresse IP existe déjà dans la base de données
-        guest, created = Guest.objects.get_or_create(ip_address=user_ip)
-        
+            return JsonResponse({'user_id': user_id, 'graphs_count': user_graphs_count})
 
-        # Incrémentez le compteur de visites
-        visits = guest.visit_counter + 1
-        guest.save()
-
-        # Return the guest visit information as JSON
-        return JsonResponse({'user_ip': user_ip, 'total_visits': visits})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
 
     return JsonResponse({'error': 'Invalid request method'})
 
-@csrf_exempt
-def update_visitor(request):
-    user_ip = request.META.get('REMOTE_ADDR')
 
-    # Vérifiez si l'adresse IP existe déjà dans la base de données
-    guest, created = Guest.objects.get_or_create(ip_address=user_ip)
 
-    # Incrémentez le compteur de visites
-    guest.visit_counter += 1
-    guest.save()
 
-    response_data = {'success': True, 'ip_address': guest.ip_address, 'visit_counter': guest.visit_counter}
-    return JsonResponse(response_data)
+from django.db.models import Count
+from django.db.models.functions import ExtractMonth, ExtractYear
+
+from datetime import datetime
 
 @csrf_exempt
-def update_user_info(request, user_id):
-        data = json.loads(request.body)
+def user_monthly_graphs(request, user_id):
+    if request.method == 'GET':
+        try:
+            # Récupérer tous les graphiques de l'utilisateur
+            user_graphs = Graph.objects.filter(user_id=user_id)
 
-        first_name = data.get('firstName')
-        last_name = data.get('lastName')
-        email = data.get('email')
-        user = User.objects.get(id=user_id)
-              
-        user.firstname = first_name
-        user.lastname = last_name
-        user.email = email
+            # Construire un dictionnaire pour stocker le nombre de graphiques par mois
+            monthly_graphs_count = {}
 
-        user.save()
+            for graph in user_graphs:
+                # Extraire le mois à partir de la date
+                month_key = graph.date_uploaded.strftime('%b %Y')
 
-        return JsonResponse({'message': 'User information updated successfully'})
+                # Incrémenter le nombre de graphiques pour le mois correspondant
+                monthly_graphs_count[month_key] = monthly_graphs_count.get(month_key, 0) + 1
 
+            # Construire la liste des données pour la réponse JSON
+            monthly_graphs_list = [
+                {
+                    'month': month,
+                    'graphCount': count
+                }
+                for month, count in monthly_graphs_count.items()
+            ]
 
+            return JsonResponse({'monthlyGraphs': monthly_graphs_list})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+    return JsonResponse({'error': 'Invalid request method'})

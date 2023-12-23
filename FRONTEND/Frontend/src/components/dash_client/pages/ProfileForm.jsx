@@ -9,7 +9,7 @@ const ProfileForm = () => {
 
   
   const dispatch = useDispatch();
-  const user_id = useSelector(state => state.auth.user.id);
+  // const user = useSelector(state => state.auth.user);
   const user = useSelector(state => state.auth.user);
 
   const [formData, setFormData] = useState({
@@ -45,7 +45,7 @@ const ProfileForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.put(`http://localhost:8000/account/api/update_user/${user_id}/`, {
+      const response = await axios.put(`http://localhost:8000/account/api/update_user/${user.id}/`, {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,

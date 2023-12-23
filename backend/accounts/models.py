@@ -9,6 +9,8 @@ class UserAccountManager(BaseUserManager):
         
         email = self.normalize_email(email)
         user = self.model(email=email, role='user', **kwargs)
+        
+
 
         user.set_password(password)
         user.save()
@@ -16,13 +18,12 @@ class UserAccountManager(BaseUserManager):
     
     def create_superuser(self, email, password=None, **kwargs):
         user = self.model(email=email, role='admin', **kwargs)
-        user.set_password(password)
+
         user.is_staff = True
         user.is_superuser = True
         user.save(using= self._db)
         return user
         
-
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     firstname = models.CharField(max_length=255)
@@ -68,7 +69,7 @@ class Message(models.Model):
   
 
 class Guest(models.Model):
-    ip_address = models.GenericIPAddressField(unique=True) # Utilisez CharField pour stocker des adresses IP
+    ip_address = models.CharField(max_length=15)  # Utilisez CharField pour stocker des adresses IP
     visit_counter = models.PositiveIntegerField(default=0)
 
     def __str__(self):
