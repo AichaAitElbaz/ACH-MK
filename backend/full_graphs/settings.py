@@ -28,14 +28,8 @@ SECRET_KEY = 'django-insecure-hus$p2=^%ijzo_ca$+2czq2k+tp8-7le*%$f1va1y-ew#msrq7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
-=======
-ALLOWED_HOSTS = []
-CORS_ALLOW_ALL_ORIGINS = True  # This allows requests from all origins
-
->>>>>>> 2f51fd1908884c87e2c7dfbd3c37c1684a71390a
 
 # Application definition
 
@@ -49,8 +43,6 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework',
     'djoser',
-    'corsheaders',
-
 ]
 
 MIDDLEWARE = [
@@ -61,11 +53,15 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://localhost:8000']
+
+
+
 ROOT_URLCONF = 'full_graphs.urls'
+
 
 # TEMPLATES = [
 #     {
@@ -103,9 +99,8 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-
-EMAIL_HOST_USER = 'ACHMK.graphs@gmail.com'
-EMAIL_HOST_PASSWORD = 'ndfqvvfvbqfqavrk'
+EMAIL_HOST_USER = 'chaima.benjaafar.chaima@gmail.com'
+EMAIL_HOST_PASSWORD = 'ggflszvilooeqpgh'
 EMAIL_USE_TLS = True
 
 REST_FRAMEWORK = {
@@ -137,7 +132,7 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL': False,
     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google', 'http://localhost:8000/facebook'],
     'SERIALIZERS': {
@@ -220,5 +215,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'build')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "accounts.UserAccount"
-
-
