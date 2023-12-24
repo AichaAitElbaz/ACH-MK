@@ -10,6 +10,7 @@
     justify-content: center;
 
     background-color: #fafdff;
+
 }
 
 .drop-file-input input{
@@ -92,4 +93,18 @@
 
 .drop-file-preview__item:hover .drop-file-preview__item__del {
     opacity: 1;
+}
+
+.form_division {
+    box-shadow: 0 0 40px rgba(0,0,0,.3);
+}
+
+.sky-form{
+    display: block;
+    padding: 5px 30px;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    background: rgba(221,221,221,.7);
+    font-size: 18px;
+    font-weight: 600;
+    color: #1c6f9e;
 }

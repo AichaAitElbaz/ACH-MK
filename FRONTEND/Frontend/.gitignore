@@ -1,4 +1,7 @@
 # Logs
+backend/accounts/__pycache__/
+backend/accounts/migrations/
+
 logs
 *.log
 npm-debug.log*

@@ -143,23 +143,4 @@
   background: rgba(149, 197, 198, 0.6);
   filter: blur(750px);
 }
-#modalbtns {
-  display: flex;
-}
-.modalbtns{
-  background-color: #396D83; /* Couleur de fond */
-  color: #f4e7e7; /* Couleur du texte */
-  border: none;
-  width: 4.5cm;
-  height: 0.8cm;
-  padding: 10px 20px; /* Rembourrage */
-  border-radius: 25px; /* Coins arrondis */
-  cursor: pointer;
-  font-size: 15px;
-  font-family:   'Trebuchet MS';
-  font-weight:100;
-  display: flex;
-  align-items: center; /* Centre le contenu verticalement */
-  justify-content: center; /* Centre le contenu horizontalement */
-  margin: 20px;
-}
+

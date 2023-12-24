@@ -2,18 +2,19 @@ import styles from "../style";
 import { arrowUp } from "../assets";
 import { Link } from 'react-scroll';
 import GenerateForm from './GenerateForm'; // Assurez-vous d'importer correctement GenerateForm.jsx
-
-import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect  } from 'react';
 import Modal from 'react-modal';
-
+// import { loadGuestVisits } from "../actions/guest";
+import { useNavigate } from "react-router-dom";
 const customStyles = {
   content: {
     top: '50%',
     left: '50%',
     backgroundColor:'#FCFEFE',
     transform: 'translate(-50%, -50%)',
-    width: '90%', // Largeur du modal
-    height: '98%', // Hauteur maximale du modal
+    width: '100%', // Largeur du modal
+    height: '100%', // Hauteur maximale du modal
     overflowY: 'auto', // Activation du défilement vertical si nécessaire
     padding: '20px', // Espacement intérieur du contenu du modal
   },
@@ -23,9 +24,46 @@ const customStyles = {
 };
 const GetStarted = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [visitorData, setVisitorData] = useState({ ip_address: '', visit_counter: 0 });
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const updateVisitor = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/account/api/update_guest_visits/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        console.error('Error updating visitor:', response.statusText);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Updated visitor:', data);
+
+      const { ip_address, visit_counter } = data;
+
+      // Set the values in the component state
+      setVisitorData({ ip_address, visit_counter });
+    } catch (error) {
+      console.error('Error updating visitor:', error);
+    }
+  };
+
+  useEffect(() => {
+    updateVisitor();
+  }, []);
   const openModal = () => {
-    setModalIsOpen(true);
+    if (isAuthenticated || visitorData.visit_counter < 5) {
+      setModalIsOpen(true);
+    } else {
+      navigate('/login')
+    }
   };
 
   const closeModal = () => {

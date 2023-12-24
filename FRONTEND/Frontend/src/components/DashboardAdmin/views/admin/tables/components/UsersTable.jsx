@@ -3,8 +3,10 @@ import Card from "../../../../components/card";
 import { DiApple } from "react-icons/di";
 import { DiAndroid } from "react-icons/di";
 import { DiWindows } from "react-icons/di";
+import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
-import React, { useMemo } from "react";
+import React, { useMemo,useState, useEffect } from "react";
 import {
   useGlobalFilter,
   usePagination,
@@ -14,10 +16,26 @@ import {
 import Progress from "../../../../components/progress";
 
 const UsersTable = (props) => {
+  const [userData, setUserData] = useState({ users: [] });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/account/api/users/');
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
   const { columnsData, tableData } = props;
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
+  
 
   const tableInstance = useTable(
     {
@@ -50,107 +68,46 @@ const UsersTable = (props) => {
 
       <div class="h-full overflow-x-scroll xl:overflow-x-hidden">
         <table
-          {...getTableProps()}
           className="mt-8 h-max w-full"
           variant="simple"
           color="gray-500"
           mb="24px"
         >
-          <thead>
-            {headerGroups.map((headerGroup, index) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                {headerGroup.headers.map((column, index) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="border-b border-gray-200 pr-32 pb-[10px] text-start dark:!border-navy-700 "
-                    key={index}
-                  >
-                    <div className="text-xs font-bold tracking-wide text-gray-600">
-                      {column.render("Header")}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, index) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()} key={index}>
-                  {row.cells.map((cell, index) => {
-                    let data = "";
-                    if (cell.column.Header === "NAME") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {cell.value}
-                        </p>
-                      );
-                    } else if (cell.column.Header === "TECH") {
-                      data = (
-                        <div className="flex items-center gap-2">
-                          {cell.value.map((item, key) => {
-                            if (item === "apple") {
-                              return (
-                                <div
-                                  key={key}
-                                  className="text-[22px] text-gray-600 dark:text-white"
-                                >
-                                  <DiApple />
-                                </div>
-                              );
-                            } else if (item === "android") {
-                              return (
-                                <div
-                                  key={key}
-                                  className="text-[21px] text-gray-600 dark:text-white"
-                                >
-                                  <DiAndroid />
-                                </div>
-                              );
-                            } else if (item === "windows") {
-                              return (
-                                <div
-                                  key={key}
-                                  className="text-xl text-gray-600 dark:text-white"
-                                >
-                                  <DiWindows />
-                                </div>
-                              );
-                            } else return null;
-                          })}
-                        </div>
-                      );
-                    } else if (cell.column.Header === "DATE") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {cell.value}
-                        </p>
-                      );
-                    } else if (cell.column.Header === "PROGRESS") {
-                      data = (
-                        <div className="flex items-center gap-3">
-                          <p className="text-sm font-bold text-navy-700 dark:text-white">
-                            {cell.value}%
-                          </p>
-                          <Progress width="w-[68px]" value={cell.value} />
-                        </div>
-                      );
-                    }
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        key={index}
-                        className="pt-[14px] pb-3 text-[14px]"
-                      >
-                        {data}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
+         <thead>
+  <tr>
+    <th className="border-b border-gray-200 pr-32 pb-[10px] text-start dark:!border-navy-700">
+      <div className="text-xs font-bold tracking-wide text-gray-600">User ID</div>
+    </th>
+    <th className="border-b border-gray-200 pr-32 pb-[10px] text-start dark:!border-navy-700">
+      <div className="text-xs font-bold tracking-wide text-gray-600">Name</div>
+    </th>
+    <th className="border-b border-gray-200 pr-32 pb-[10px] text-start dark:!border-navy-700">
+      <div className="text-xs font-bold tracking-wide text-gray-600">Email</div>
+    </th>
+    <th className="border-b border-gray-200 pr-32 pb-[10px] text-start dark:!border-navy-700">
+      <div className="text-xs font-bold tracking-wide text-gray-600">Date Joined</div>
+    </th>
+   
+  </tr>
+</thead>
+
+<tbody>
+  {userData.users.map((user) => (
+    <tr key={user.id}>
+      <td className="pt-[14px] pb-3 text-[14px]">
+        <Link to={`/user/${user.id}`}>#{user.id}</Link>
+      </td>
+      <td className="pt-[14px] pb-3 text-[14px]">
+        <Link to={`/email/${user.email}`}>{user.firstname} {user.lastname}</Link>
+      </td>
+      <td className="pt-[14px] pb-3 text-[14px]">{user.email}</td>
+      <td className="pt-[14px] pb-3 text-[14px]">
+        {format(new Date(user.date_joined), 'dd MMM yyyy')}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
       </div>
     </Card>
